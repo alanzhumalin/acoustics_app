@@ -171,7 +171,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                                   topRight: Radius.circular(10),
                                 ),
                                 child: Image(
-                                  image: NetworkImage(ad.imageLink),
+                                  image: NetworkImage(ad.adImages[0]),
                                   fit: BoxFit.cover,
                                 ),
                               ),

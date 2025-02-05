@@ -75,7 +75,7 @@ class _SearchState extends State<Search> {
                           child: Image(
                             width: 50,
                             height: 60,
-                            image: NetworkImage(ad.imageLink),
+                            image: NetworkImage(ad.adImages[0]),
                             fit: BoxFit.cover,
                           )),
                       title: Text(

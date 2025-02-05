@@ -1,22 +1,27 @@
 class AdModel {
   final String title;
   final String description;
-  final String imageLink;
   final String price;
   final String nameOfCustomer;
   final String phoneNumber;
+  final String brand;
+  final String brandImage;
   final String city;
   final DateTime createdAt;
   final String category;
   final String condition;
   final String id;
+
+  final List<String> adImages;
   const AdModel(
       {required this.description,
-      required this.imageLink,
       required this.nameOfCustomer,
       required this.phoneNumber,
       required this.city,
+      required this.brand,
       required this.price,
+      required this.brandImage,
+      required this.adImages,
       required this.id,
       required this.condition,
       required this.category,
@@ -27,10 +32,14 @@ class AdModel {
     return AdModel(
         id: data['id'],
         description: data['description'],
-        imageLink: data['imageLink'],
+        adImages: (data['imageLink'] as List<dynamic>)
+            .map((image) => image.toString())
+            .toList(),
         nameOfCustomer: data['nameOfCustomer'],
         phoneNumber: data['phoneNumber'],
         price: data['price'],
+        brandImage: data['brandImage'],
+        brand: data['brand'],
         title: data['title'],
         condition: data['condition'],
         category: data['category'],
@@ -41,9 +50,12 @@ class AdModel {
   Map<String, dynamic> toMap() {
     return {
       'description': description,
-      'imageLink': imageLink,
+      'adImages': adImages,
       'nameOfCustomer': nameOfCustomer,
       'phoneNumber': phoneNumber,
+      'brand': brand,
+      'city': city,
+      'brandImage': brandImage,
       'category': category,
       'price': price,
       'condition': condition,
@@ -57,12 +69,18 @@ List<AdModel> ads = [
   AdModel(
       id: '221',
       description: 'Новая акустическая гитара, отличное звучание.',
-      imageLink:
-          'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
-      nameOfCustomer: 'Алексей',
+      adImages: [
+        'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+        'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg',
+        'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg'
+      ],
+      nameOfCustomer: 'Алексейe',
       phoneNumber: '+7 900 123 45 67',
+      brandImage:
+          'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
       price: '80000',
       condition: 'Б/у',
+      brand: 'Yamaha',
       category: 'Инструмент',
       title: 'Акустическая гитара Yamaha',
       createdAt: DateTime.now(),
@@ -70,8 +88,11 @@ List<AdModel> ads = [
   AdModel(
       id: '221',
       description: 'Электрогитара Fender, в отличном состоянии.',
-      imageLink: 'https://m.media-amazon.com/images/I/61Z01+68f8L.jpg',
+      adImages: ['https://m.media-amazon.com/images/I/61Z01+68f8L.jpg'],
       nameOfCustomer: 'Владимир',
+      brand: 'Fender',
+      brandImage:
+          'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
       phoneNumber: '+7 901 234 56 78',
       category: 'Инструмент',
       condition: 'Б/у',
@@ -82,9 +103,13 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Бас-гитара Ibanez, почти новая, мало использовалась.',
-    imageLink:
-        'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Дмитрий',
+    brandImage:
+        'https://www.sweelee.com.sg/cdn/shop/collections/ibanez_1200x1200.jpg?v=1677052262',
     phoneNumber: '+7 902 345 67 89',
     price: '150000',
     category: 'Инструмент',
@@ -96,11 +121,15 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Классическая гитара для начинающих и профессионалов.',
-    imageLink:
-        'https://basket-13.wbbasket.ru/vol1934/part193402/193402473/images/big/1.webp',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Мария',
     phoneNumber: '+7 903 456 78 90',
     category: 'Инструмент',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     price: '65000',
     condition: 'Новый',
     title: 'Классическая гитара Alhambra',
@@ -110,9 +139,13 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Гитара Gibson, редкая модель, коллекционное состояние.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkTe03UTXM1WVd050u8iRKyjNc_CmVcdTUxQ&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Сергей',
+    brandImage:
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3gWbIt3lLWufFHD5ZeVdkON3bXkK5LewRag&s',
     category: 'Инструмент',
     phoneNumber: '+7 904 567 89 01',
     price: '760000',
@@ -125,8 +158,12 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука и встроенным микрофоном. Поддерживает Bluetooth, USB и AUX. Идеальна для вечеринок и мероприятий.',
-    imageLink:
-        'https://kh.jbl.com/dw/image/v2/AAUJ_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw8e0c7057/JBL_Party_Box_300_Hero_14836_X1.png?sw=537&sfrm=png',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     nameOfCustomer: 'Иван',
     phoneNumber: '+7 900 123 45 67',
     price: '150000',
@@ -140,12 +177,16 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности. Отлично подходит для вокала и инструментов. Прочный металлический корпус.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Kh7oJeMYLbou2ctBh22f1dMUwarc3sI5SQ&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Мария',
     phoneNumber: '+7 901 234 56 78',
     price: '25000',
     title: 'AKG P3 S',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     condition: 'Б/у',
     category: 'Микрофон',
     city: 'Алматы',
@@ -155,14 +196,18 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Портативная колонка Sony MHC-V21D с функцией караоке, световыми эффектами и поддержкой Bluetooth. Идеальна для домашних вечеринок.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb6-2LVfv06lN02UCBhE9BZxMQeeDh-XC7Mw&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Алексей',
     phoneNumber: '+7 902 345 67 89',
     price: '125000',
     condition: 'Б/у',
     city: 'Алматы',
     category: 'Колонки',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     title: 'Sony MHC-V21D',
     createdAt: DateTime.now(),
   ),
@@ -170,11 +215,15 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Портативная колонка AUNA Streetstar 15 с мощностью 100 Вт и временем автономной работы до 7 часов. Поддерживает Bluetooth, USB и SD-карты. Идеальна для уличных мероприятий.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGmdQwzS9bUngzuTbs2Abm_u-6yN5UVUcYhA&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Сергей',
     condition: 'Новый',
     phoneNumber: '+7 903 456 78 90',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     price: '150000',
     city: 'Алматы',
     category: 'Колонки',
@@ -185,9 +234,14 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Портативная колонка JBL PartyBox 100 с мощностью 160 Вт и световыми эффектами. В комплекте вокальный микрофон AKG P3 S. Поддерживает Bluetooth 4.2.',
-    imageLink: 'https://m.media-amazon.com/images/I/71JVQKYAEFL.jpg',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Ольга',
     phoneNumber: '+7 904 567 89 01',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     condition: 'Б/у',
     category: 'Колонки',
     price: '170000',
@@ -198,11 +252,15 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Новая акустическая гитара, отличное звучание.',
-    imageLink:
-        'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Алексей',
     phoneNumber: '+7 900 123 45 67',
     condition: 'Новый',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     category: 'Инструмент',
     price: '80000',
     city: 'Алматы',
@@ -212,9 +270,14 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Электрогитара Fender, в отличном состоянии.',
-    imageLink: 'https://m.media-amazon.com/images/I/61Z01+68f8L.jpg',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Владимир',
     condition: 'Б/у',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     phoneNumber: '+7 901 234 56 78',
     price: '250000',
     category: 'Инструмент',
@@ -225,10 +288,14 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Бас-гитара Ibanez, почти новая, мало использовалась.',
-    imageLink:
-        'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Дмитрий',
     phoneNumber: '+7 902 345 67 89',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     price: '150000',
     condition: 'Б/у',
     category: 'Инструмент',
@@ -239,13 +306,17 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Классическая гитара для начинающих и профессионалов.',
-    imageLink:
-        'https://basket-13.wbbasket.ru/vol1934/part193402/193402473/images/big/1.webp',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Мария',
     condition: 'Новый',
     phoneNumber: '+7 903 456 78 90',
     category: 'Инструмент',
     price: '65000',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     city: 'Алматы',
     title: 'Классическая гитара Alhambra',
     createdAt: DateTime.now(),
@@ -253,11 +324,15 @@ List<AdModel> ads = [
   AdModel(
     id: '221',
     description: 'Гитара Gibson, редкая модель, коллекционное состояние.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRkTe03UTXM1WVd050u8iRKyjNc_CmVcdTUxQ&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Сергей',
     phoneNumber: '+7 904 567 89 01',
     city: 'Алматы',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     condition: 'Б/у',
     category: 'Инструмент',
     price: '760000',
@@ -268,11 +343,15 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука и встроенным микрофоном. Поддерживает Bluetooth, USB и AUX. Идеальна для вечеринок и мероприятий.',
-    imageLink:
-        'https://kh.jbl.com/dw/image/v2/AAUJ_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw8e0c7057/JBL_Party_Box_300_Hero_14836_X1.png?sw=537&sfrm=png',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Иван',
     phoneNumber: '+7 900 123 45 67',
     category: 'Колонки',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     city: 'Алматы',
     price: '150000',
     condition: 'Новый',
@@ -283,14 +362,18 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности. Отлично подходит для вокала и инструментов. Прочный металлический корпус.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3Kh7oJeMYLbou2ctBh22f1dMUwarc3sI5SQ&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Мария',
     phoneNumber: '+7 901 234 56 78',
     city: 'Алматы',
     category: 'Микрофон',
     price: '25000',
     condition: 'Новый',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     title: 'AKG P3 S',
     createdAt: DateTime.now(),
   ),
@@ -298,13 +381,17 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Портативная колонка Sony MHC-V21D с функцией караоке, световыми эффектами и поддержкой Bluetooth. Идеальна для домашних вечеринок.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb6-2LVfv06lN02UCBhE9BZxMQeeDh-XC7Mw&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Алексей',
     phoneNumber: '+7 902 345 67 89',
     condition: 'Новый',
     price: '125000',
     city: 'Алматы',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     category: 'Колонки',
     title: 'Sony MHC-V21D',
     createdAt: DateTime.now(),
@@ -313,12 +400,16 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Портативная колонка AUNA Streetstar 15 с мощностью 100 Вт и временем автономной работы до 7 часов. Поддерживает Bluetooth, USB и SD-карты. Идеальна для уличных мероприятий.',
-    imageLink:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGmdQwzS9bUngzuTbs2Abm_u-6yN5UVUcYhA&s',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Сергей',
     phoneNumber: '+7 903 456 78 90',
     price: '150000',
     city: 'Алматы',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     title: 'AUNA Streetstar 15',
     condition: 'Б/у',
     category: 'Инструмент',
@@ -328,8 +419,13 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Портативная колонка JBL PartyBox 100 с мощностью 160 Вт и световыми эффектами. В комплекте вокальный микрофон AKG P3 S. Поддерживает Bluetooth 4.2.',
-    imageLink: 'https://m.media-amazon.com/images/I/71JVQKYAEFL.jpg',
+    adImages: [
+      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+    ],
+    brand: 'Fender',
     nameOfCustomer: 'Ольга',
+    brandImage:
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     phoneNumber: '+7 904 567 89 01',
     price: '170000',
     condition: 'Б/у',

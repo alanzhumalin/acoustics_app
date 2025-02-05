@@ -38,25 +38,28 @@ class AdDetail extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) =>
-                        ImageFullScreen(imageLink: ad.imageLink),
-                  ),
-                );
-              },
-              child: SizedBox(
+            SizedBox(
                 width: double.infinity,
                 height: size.height * 0.4,
-                child: Image.network(
-                  ad.imageLink,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
+                child: PageView.builder(
+                    itemCount: ad.adImages.length,
+                    itemBuilder: (context, index) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ImageFullScreen(
+                                  imageLink: ad.adImages[index]),
+                            ),
+                          );
+                        },
+                        child: Image.network(
+                          ad.adImages[index],
+                          fit: BoxFit.cover,
+                        ),
+                      );
+                    })),
             Padding(
               padding: EdgeInsets.all(16.0),
               child: Column(

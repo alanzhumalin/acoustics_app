@@ -126,7 +126,7 @@ class Ad extends ConsumerWidget {
                                   topRight: Radius.circular(10),
                                 ),
                                 child: Image(
-                                  image: NetworkImage(ad.imageLink),
+                                  image: NetworkImage(ad.adImages[0]),
                                   fit: BoxFit.cover,
                                 ),
                               ),
@@ -211,8 +211,7 @@ class Ad extends ConsumerWidget {
                             child: Image(
                                 height: 40,
                                 width: 40,
-                                image: NetworkImage(
-                                    'https://assets.spotlight.fender.com/logos/fender-red-large.jpg')),
+                                image: NetworkImage(ad.brandImage)),
                           ))
                     ],
                   ),
