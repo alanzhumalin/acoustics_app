@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:acousticsapp/core/utils/phone_formatter.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_brand.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_category.dart';
+import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class CreateAd extends StatefulWidget {
   const CreateAd({super.key});
@@ -16,11 +21,34 @@ class _CreateAdState extends State<CreateAd> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final ImagePicker imagePicker = ImagePicker();
+  List<XFile> pickedFileList = <XFile>[];
+
   final _key = GlobalKey<FormState>();
-  bool isSelectedCategory = false;
-  bool isSelectedBrand = false;
   String selectedBrand = '';
   String selectedCategory = '';
+
+  Future<void> pickPhoto() async {
+    final List<XFile>? pickedFile = await imagePicker.pickMultiImage(
+      imageQuality: 80,
+    );
+
+    if (pickedFile != null && pickedFile.isNotEmpty) {
+      for (var file in pickedFile) {
+        File imageFile = File(file.path);
+        final decodedImage =
+            await decodeImageFromList(imageFile.readAsBytesSync());
+
+        if (decodedImage.width > 0 && decodedImage.height > 0) {
+          setState(() {
+            pickedFileList.add(file);
+          });
+        } else {
+          debugPrint("Некорректное фото: ${file.path}");
+        }
+      }
+    }
+  }
 
   Future<void> selectCategory() async {
     final result = await Navigator.push<String>(
@@ -28,9 +56,7 @@ class _CreateAdState extends State<CreateAd> {
 
     if (result != null && result.isNotEmpty) {
       setState(() {
-        isSelectedCategory = true;
         selectedCategory = result;
-        isSelectedBrand = false;
         selectedBrand = '';
       });
     }
@@ -42,16 +68,22 @@ class _CreateAdState extends State<CreateAd> {
 
     if (result != null && result.isNotEmpty) {
       setState(() {
-        isSelectedBrand = true;
         selectedBrand = result;
       });
     }
+  }
+
+  void removeFile(int index) {
+    setState(() {
+      pickedFileList.removeAt(index);
+    });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+
     _nameController.dispose();
     _descriptionController.dispose();
     _phoneController.dispose();
@@ -61,6 +93,7 @@ class _CreateAdState extends State<CreateAd> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).textTheme.bodyLarge!.color;
     final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
@@ -82,22 +115,117 @@ class _CreateAdState extends State<CreateAd> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(18),
-                      child: Container(
-                        width: double.infinity,
-                        height: size.height * 0.23,
-                        padding: EdgeInsets.symmetric(vertical: 70),
-                        decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 129, 129, 129)),
-                        child: Center(
-                          child: Text(
-                            'Выберите фото',
-                            style: TextStyle(fontWeight: FontWeight.bold),
-                          ),
+                    InkWell(
+                      onTap: pickedFileList.isNotEmpty ? null : pickPhoto,
+                      child: ClipRRect(
+                          borderRadius: BorderRadius.circular(18),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(vertical: 30),
+                            width: double.infinity,
+                            height: 228,
+                            decoration: BoxDecoration(
+                                color:
+                                    const Color.fromARGB(255, 129, 129, 129)),
+                            child: pickedFileList.isNotEmpty
+                                ? Center(
+                                    child: ListView.builder(
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: pickedFileList.length,
+                                        itemBuilder: (context, index) {
+                                          final num = index + 1;
+                                          return InkWell(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            ShowPhoto(
+                                                              file:
+                                                                  pickedFileList[
+                                                                      index],
+                                                            )));
+                                              },
+                                              child: Stack(
+                                                clipBehavior: Clip.none,
+                                                children: [
+                                                  Image.file(
+                                                    File(pickedFileList[index]
+                                                        .path),
+                                                    fit: BoxFit.cover,
+                                                    errorBuilder: (context,
+                                                        error, stackTrace) {
+                                                      return const Icon(
+                                                          Icons.broken_image,
+                                                          size: 50,
+                                                          color: Colors.red);
+                                                    },
+                                                  ),
+                                                  Positioned(
+                                                    bottom: -10,
+                                                    left: 0,
+                                                    right: 0,
+                                                    child: IconButton(
+                                                      onPressed: () {
+                                                        removeFile(index);
+                                                      },
+                                                      icon: const Icon(
+                                                        CupertinoIcons.delete,
+                                                        size: 20,
+                                                        color: Colors.red,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Positioned(
+                                                    left: 2,
+                                                    top: -2,
+                                                    child: Container(
+                                                      padding:
+                                                          const EdgeInsets.all(
+                                                              4),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        color: Colors.black,
+                                                      ),
+                                                      child: Text(
+                                                        num.toString(),
+                                                        style: const TextStyle(
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.white,
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ));
+                                        }),
+                                  )
+                                : Center(
+                                    child: Text(
+                                      'Выберите фото',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold),
+                                    ),
+                                  ),
+                          )),
+                    ),
+                    if (pickedFileList.isNotEmpty)
+                      Padding(
+                        padding: EdgeInsets.only(top: 15),
+                        child: Align(
+                          alignment: Alignment.center,
+                          child: TextButton(
+                              onPressed: pickPhoto,
+                              child: Text(
+                                'Добавить фото',
+                                style: TextStyle(
+                                    color: theme,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 15),
+                              )),
                         ),
                       ),
-                    ),
                     SizedBox(
                       height: 15,
                     ),
@@ -145,15 +273,11 @@ class _CreateAdState extends State<CreateAd> {
                     SizedBox(
                       height: 10,
                     ),
-                    // DropdownMenu(
-                    //     width: double.infinity,
-                    //     hintText: 'Выберите категорию',
-                    //     dropdownMenuEntries: []),
                     TextFormField(
                       readOnly: true,
                       onTap: selectCategory,
                       decoration: InputDecoration(
-                        suffixIcon: isSelectedCategory
+                        suffixIcon: selectedCategory.isNotEmpty
                             ? TextButton(
                                 onPressed: selectCategory,
                                 child: const Text(
@@ -169,7 +293,7 @@ class _CreateAdState extends State<CreateAd> {
                         hintStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.bodyLarge!.color),
-                        hintText: isSelectedCategory
+                        hintText: selectedCategory.isNotEmpty
                             ? selectedCategory
                             : 'Выберите категорию',
                         contentPadding: const EdgeInsets.symmetric(
@@ -186,14 +310,13 @@ class _CreateAdState extends State<CreateAd> {
                         ),
                       ),
                       validator: (value) {
-                        if (!isSelectedCategory) {
+                        if (selectedCategory.isEmpty) {
                           return 'Выберите категорию';
                         }
                         return null;
                       },
                     ),
-
-                    if (isSelectedCategory)
+                    if (selectedCategory.isNotEmpty)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -212,7 +335,7 @@ class _CreateAdState extends State<CreateAd> {
                             readOnly: true,
                             onTap: selectBrand,
                             decoration: InputDecoration(
-                              suffixIcon: isSelectedBrand
+                              suffixIcon: selectedBrand.isNotEmpty
                                   ? TextButton(
                                       onPressed: selectBrand,
                                       child: const Text(
@@ -230,7 +353,7 @@ class _CreateAdState extends State<CreateAd> {
                                       .textTheme
                                       .bodyLarge!
                                       .color),
-                              hintText: isSelectedBrand
+                              hintText: selectedBrand.isNotEmpty
                                   ? selectedBrand
                                   : 'Выберите бренд',
                               contentPadding: const EdgeInsets.symmetric(
@@ -247,7 +370,7 @@ class _CreateAdState extends State<CreateAd> {
                               ),
                             ),
                             validator: (value) {
-                              if (!isSelectedBrand) {
+                              if (selectedBrand.isEmpty) {
                                 return 'Выберите бренд';
                               }
                               return null;

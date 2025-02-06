@@ -6,6 +6,10 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Это приложение запрашивает доступ к вашей фотогалерее для загрузки и выбора изображений.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Это приложение запрашивает доступ к камере.</string>
 	<key>CFBundleDisplayName</key>
 	<string>Acoustics</string>
 	<key>CFBundleExecutable</key>

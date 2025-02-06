@@ -1,4 +1,5 @@
 import 'package:acousticsapp/features/chat/presentation/chat_detail.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -26,8 +27,12 @@ class Chat extends ConsumerWidget {
           itemBuilder: (context, index) {
             return InkWell(
               onTap: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ChatDetail()));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => ChatDetail(
+                              name: 'Alex Sanches',
+                            )));
               },
               child: Stack(
                 children: [
@@ -38,9 +43,27 @@ class Chat extends ConsumerWidget {
                     child: Row(
                       children: [
                         CircleAvatar(
-                            radius: 30,
-                            backgroundImage:
-                                AssetImage('assets/speakers/k1.jpeg')),
+                          radius: 30,
+                          child: Stack(
+                            children: [
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(30),
+                                child: Image(
+                                    image: AssetImage(
+                                        ('assets/speakers/k1.jpeg'))),
+                              ),
+                              Positioned(
+                                  right: 5,
+                                  top: 0,
+                                  child: Icon(
+                                    size: 15,
+                                    CupertinoIcons.circle_filled,
+                                    color:
+                                        const Color.fromARGB(255, 81, 255, 87),
+                                  ))
+                            ],
+                          ),
+                        ),
                         SizedBox(
                           width: 20,
                         ),
@@ -82,11 +105,15 @@ class Chat extends ConsumerWidget {
                   ),
                   Positioned(
                       right: 5,
-                      top: 5,
-                      child: Icon(
-                        size: 18,
-                        Icons.circle_rounded,
-                        color: Colors.blue,
+                      top: 0,
+                      child: Container(
+                        padding: EdgeInsets.all(5),
+                        decoration: BoxDecoration(
+                            color: Colors.blue, shape: BoxShape.circle),
+                        child: Text(
+                          '1',
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
                       ))
                 ],
               ),
