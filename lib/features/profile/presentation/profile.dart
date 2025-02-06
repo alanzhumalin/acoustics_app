@@ -30,7 +30,7 @@ class Profile extends ConsumerWidget {
             height: 20,
           ),
           Text(
-            'HI, Alan',
+            'Привет, Alan',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
           SizedBox(

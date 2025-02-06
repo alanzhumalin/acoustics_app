@@ -156,7 +156,27 @@ class Ad extends ConsumerWidget {
                                       ),
                                     ],
                                   ),
-                                  ConditionWidget(ad: ad),
+                                  Row(children: [
+                                    ConditionWidget(ad: ad),
+                                    SizedBox(
+                                      width: 5,
+                                    ),
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: 5, vertical: 1),
+                                      decoration: BoxDecoration(
+                                          color: Colors.green,
+                                          borderRadius:
+                                              BorderRadius.circular(9)),
+                                      child: Text(
+                                        'Магазин',
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12),
+                                      ),
+                                    ),
+                                  ]),
                                   SizedBox(
                                     height: 5,
                                   ),
@@ -184,34 +204,12 @@ class Ad extends ConsumerWidget {
                         ),
                       ),
                       Positioned(
-                          right: -4,
-                          top: 13,
-                          child: RotationTransition(
-                            turns: AlwaysStoppedAnimation(40 / 360),
-                            child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 3, vertical: 2),
-                              decoration: BoxDecoration(
-                                  color: Colors.green,
-                                  borderRadius: BorderRadius.circular(9)),
-                              child: Text(
-                                'Магазин',
-                                style: TextStyle(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 10),
-                              ),
-                            ),
-                          )),
-                      Positioned(
-                          left: 0,
+                          left: 4,
                           top: 0,
                           child: ClipRRect(
                             borderRadius: BorderRadius.circular(10),
                             child: Image(
-                                height: 40,
-                                width: 40,
-                                image: NetworkImage(ad.brandImage)),
+                                height: 35, image: NetworkImage(ad.brandImage)),
                           ))
                     ],
                   ),

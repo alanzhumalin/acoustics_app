@@ -68,6 +68,23 @@ class AdModel {
 List<AdModel> ads = [
   AdModel(
       id: '221',
+      description: 'Состояние новый.',
+      adImages: [
+        'https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xKara_IIM-BUMP_01.png'
+      ],
+      nameOfCustomer: 'Алан',
+      phoneNumber: '+77789065778',
+      brandImage:
+          'https://bristol-pahire.co.uk/wp-content/uploads/2013/07/lacoustics-logo.png',
+      price: '15000000',
+      condition: 'Б/у',
+      brand: 'L Acoustics',
+      category: 'Колонки',
+      title: 'Линейный массив l Acoustics kara2',
+      createdAt: DateTime.now(),
+      city: 'Актобе'),
+  AdModel(
+      id: '221',
       description: 'Новая акустическая гитара, отличное звучание.',
       adImages: [
         'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
@@ -77,7 +94,7 @@ List<AdModel> ads = [
       nameOfCustomer: 'Алексейe',
       phoneNumber: '+7 900 123 45 67',
       brandImage:
-          'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
       price: '80000',
       condition: 'Б/у',
       brand: 'Yamaha',
@@ -106,10 +123,10 @@ List<AdModel> ads = [
     adImages: [
       'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
     ],
-    brand: 'Fender',
+    brand: 'Ibanez',
     nameOfCustomer: 'Дмитрий',
     brandImage:
-        'https://www.sweelee.com.sg/cdn/shop/collections/ibanez_1200x1200.jpg?v=1677052262',
+        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
     phoneNumber: '+7 902 345 67 89',
     price: '150000',
     category: 'Инструмент',
@@ -122,14 +139,14 @@ List<AdModel> ads = [
     id: '221',
     description: 'Классическая гитара для начинающих и профессионалов.',
     adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+      'https://www.guitarfromspain.com/5869-medium_default/alhambra-7c-classic-classical-guitar.jpg'
     ],
     brand: 'Fender',
     nameOfCustomer: 'Мария',
     phoneNumber: '+7 903 456 78 90',
     category: 'Инструмент',
     brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
+        'https://www.alhambraguitarras.com/layout/frontend/themes/guitarrasalhambra/images/guitarrasalhambra-logo.png',
     price: '65000',
     condition: 'Новый',
     title: 'Классическая гитара Alhambra',
@@ -140,9 +157,9 @@ List<AdModel> ads = [
     id: '221',
     description: 'Гитара Gibson, редкая модель, коллекционное состояние.',
     adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+      'https://images.ctfassets.net/m8onsx4mm13s/4k0ldXqvN8cM2itLyIS5b3/6a732610de017c7bf726680202b7ae50/LPS500PUNH1_front.png'
     ],
-    brand: 'Fender',
+    brand: 'Gibson',
     nameOfCustomer: 'Сергей',
     brandImage:
         'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3gWbIt3lLWufFHD5ZeVdkON3bXkK5LewRag&s',
@@ -159,11 +176,11 @@ List<AdModel> ads = [
     description:
         'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука и встроенным микрофоном. Поддерживает Bluetooth, USB и AUX. Идеальна для вечеринок и мероприятий.',
     adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+      'https://kh.jbl.com/dw/image/v2/AAUJ_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw8e0c7057/JBL_Party_Box_300_Hero_14836_X1.png?sw=537&sfrm=png'
     ],
-    brand: 'Fender',
+    brand: 'JBL',
     brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
+        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/JBL-Logo.svg/1200px-JBL-Logo.svg.png',
     nameOfCustomer: 'Иван',
     phoneNumber: '+7 900 123 45 67',
     price: '150000',
@@ -177,16 +194,14 @@ List<AdModel> ads = [
     id: '221',
     description:
         'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности. Отлично подходит для вокала и инструментов. Прочный металлический корпус.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
+    adImages: ['https://images.satu.kz/112283671_mikrofon-akg-p3s.jpg'],
+    brand: 'AKG',
     nameOfCustomer: 'Мария',
     phoneNumber: '+7 901 234 56 78',
     price: '25000',
     title: 'AKG P3 S',
     brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
+        'https://cdn.cookielaw.org/logos/68a7fd17-25ad-4562-9af3-cbe40f09076e/7eddad80-2690-405c-bdd3-9bf654c8d45f/3094a13c-2d05-46f9-9bee-095fd7262bc5/AKG-3300x2550pix_white.jpg',
     condition: 'Б/у',
     category: 'Микрофон',
     city: 'Алматы',

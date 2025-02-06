@@ -1,12 +1,22 @@
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/presentation/image_full_screen.dart';
+import 'package:acousticsapp/shared/widgets/condition_widget.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class AdDetail extends StatelessWidget {
+class AdDetail extends StatefulWidget {
   const AdDetail({super.key, required this.ad});
   final AdModel ad;
+
+  @override
+  State<AdDetail> createState() => _AdDetailState();
+}
+
+class _AdDetailState extends State<AdDetail> {
+  final PageController pageController = PageController();
+  int initialIndex = 0;
   Future<void> _makeCall(String phoneNumber) async {
     final Uri phoneUrl = Uri(scheme: 'tel', path: phoneNumber);
 
@@ -15,6 +25,22 @@ class AdDetail extends StatelessWidget {
     } else {
       throw 'Не удалось совершить звонок';
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    pageController.addListener(() {
+      setState(() {
+        initialIndex = pageController.page!.round();
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -30,8 +56,8 @@ class AdDetail extends StatelessWidget {
         ),
         forceMaterialTransparency: true,
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.favorite_border)),
-          IconButton(onPressed: () {}, icon: const Icon(Icons.share)),
+          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.heart)),
+          IconButton(onPressed: () {}, icon: const Icon(CupertinoIcons.share)),
         ],
       ),
       body: SingleChildScrollView(
@@ -42,46 +68,101 @@ class AdDetail extends StatelessWidget {
                 width: double.infinity,
                 height: size.height * 0.4,
                 child: PageView.builder(
-                    itemCount: ad.adImages.length,
+                    controller: pageController,
+                    itemCount: widget.ad.adImages.length,
                     itemBuilder: (context, index) {
                       return InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ImageFullScreen(
-                                  imageLink: ad.adImages[index]),
-                            ),
-                          );
+                        onTap: () async {
+                          final int indexFrom = await Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                pageBuilder:
+                                    (context, animation, secondaryAnimation) =>
+                                        ImageFullScreen(
+                                  imagesLink: widget.ad.adImages,
+                                  indexInitial: index,
+                                ),
+                                transitionsBuilder: (context, animation,
+                                    secondaryAnimation, child) {
+                                  const begin = Offset(0.0, 1.0);
+                                  const end = Offset.zero;
+                                  const curve = Curves.ease;
+
+                                  var tween = Tween(begin: begin, end: end)
+                                      .chain(CurveTween(curve: curve));
+
+                                  return SlideTransition(
+                                    position: animation.drive(tween),
+                                    child: child,
+                                  );
+                                },
+                              ));
+                          setState(() {
+                            pageController.jumpToPage(indexFrom);
+                          });
                         },
                         child: Image.network(
-                          ad.adImages[index],
+                          widget.ad.adImages[index],
                           fit: BoxFit.cover,
                         ),
                       );
                     })),
+            SizedBox(
+              height: 13,
+            ),
+            if (widget.ad.adImages.length != 1)
+              Center(
+                  child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: List.generate(
+                    widget.ad.adImages.length,
+                    (index) => Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 3),
+                          child: Container(
+                            width: initialIndex == index ? 7 : 5,
+                            height: initialIndex == index ? 7 : 5,
+                            decoration: BoxDecoration(
+                                color: initialIndex == index
+                                    ? Colors.blue
+                                    : Colors.grey,
+                                shape: BoxShape.circle),
+                          ),
+                        )),
+              )),
             Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    ad.title,
+                    widget.ad.title,
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 3),
+                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: Image.network(height: 35, widget.ad.brandImage)),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    ConditionWidget(ad: widget.ad),
+                  ]),
+                  SizedBox(
+                    height: 3,
+                  ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '${NumberFormat('#,###', 'ru_RU').format(int.parse(ad.price))} тг.',
+                        '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
                         style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       Text(
-                        'Опубликован ${ad.createdAt.month}-${ad.createdAt.day}-${ad.createdAt.year}. ${ad.city}',
+                        'Опубликован ${widget.ad.createdAt.month}-${widget.ad.createdAt.day}-${widget.ad.createdAt.year}. ${widget.ad.city}',
                         style: TextStyle(fontSize: 12),
                       )
                     ],
@@ -94,7 +175,7 @@ class AdDetail extends StatelessWidget {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    ad.description,
+                    widget.ad.description,
                     style: TextStyle(fontSize: 15),
                   ),
                   SizedBox(height: 8),
@@ -118,12 +199,12 @@ class AdDetail extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              ad.nameOfCustomer,
+                              widget.ad.nameOfCustomer,
                               style: TextStyle(
                                   fontWeight: FontWeight.bold, fontSize: 16),
                             ),
                             Text(
-                              'Пользователь зарегестрирован с ${ad.createdAt.month}-${ad.createdAt.day}-${ad.createdAt.year}',
+                              'Пользователь зарегестрирован с ${widget.ad.createdAt.month}-${widget.ad.createdAt.day}-${widget.ad.createdAt.year}',
                               style: TextStyle(fontSize: 12),
                             )
                           ],
@@ -143,7 +224,7 @@ class AdDetail extends StatelessWidget {
             Expanded(
               child: ElevatedButton.icon(
                 onPressed: () {
-                  _makeCall(ad.phoneNumber);
+                  _makeCall(widget.ad.phoneNumber);
                 },
                 icon: const Icon(
                   Icons.call_rounded,

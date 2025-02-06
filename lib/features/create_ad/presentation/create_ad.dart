@@ -1,4 +1,5 @@
 import 'package:acousticsapp/core/utils/phone_formatter.dart';
+import 'package:acousticsapp/features/create_ad/presentation/select_brand.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_category.dart';
 import 'package:flutter/material.dart';
 
@@ -17,6 +18,8 @@ class _CreateAdState extends State<CreateAd> {
   final TextEditingController _phoneController = TextEditingController();
   final _key = GlobalKey<FormState>();
   bool isSelectedCategory = false;
+  bool isSelectedBrand = false;
+  String selectedBrand = '';
   String selectedCategory = '';
 
   Future<void> selectCategory() async {
@@ -27,12 +30,38 @@ class _CreateAdState extends State<CreateAd> {
       setState(() {
         isSelectedCategory = true;
         selectedCategory = result;
+        isSelectedBrand = false;
+        selectedBrand = '';
+      });
+    }
+  }
+
+  Future<void> selectBrand() async {
+    final result = await Navigator.push<String>(
+        context, MaterialPageRoute(builder: (context) => SelectBrand()));
+
+    if (result != null && result.isNotEmpty) {
+      setState(() {
+        isSelectedBrand = true;
+        selectedBrand = result;
       });
     }
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _nameController.dispose();
+    _descriptionController.dispose();
+    _phoneController.dispose();
+    _priceController.dispose();
+    _titleController.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -53,15 +82,19 @@ class _CreateAdState extends State<CreateAd> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Container(
-                      width: double.infinity,
-                      padding: EdgeInsets.symmetric(vertical: 70),
-                      decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 129, 129, 129)),
-                      child: Center(
-                        child: Text(
-                          'Выберите фото',
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(18),
+                      child: Container(
+                        width: double.infinity,
+                        height: size.height * 0.23,
+                        padding: EdgeInsets.symmetric(vertical: 70),
+                        decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 129, 129, 129)),
+                        child: Center(
+                          child: Text(
+                            'Выберите фото',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
                         ),
                       ),
                     ),
@@ -160,6 +193,68 @@ class _CreateAdState extends State<CreateAd> {
                       },
                     ),
 
+                    if (isSelectedCategory)
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Text(
+                            'Бренд',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16),
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          TextFormField(
+                            readOnly: true,
+                            onTap: selectBrand,
+                            decoration: InputDecoration(
+                              suffixIcon: isSelectedBrand
+                                  ? TextButton(
+                                      onPressed: selectBrand,
+                                      child: const Text(
+                                        'Изменить',
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 13,
+                                          color: Colors.blue,
+                                        ),
+                                      ),
+                                    )
+                                  : const Icon(Icons.arrow_drop_down_outlined),
+                              hintStyle: TextStyle(
+                                  color: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .color),
+                              hintText: isSelectedBrand
+                                  ? selectedBrand
+                                  : 'Выберите бренд',
+                              contentPadding: const EdgeInsets.symmetric(
+                                  horizontal: 20, vertical: 14),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                    color: Colors.blue, width: 2),
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(14),
+                                borderSide: const BorderSide(
+                                    color: Colors.blue, width: 2),
+                              ),
+                            ),
+                            validator: (value) {
+                              if (!isSelectedBrand) {
+                                return 'Выберите бренд';
+                              }
+                              return null;
+                            },
+                          ),
+                        ],
+                      ),
                     SizedBox(
                       height: 15,
                     ),

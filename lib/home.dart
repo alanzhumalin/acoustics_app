@@ -3,6 +3,7 @@ import 'package:acousticsapp/features/chat/presentation/chat.dart';
 import 'package:acousticsapp/features/create_ad/presentation/create_ad.dart';
 import 'package:acousticsapp/features/favorites/presentation/favorites.dart';
 import 'package:acousticsapp/features/profile/presentation/profile.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -38,10 +39,10 @@ class _HomeState extends State<Home> {
           currentIndex: selectedIndex,
           items: [
             BottomNavigationBarItem(
-                icon: Icon(Icons.home_filled), label: 'Главное'),
+                icon: Icon(CupertinoIcons.home), label: 'Главное'),
             BottomNavigationBarItem(
                 icon: Stack(children: [
-                  Icon(Icons.chat),
+                  Icon(CupertinoIcons.chat_bubble),
                   Positioned(
                       top: -1,
                       right: -1,
@@ -52,10 +53,12 @@ class _HomeState extends State<Home> {
                       ))
                 ]),
                 label: 'Чат'),
-            BottomNavigationBarItem(icon: Icon(Icons.add), label: 'Создать'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.favorite), label: 'Избранные'),
-            BottomNavigationBarItem(icon: Icon(Icons.people), label: 'Профиль')
+                icon: Icon(CupertinoIcons.add_circled_solid), label: 'Создать'),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.heart), label: 'Избранные'),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.profile_circled), label: 'Профиль')
           ]),
     );
   }

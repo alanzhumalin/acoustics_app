@@ -1,7 +1,6 @@
 import 'package:acousticsapp/core/utils/phone_formatter.dart';
 import 'package:acousticsapp/features/auth/presentation/sms.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -14,6 +13,13 @@ class _LoginState extends State<Login> {
   final TextEditingController _numberController = TextEditingController();
   var isChecked = false;
   final _key = GlobalKey<FormState>();
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _numberController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +55,7 @@ class _LoginState extends State<Login> {
                           borderSide: BorderSide(color: Colors.blue, width: 2)),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                      hintText: '+7 (___) ___ __ __',
+                      hintText: '+7 (707) 000 00 00',
                     ),
                     keyboardType: TextInputType.phone,
                     validator: (value) {
