@@ -101,9 +101,24 @@ class _AdDetailState extends State<AdDetail> {
                             pageController.jumpToPage(indexFrom);
                           });
                         },
-                        child: Image.network(
-                          widget.ad.adImages[index],
-                          fit: BoxFit.cover,
+                        child: Stack(
+                          clipBehavior: Clip.none,
+                          children: [
+                            Center(
+                              child: Image.network(
+                                widget.ad.adImages[index],
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Positioned(
+                              left: 10,
+                              top: 10,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.network(
+                                      height: 50, widget.ad.brandImage)),
+                            )
+                          ],
                         ),
                       );
                     })),
@@ -139,15 +154,7 @@ class _AdDetailState extends State<AdDetail> {
                     style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 3),
-                  Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.network(height: 35, widget.ad.brandImage)),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    ConditionWidget(ad: widget.ad),
-                  ]),
+                  ConditionWidget(ad: widget.ad),
                   SizedBox(
                     height: 3,
                   ),

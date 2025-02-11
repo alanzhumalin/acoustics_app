@@ -1,4 +1,5 @@
 import 'package:acousticsapp/core/utils/phone_formatter.dart';
+import 'package:acousticsapp/features/auth/presentation/rules.dart';
 import 'package:acousticsapp/features/auth/presentation/sms.dart';
 import 'package:flutter/material.dart';
 
@@ -23,6 +24,7 @@ class _LoginState extends State<Login> {
 
   @override
   Widget build(BuildContext context) {
+    final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
     return Scaffold(
         body: Form(
             key: _key,
@@ -47,6 +49,11 @@ class _LoginState extends State<Login> {
                     autofocus: true,
                     controller: _numberController,
                     decoration: InputDecoration(
+                      prefix: Text(
+                        '+7 ',
+                        style: TextStyle(
+                            color: colorOfText, fontWeight: FontWeight.w500),
+                      ),
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(14),
                           borderSide: BorderSide(color: Colors.blue, width: 2)),
@@ -55,16 +62,16 @@ class _LoginState extends State<Login> {
                           borderSide: BorderSide(color: Colors.blue, width: 2)),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                      hintText: '+7 (707) 000 00 00',
+                      hintText: '(700) 700 00 00',
                     ),
                     keyboardType: TextInputType.phone,
                     validator: (value) {
                       if (value == null ||
                           !value
                               .replaceAll(RegExp(r'[+\(\)\s-]'), '')
-                              .startsWith('77') ||
+                              .startsWith('7') ||
                           value.replaceAll(RegExp(r'[+\(\)\s-]'), '').length <=
-                              10) {
+                              9) {
                         return 'Номер не корректный';
                       }
 
@@ -87,10 +94,20 @@ class _LoginState extends State<Login> {
                               });
                             }),
                         Expanded(
-                          child: Text(
-                            'Принимая вы соглашаетесь с правилам',
-                            style: TextStyle(
-                                fontWeight: FontWeight.bold, fontSize: 13),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Rules()));
+                            },
+                            child: Text(
+                              'Принимая вы соглашаетесь с правилам',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 13),
+                            ),
                           ),
                         )
                       ],
@@ -113,7 +130,7 @@ class _LoginState extends State<Login> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => Sms(
-                                          number: _numberController.text
+                                          number: '+7${_numberController.text}'
                                               .replaceAll(
                                                   RegExp(r'[(\)\s-]'), ''),
                                         )));

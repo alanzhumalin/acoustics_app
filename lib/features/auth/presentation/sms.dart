@@ -85,13 +85,14 @@ class _SmsState extends State<Sms> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
-                    'Введите код отправленный на ваш телеграм ${widget.number}',
+                    'Введите код отправленный на номер ${widget.number}',
                     style: const TextStyle(
                         fontWeight: FontWeight.bold, fontSize: 17),
                   ),
                   const SizedBox(height: 20),
                   Pinput(
                     controller: _codeController,
+                    autofocus: true,
                     focusNode: focusNode,
                     defaultPinTheme: defaultPinTheme,
                     separatorBuilder: (index) => const SizedBox(width: 8),

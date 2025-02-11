@@ -24,10 +24,12 @@ class _HomeState extends State<Home> {
   ];
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context).bottomNavigationBarTheme.backgroundColor;
     return Scaffold(
       body: _pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
+          backgroundColor: theme,
           selectedItemColor:
               Theme.of(context).bottomNavigationBarTheme.selectedItemColor,
           selectedFontSize: 12,

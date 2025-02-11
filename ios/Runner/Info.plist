@@ -6,6 +6,8 @@
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>We need your location to provide personalized services and improve your experience.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Это приложение запрашивает доступ к вашей фотогалерее для загрузки и выбора изображений.</string>
 	<key>NSCameraUsageDescription</key>

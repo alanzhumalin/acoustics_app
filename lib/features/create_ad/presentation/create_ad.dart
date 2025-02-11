@@ -3,10 +3,15 @@ import 'dart:io';
 import 'package:acousticsapp/core/utils/phone_formatter.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_brand.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_category.dart';
+import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:latlong2/latlong.dart';
+import 'package:location/location.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CreateAd extends StatefulWidget {
   const CreateAd({super.key});
@@ -27,7 +32,7 @@ class _CreateAdState extends State<CreateAd> {
   final _key = GlobalKey<FormState>();
   String selectedBrand = '';
   String selectedCategory = '';
-
+  String selectedCity = '';
   Future<void> pickPhoto() async {
     final List<XFile>? pickedFile = await imagePicker.pickMultiImage(
       imageQuality: 80,
@@ -453,6 +458,81 @@ class _CreateAdState extends State<CreateAd> {
                       },
                     ),
                     SizedBox(
+                      height: 10,
+                    ),
+                    Text(
+                      'Местоположение',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(right: 10, left: 10, top: 10),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(14)),
+                      child: Column(
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Row(
+                                  children: [
+                                    Icon(CupertinoIcons.location_solid),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      selectedCity.isEmpty
+                                          ? 'Ваше местоположение'
+                                          : selectedCity,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) => ShowMap()));
+                                    },
+                                    child: Text(
+                                      'Выбрать',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w500,
+                                          color: theme),
+                                    ))
+                              ]),
+                          SizedBox(
+                            height: 200,
+                            child: FlutterMap(
+                              options: MapOptions(
+                                initialCenter: LatLng(43.2452,
+                                    76.9345), // Center the map over London
+                                initialZoom: 9.2,
+                              ),
+                              children: [
+                                TileLayer(
+                                  // Bring your own tiles
+                                  urlTemplate:
+                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
+                                  userAgentPackageName:
+                                      'com.example.app', // Add your app identifier
+                                  // And many more recommended properties!
+                                ),
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    SizedBox(
                       height: 20,
                     ),
                     Text(
@@ -468,7 +548,7 @@ class _CreateAdState extends State<CreateAd> {
                       cursorColor: Colors.blue,
                       controller: _nameController,
                       decoration: InputDecoration(
-                        hintText: 'Ваше имя или псевдоним',
+                        hintText: 'Ваше имя',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                         focusedBorder: OutlineInputBorder(

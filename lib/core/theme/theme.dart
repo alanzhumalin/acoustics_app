@@ -23,7 +23,7 @@ final ThemeData lightTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
         surfaceContainerHigh: const Color.fromARGB(255, 0, 76, 255),
         surfaceContainerLow: const Color.fromARGB(255, 128, 0, 255),
-        surfaceContainer: Color.fromARGB(255, 234, 234, 234),
+        surfaceContainer: Color.fromARGB(255, 247, 247, 247),
         seedColor: Colors.blue,
         brightness: Brightness.light));
 
