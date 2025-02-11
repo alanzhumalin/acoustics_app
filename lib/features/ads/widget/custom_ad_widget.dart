@@ -62,26 +62,7 @@ class CustomAdWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    Row(children: [
-                      ConditionWidget(ad: ad),
-                      SizedBox(
-                        width: 5,
-                      ),
-                      Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 5, vertical: 1),
-                        decoration: BoxDecoration(
-                            color: Colors.green,
-                            borderRadius: BorderRadius.circular(9)),
-                        child: Text(
-                          'Магазин',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 12),
-                        ),
-                      ),
-                    ]),
+                    ConditionWidget(ad: ad),
                     SizedBox(
                       height: 5,
                     ),

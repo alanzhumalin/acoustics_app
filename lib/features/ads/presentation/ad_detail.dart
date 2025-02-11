@@ -3,7 +3,9 @@ import 'package:acousticsapp/features/ads/presentation/image_full_screen.dart';
 import 'package:acousticsapp/shared/widgets/condition_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
+import 'package:latlong2/latlong.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AdDetail extends StatefulWidget {
@@ -46,6 +48,7 @@ class _AdDetailState extends State<AdDetail> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -151,7 +154,7 @@ class _AdDetailState extends State<AdDetail> {
                 children: [
                   Text(
                     widget.ad.title,
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 3),
                   ConditionWidget(ad: widget.ad),
@@ -164,7 +167,7 @@ class _AdDetailState extends State<AdDetail> {
                       Text(
                         '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -178,12 +181,12 @@ class _AdDetailState extends State<AdDetail> {
                   Divider(),
                   Text(
                     'ОПИСАНИЕ',
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 8),
                   Text(
                     widget.ad.description,
-                    style: TextStyle(fontSize: 15),
+                    style: TextStyle(fontSize: 13),
                   ),
                   SizedBox(height: 8),
                   Divider(),
@@ -219,6 +222,40 @@ class _AdDetailState extends State<AdDetail> {
                       ),
                     ],
                   ),
+                  SizedBox(height: 8),
+                  Container(
+                    padding: EdgeInsets.all(9),
+                    decoration: BoxDecoration(color: Colors.grey),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          widget.ad.city,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 18),
+                        ),
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            height: 120,
+                            width: 140,
+                            child: FlutterMap(
+                              options: MapOptions(
+                                  initialCenter: LatLng(43.2452, 76.9345),
+                                  // initialZoom: currentZoom,
+                                  initialZoom: 8),
+                              children: [
+                                TileLayer(
+                                  urlTemplate:
+                                      'https://tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=83c49e07601543538a8907806945e4ed',
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
                 ],
               ),
             ),

@@ -10,8 +10,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:location/location.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class CreateAd extends StatefulWidget {
   const CreateAd({super.key});
@@ -100,6 +98,8 @@ class _CreateAdState extends State<CreateAd> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context).textTheme.bodyLarge!.color;
     final size = MediaQuery.of(context).size;
+    final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -125,19 +125,26 @@ class _CreateAdState extends State<CreateAd> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(18),
                           child: Container(
-                            padding: EdgeInsets.symmetric(vertical: 30),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 30,
+                            ),
                             width: double.infinity,
                             height: 228,
                             decoration: BoxDecoration(
                                 color:
-                                    const Color.fromARGB(255, 129, 129, 129)),
+                                    const Color.fromARGB(255, 221, 221, 221)),
                             child: pickedFileList.isNotEmpty
                                 ? Center(
-                                    child: ListView.builder(
+                                    child: ListView.separated(
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal: 20),
+                                        separatorBuilder: (context, index) =>
+                                            SizedBox(
+                                              width: 10,
+                                            ),
                                         scrollDirection: Axis.horizontal,
                                         itemCount: pickedFileList.length,
                                         itemBuilder: (context, index) {
-                                          final num = index + 1;
                                           return InkWell(
                                               onTap: () {
                                                 Navigator.push(
@@ -145,15 +152,21 @@ class _CreateAdState extends State<CreateAd> {
                                                     MaterialPageRoute(
                                                         builder: (context) =>
                                                             ShowPhoto(
+                                                              removeFile:
+                                                                  removeFile,
+                                                              index: index,
                                                               file:
                                                                   pickedFileList[
                                                                       index],
                                                             )));
                                               },
-                                              child: Stack(
-                                                clipBehavior: Clip.none,
-                                                children: [
-                                                  Image.file(
+                                              child: Center(
+                                                child: ClipRRect(
+                                                  borderRadius:
+                                                      BorderRadius.circular(6),
+                                                  child: Image.file(
+                                                    width: 100,
+                                                    height: 100,
                                                     File(pickedFileList[index]
                                                         .path),
                                                     fit: BoxFit.cover,
@@ -165,44 +178,7 @@ class _CreateAdState extends State<CreateAd> {
                                                           color: Colors.red);
                                                     },
                                                   ),
-                                                  Positioned(
-                                                    bottom: -10,
-                                                    left: 0,
-                                                    right: 0,
-                                                    child: IconButton(
-                                                      onPressed: () {
-                                                        removeFile(index);
-                                                      },
-                                                      icon: const Icon(
-                                                        CupertinoIcons.delete,
-                                                        size: 20,
-                                                        color: Colors.red,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Positioned(
-                                                    left: 2,
-                                                    top: -2,
-                                                    child: Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              4),
-                                                      decoration:
-                                                          const BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        color: Colors.black,
-                                                      ),
-                                                      child: Text(
-                                                        num.toString(),
-                                                        style: const TextStyle(
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          color: Colors.white,
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
+                                                ),
                                               ));
                                         }),
                                   )
@@ -210,7 +186,9 @@ class _CreateAdState extends State<CreateAd> {
                                     child: Text(
                                       'Выберите фото',
                                       style: TextStyle(
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                          fontSize: 16),
                                     ),
                                   ),
                           )),
@@ -469,10 +447,12 @@ class _CreateAdState extends State<CreateAd> {
                       height: 10,
                     ),
                     Container(
-                      padding: EdgeInsets.only(right: 10, left: 10, top: 10),
+                      padding: EdgeInsets.only(
+                        right: 10,
+                        left: 10,
+                      ),
                       width: double.infinity,
                       decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 255, 255, 255),
                           borderRadius: BorderRadius.circular(14)),
                       child: Column(
                         children: [
@@ -491,16 +471,23 @@ class _CreateAdState extends State<CreateAd> {
                                           : selectedCity,
                                       style: TextStyle(
                                           fontWeight: FontWeight.w600,
-                                          fontSize: 14),
+                                          fontSize: 14,
+                                          color: theme),
                                     ),
                                   ],
                                 ),
                                 TextButton(
-                                    onPressed: () {
-                                      Navigator.push(
+                                    onPressed: () async {
+                                      final city = await Navigator.push<String>(
                                           context,
                                           MaterialPageRoute(
                                               builder: (context) => ShowMap()));
+
+                                      if (city != null && city.isNotEmpty) {
+                                        setState(() {
+                                          selectedCity = city;
+                                        });
+                                      }
                                     },
                                     child: Text(
                                       'Выбрать',
@@ -513,8 +500,7 @@ class _CreateAdState extends State<CreateAd> {
                             height: 200,
                             child: FlutterMap(
                               options: MapOptions(
-                                initialCenter: LatLng(43.2452,
-                                    76.9345), // Center the map over London
+                                initialCenter: LatLng(43.2452, 76.9345),
                                 initialZoom: 9.2,
                               ),
                               children: [
@@ -585,8 +571,18 @@ class _CreateAdState extends State<CreateAd> {
                       controller: _phoneController,
                       cursorErrorColor: Colors.blue,
                       cursorColor: Colors.blue,
+                      keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                        hintText: '+7 (___) ___ __ __',
+                        isDense: true,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.only(left: 15, top: 1.5),
+                          child: Text(
+                            "+7 ",
+                            style: TextStyle(fontSize: 16),
+                          ),
+                        ),
+                        prefixIconConstraints: BoxConstraints(),
+                        hintText: '(700) 700 00 00',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                         focusedBorder: OutlineInputBorder(
@@ -600,10 +596,13 @@ class _CreateAdState extends State<CreateAd> {
                       ),
                       validator: (value) {
                         if (value == null ||
+                            !value
+                                .replaceAll(RegExp(r'[+\(\)\s-]'), '')
+                                .startsWith('7') ||
                             value
                                     .replaceAll(RegExp(r'[+\(\)\s-]'), '')
                                     .length <=
-                                10) {
+                                9) {
                           return 'Номер не корректный';
                         }
                         return null;

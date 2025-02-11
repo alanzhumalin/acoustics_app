@@ -4,11 +4,9 @@ import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
 import 'package:acousticsapp/features/ads/presentation/category_detail.dart';
 import 'package:acousticsapp/features/ads/presentation/search.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
-import 'package:acousticsapp/shared/widgets/condition_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 
 class Ad extends ConsumerWidget {
   const Ad({super.key});
