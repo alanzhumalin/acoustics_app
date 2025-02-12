@@ -10,7 +10,7 @@ class Loader extends StatelessWidget {
     return Center(
       child: LoadingAnimationWidget.staggeredDotsWave(
         color: Colors.blue,
-        size: 24,
+        size: 28,
       ),
     );
   }

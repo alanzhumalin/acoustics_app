@@ -45,6 +45,7 @@ dependencies:
   latlong2: ^0.9.1
   loading_animation_widget: ^1.3.0
   geolocator: ^13.0.2
+  maplibre_gl: ^0.20.0
   
 
 dev_dependencies:
@@ -100,6 +101,8 @@ flutter:
     - assets/categories/speakers.jpeg    
     - assets/porshe.jpg
     - assets/logo/logo.png
+    - assets/marker/marker.png
+    - assets/logo/logo2.png
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

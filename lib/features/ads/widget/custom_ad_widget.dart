@@ -16,83 +16,84 @@ class CustomAdWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: double.infinity,
-            height: 180,
-            child: ClipRRect(
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
+          Stack(
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 180,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(10),
+                    topRight: Radius.circular(10),
+                  ),
+                  child: Image(
+                    image: NetworkImage(ad.adImages[0]),
+                    fit: BoxFit.cover,
+                  ),
+                ),
               ),
-              child: Image(
-                image: NetworkImage(ad.adImages[0]),
-                fit: BoxFit.cover,
-              ),
-            ),
+              Positioned(
+                  right: 3.5,
+                  top: 3.5,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child:
+                        Image(height: 30, image: NetworkImage(ad.brandImage)),
+                  )),
+            ],
           ),
           Padding(
             padding: const EdgeInsets.only(
               left: 10,
-              right: 0,
-              top: 5,
-              bottom: 5,
+              right: 10,
+              top: 10,
             ),
-            child: Stack(
-              clipBehavior: Clip.none,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Row(
                   children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            ad.title,
-                            style: textTheme.bodyMedium,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        IconButton(
-                          onPressed: () {},
-                          icon: const Icon(
-                            CupertinoIcons.heart,
-                            size: 18,
-                          ),
-                        ),
-                      ],
+                    Expanded(
+                      child: Text(
+                        ad.title,
+                        style: textTheme.bodyMedium,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                     ),
-                    ConditionWidget(ad: ad),
-                    SizedBox(
-                      height: 5,
+                    const SizedBox(
+                      width: 5,
                     ),
-                    Text(
-                      '${ad.createdAt.day}-${ad.createdAt.month}-${ad.createdAt.year}',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      '${NumberFormat('#,###', 'ru_RU').format(int.parse(ad.price))} тг.',
-                      style: textTheme.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      ad.city,
-                      style: TextStyle(fontSize: 13),
+                    InkWell(
+                      onTap: () {},
+                      child: Icon(
+                        CupertinoIcons.heart,
+                        size: 20,
+                      ),
                     )
                   ],
                 ),
-                Positioned(
-                    right: 5,
-                    bottom: -25,
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child:
-                          Image(height: 35, image: NetworkImage(ad.brandImage)),
-                    ))
+                const SizedBox(
+                  height: 5,
+                ),
+                ConditionWidget(ad: ad),
+                const SizedBox(
+                  height: 5,
+                ),
+                Text(
+                  '${NumberFormat('#,###', 'ru_RU').format(int.parse(ad.price))} тг.',
+                  style: textTheme.bodyLarge
+                      ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  ad.city,
+                  style: TextStyle(fontSize: 13),
+                ),
+                Text(
+                  '${ad.createdAt.day}-${ad.createdAt.month}-${ad.createdAt.year}',
+                  style: TextStyle(fontSize: 12),
+                ),
               ],
             ),
           )

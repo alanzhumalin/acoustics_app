@@ -1,7 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class ShowMap extends StatefulWidget {
   const ShowMap({super.key});
@@ -12,7 +13,7 @@ class ShowMap extends StatefulWidget {
 
 class _ShowMapState extends State<ShowMap> {
   Position? position;
-  late MapController mapController;
+  late MapLibreMapController mapController;
   List<String> results = [];
   String text = '';
   LatLng currentCenter = LatLng(43.2452, 76.9345);
@@ -52,16 +53,6 @@ class _ShowMapState extends State<ShowMap> {
     "Степногорск",
     "Щучинск"
   ];
-
-  void zoomIn() {
-    currentZoom = currentZoom + 0.5;
-    mapController.move(currentCenter, currentZoom);
-  }
-
-  void zoomOut() {
-    currentZoom = currentZoom - 0.5;
-    mapController.move(currentCenter, currentZoom);
-  }
 
   void showCities(String value) {
     setState(() {
@@ -105,22 +96,33 @@ class _ShowMapState extends State<ShowMap> {
 
     if (position != null) {
       currentCenter = LatLng(position!.latitude, position!.longitude);
-      mapController.move(
-          LatLng(position!.latitude, position!.longitude), currentZoom);
+
+      _addCustomMarker(currentCenter);
+
+      mapController.animateCamera(
+        CameraUpdate.newLatLngZoom(
+          LatLng(position!.latitude, position!.longitude),
+          currentZoom,
+        ),
+      );
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    mapController = MapController();
-  }
+  Future<void> _addCustomMarker(LatLng position) async {
+    final ByteData bytes =
+        await DefaultAssetBundle.of(context).load('assets/marker/marker.png');
+    final Uint8List image = bytes.buffer.asUint8List();
 
-  @override
-  void dispose() {
-    results = [];
-    mapController.dispose();
-    super.dispose();
+    await mapController.addImage('custom_marker', image);
+
+    mapController.addSymbol(
+      SymbolOptions(
+        geometry: position,
+        iconImage: 'custom_marker',
+        iconSize: 0.2,
+        iconAnchor: "bottom",
+      ),
+    );
   }
 
   @override
@@ -131,29 +133,18 @@ class _ShowMapState extends State<ShowMap> {
     return Scaffold(
       body: Stack(
         children: [
-          FlutterMap(
-            mapController: mapController,
-            options: MapOptions(
-              initialCenter: currentCenter,
-              initialZoom: currentZoom,
+          MapLibreMap(
+            styleString:
+                "https://api.maptiler.com/maps/76d584d7-2bab-4f56-b07e-b6952e99aa18/style.json?key=BXjwwWbXqov08uZ68gVt",
+            initialCameraPosition: CameraPosition(
+              target: currentCenter,
+              zoom: currentZoom,
             ),
-            children: [
-              TileLayer(
-                urlTemplate:
-                    'https://tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=83c49e07601543538a8907806945e4ed',
-              ),
-              position == null
-                  ? SizedBox.shrink()
-                  : MarkerLayer(markers: [
-                      Marker(
-                          point: LatLng(
-                              currentCenter.latitude, currentCenter.longitude),
-                          child: Icon(
-                            Icons.location_on,
-                            color: Colors.red,
-                          ))
-                    ])
-            ],
+            rotateGesturesEnabled: false,
+            compassEnabled: false,
+            onMapCreated: (controller) {
+              mapController = controller;
+            },
           ),
           Positioned(
             left: 0,
@@ -195,8 +186,20 @@ class _ShowMapState extends State<ShowMap> {
                     ),
                   ),
                   InkWell(
-                    onTap: () {
-                      Navigator.of(context).pop('Мое местоположение');
+                    onTap: () async {
+                      await _determinePosition();
+                      if (position != null) {
+                        Navigator.of(context).pop({
+                          'text': 'Мое местоположение',
+                          'location':
+                              LatLng(position!.latitude, position!.longitude),
+                        });
+                      } else {
+                        Navigator.of(context).pop({
+                          'text': 'Мое местоположение',
+                          'location': null,
+                        });
+                      }
                     },
                     child: Container(
                         width: double.infinity,
@@ -256,44 +259,15 @@ class _ShowMapState extends State<ShowMap> {
           Positioned(
             right: 10,
             bottom: size.height / 14,
-            child: Column(
-              children: [
-                Container(
-                  decoration:
-                      BoxDecoration(color: theme, shape: BoxShape.circle),
-                  child: IconButton(
-                    onPressed: zoomIn,
-                    icon: const Icon(
-                      Icons.add,
-                      color: Colors.blue,
-                    ),
-                  ),
+            child: Container(
+              decoration: BoxDecoration(color: theme, shape: BoxShape.circle),
+              child: IconButton(
+                onPressed: _determinePosition,
+                icon: const Icon(
+                  Icons.gps_fixed,
+                  color: Colors.blue,
                 ),
-                const SizedBox(height: 5),
-                Container(
-                  decoration:
-                      BoxDecoration(color: theme, shape: BoxShape.circle),
-                  child: IconButton(
-                    onPressed: zoomOut,
-                    icon: const Icon(
-                      Icons.remove,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 30),
-                Container(
-                  decoration:
-                      BoxDecoration(color: theme, shape: BoxShape.circle),
-                  child: IconButton(
-                    onPressed: _determinePosition,
-                    icon: const Icon(
-                      Icons.gps_fixed,
-                      color: Colors.blue,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ),
         ],

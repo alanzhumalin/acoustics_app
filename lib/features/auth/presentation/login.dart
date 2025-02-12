@@ -26,7 +26,21 @@ class _LoginState extends State<Login> {
   Widget build(BuildContext context) {
     final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
     return Scaffold(
-        body: Form(
+        body: Stack(
+      children: [
+        Positioned(
+          left: 0,
+          right: 0,
+          top: MediaQuery.of(context).size.height / 4.6,
+          child: Opacity(
+            opacity: 0.3,
+            child: Image(
+              image: AssetImage('assets/logo/logo2.png'),
+              width: double.infinity,
+            ),
+          ),
+        ),
+        Form(
             key: _key,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 23),
@@ -146,6 +160,8 @@ class _LoginState extends State<Login> {
                   )
                 ],
               ),
-            )));
+            )),
+      ],
+    ));
   }
 }

@@ -7,9 +7,8 @@ import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 
 class CreateAd extends StatefulWidget {
   const CreateAd({super.key});
@@ -26,7 +25,7 @@ class _CreateAdState extends State<CreateAd> {
   final TextEditingController _phoneController = TextEditingController();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> pickedFileList = <XFile>[];
-
+  var location = LatLng(43.2452, 76.9345);
   final _key = GlobalKey<FormState>();
   String selectedBrand = '';
   String selectedCategory = '';
@@ -477,42 +476,52 @@ class _CreateAdState extends State<CreateAd> {
                                   ],
                                 ),
                                 TextButton(
-                                    onPressed: () async {
-                                      final city = await Navigator.push<String>(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) => ShowMap()));
+                                  onPressed: () async {
+                                    final result = await Navigator.push<
+                                        Map<String, dynamic>>(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => ShowMap(),
+                                      ),
+                                    );
 
-                                      if (city != null && city.isNotEmpty) {
-                                        setState(() {
-                                          selectedCity = city;
-                                        });
-                                      }
-                                    },
-                                    child: Text(
-                                      'Выбрать',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w500,
-                                          color: theme),
-                                    ))
+                                    if (result != null) {
+                                      setState(() {
+                                        selectedCity = result['text'];
+                                        final LatLng? locationNew =
+                                            result['location'];
+
+                                        if (locationNew != null) {
+                                          print(locationNew.latitude);
+                                          print(locationNew.longitude);
+                                          setState(() {
+                                            location = locationNew;
+                                          });
+                                        }
+                                      });
+                                    }
+                                  },
+                                  child: Text(
+                                    'Выбрать',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w500,
+                                      color: theme,
+                                    ),
+                                  ),
+                                )
                               ]),
                           SizedBox(
                             height: 200,
-                            child: FlutterMap(
-                              options: MapOptions(
-                                initialCenter: LatLng(43.2452, 76.9345),
-                                initialZoom: 9.2,
+                            child: MapLibreMap(
+                              key: ValueKey(location),
+                              styleString:
+                                  "https://api.maptiler.com/maps/76d584d7-2bab-4f56-b07e-b6952e99aa18/style.json?key=BXjwwWbXqov08uZ68gVt",
+                              initialCameraPosition: CameraPosition(
+                                target: location,
+                                zoom: 9.2,
                               ),
-                              children: [
-                                TileLayer(
-                                  // Bring your own tiles
-                                  urlTemplate:
-                                      'https://tile.openstreetmap.org/{z}/{x}/{y}.png', // For demonstration only
-                                  userAgentPackageName:
-                                      'com.example.app', // Add your app identifier
-                                  // And many more recommended properties!
-                                ),
-                              ],
+                              rotateGesturesEnabled: false,
+                              compassEnabled: false,
                             ),
                           )
                         ],

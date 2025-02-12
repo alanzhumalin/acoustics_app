@@ -74,6 +74,20 @@ class _SmsState extends State<Sms> {
       ),
     );
 
+    final errorPinTheme = PinTheme(
+      width: 60,
+      height: 60,
+      textStyle: const TextStyle(
+        fontWeight: FontWeight.bold,
+        fontSize: 22,
+        color: Colors.red,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(19),
+        border: Border.all(color: borderColor, width: 2),
+      ),
+    );
+
     return Scaffold(
       body: Stack(
         children: [
@@ -91,69 +105,67 @@ class _SmsState extends State<Sms> {
                   ),
                   const SizedBox(height: 20),
                   Pinput(
-                    controller: _codeController,
-                    autofocus: true,
-                    focusNode: focusNode,
-                    defaultPinTheme: defaultPinTheme,
-                    separatorBuilder: (index) => const SizedBox(width: 8),
-                    validator: (value) {
-                      if (value == null ||
-                          value.length <= 3 ||
-                          value.length > 6) {
-                        return 'Введите пин-код';
-                      }
-                      return null;
-                    },
-                    hapticFeedbackType: HapticFeedbackType.lightImpact,
-                    onCompleted: (pin) async {
-                      if (_key.currentState!.validate()) {
-                        setState(() {
-                          isLoading = true;
-                        });
-                        await Future.delayed(const Duration(seconds: 2));
-                        setState(() {
-                          isLoading = false;
-                        });
-                        if (context.mounted) {
-                          Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                            (Route<dynamic> route) => false,
-                          );
+                      controller: _codeController,
+                      autofocus: true,
+                      focusNode: focusNode,
+                      defaultPinTheme: defaultPinTheme,
+                      separatorBuilder: (index) => const SizedBox(width: 8),
+                      hapticFeedbackType: HapticFeedbackType.lightImpact,
+                      onCompleted: (pin) async {
+                        if (_key.currentState!.validate()) {
+                          setState(() {
+                            isLoading = true;
+                          });
+                          await Future.delayed(const Duration(seconds: 2));
+                          setState(() {
+                            isLoading = false;
+                          });
+                          if (context.mounted) {
+                            Navigator.pushAndRemoveUntil(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                              (Route<dynamic> route) => false,
+                            );
+                          }
                         }
-                      }
-                    },
-                    cursor: Column(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 9),
-                          width: 22,
-                          height: 2,
-                          color: Colors.blueAccent,
+                      },
+                      cursor: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          Container(
+                            margin: const EdgeInsets.only(bottom: 9),
+                            width: 22,
+                            height: 2,
+                            color: Colors.blueAccent,
+                          ),
+                        ],
+                      ),
+                      focusedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration!.copyWith(
+                          borderRadius: BorderRadius.circular(8),
+                          border:
+                              Border.all(color: focusedBorderColor, width: 2),
                         ),
-                      ],
-                    ),
-                    focusedPinTheme: defaultPinTheme.copyWith(
-                      decoration: defaultPinTheme.decoration!.copyWith(
-                        borderRadius: BorderRadius.circular(8),
-                        border: Border.all(color: focusedBorderColor, width: 2),
                       ),
-                    ),
-                    submittedPinTheme: defaultPinTheme.copyWith(
-                      decoration: defaultPinTheme.decoration!.copyWith(
-                        color: fillColor,
-                        borderRadius: BorderRadius.circular(19),
-                        border: Border.all(color: focusedBorderColor, width: 2),
+                      submittedPinTheme: defaultPinTheme.copyWith(
+                        decoration: defaultPinTheme.decoration!.copyWith(
+                          color: fillColor,
+                          borderRadius: BorderRadius.circular(19),
+                          border:
+                              Border.all(color: focusedBorderColor, width: 2),
+                        ),
                       ),
-                    ),
-                    errorPinTheme: defaultPinTheme.copyBorderWith(
-                      border: Border.all(color: Colors.redAccent),
-                    ),
-                  ),
+                      errorPinTheme: errorPinTheme),
                   const SizedBox(height: 13),
                   isLoading
-                      ? Loader()
+                      ? Column(
+                          children: [
+                            SizedBox(
+                              height: 10,
+                            ),
+                            Loader()
+                          ],
+                        )
                       : _isResendButtonVisible
                           ? TextButton(
                               onPressed: () {
@@ -170,13 +182,13 @@ class _SmsState extends State<Sms> {
                           : Column(
                               children: [
                                 SizedBox(
-                                  height: 12,
+                                  height: 14,
                                 ),
                                 Text(
                                   'Отправить заново через $_secondsRemaining сек.',
                                   style: const TextStyle(
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 14,
+                                      fontSize: 13,
                                       color: Colors.grey),
                                 ),
                               ],

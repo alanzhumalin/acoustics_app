@@ -10,7 +10,8 @@ class ConditionWidget extends StatelessWidget {
         ? Container(
             padding: EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-                color: Colors.orange, borderRadius: BorderRadius.circular(8)),
+                color: const Color.fromARGB(255, 121, 121, 121),
+                borderRadius: BorderRadius.circular(8)),
             child: Text(
               ad.condition,
               style: TextStyle(
@@ -22,7 +23,8 @@ class ConditionWidget extends StatelessWidget {
         : Container(
             padding: EdgeInsets.symmetric(horizontal: 4),
             decoration: BoxDecoration(
-                color: Colors.blue, borderRadius: BorderRadius.circular(8)),
+                color: const Color.fromARGB(255, 0, 164, 30),
+                borderRadius: BorderRadius.circular(8)),
             child: Text(
               ad.condition,
               style: TextStyle(

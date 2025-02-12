@@ -8,7 +8,7 @@ class ShimmerLoadingAds extends StatelessWidget {
   Widget build(BuildContext context) {
     final sizeScreen = MediaQuery.of(context).size;
     return Shimmer.fromColors(
-      direction: ShimmerDirection.btt,
+      direction: ShimmerDirection.ttb,
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.white,
       child: GridView.builder(
