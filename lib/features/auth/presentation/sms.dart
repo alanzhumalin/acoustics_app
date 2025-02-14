@@ -4,6 +4,7 @@ import 'package:acousticsapp/home.dart';
 import 'package:acousticsapp/shared/widgets/loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 
 class Sms extends StatefulWidget {
@@ -28,6 +29,13 @@ class _SmsState extends State<Sms> {
   void initState() {
     super.initState();
     _startTimer();
+  }
+
+  Future<LottieComposition?> customDecoder(List<int> bytes) {
+    return LottieComposition.decodeZip(bytes, filePicker: (files) {
+      return files.firstWhere(
+          (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
+    });
   }
 
   void _startTimer() {
@@ -59,7 +67,7 @@ class _SmsState extends State<Sms> {
     const focusedBorderColor = Color.fromRGBO(23, 95, 171, 1);
     const fillColor = Color.fromRGBO(243, 246, 249, 0);
     const borderColor = Color.fromRGBO(0, 123, 255, 1);
-
+    final size = MediaQuery.of(context).size;
     final defaultPinTheme = PinTheme(
       width: 60,
       height: 60,
@@ -91,6 +99,17 @@ class _SmsState extends State<Sms> {
     return Scaffold(
       body: Stack(
         children: [
+          Positioned(
+              left: 0,
+              right: 0,
+              child: Opacity(
+                opacity: 0.2,
+                child: Lottie.asset(
+                    width: size.width,
+                    height: size.height,
+                    decoder: customDecoder,
+                    'assets/animation/main.lottie'),
+              )),
           Form(
             key: _key,
             child: Padding(

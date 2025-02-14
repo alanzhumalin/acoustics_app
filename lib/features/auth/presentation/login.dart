@@ -2,6 +2,7 @@ import 'package:acousticsapp/core/utils/phone_formatter.dart';
 import 'package:acousticsapp/features/auth/presentation/rules.dart';
 import 'package:acousticsapp/features/auth/presentation/sms.dart';
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -22,24 +23,31 @@ class _LoginState extends State<Login> {
     _numberController.dispose();
   }
 
+  Future<LottieComposition?> customDecoder(List<int> bytes) {
+    return LottieComposition.decodeZip(bytes, filePicker: (files) {
+      return files.firstWhere(
+          (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
+    final size = MediaQuery.of(context).size;
     return Scaffold(
         body: Stack(
       children: [
         Positioned(
-          left: 0,
-          right: 0,
-          top: MediaQuery.of(context).size.height / 4.6,
-          child: Opacity(
-            opacity: 0.3,
-            child: Image(
-              image: AssetImage('assets/logo/logo2.png'),
-              width: double.infinity,
-            ),
-          ),
-        ),
+            left: 0,
+            right: 0,
+            child: Opacity(
+              opacity: 0.2,
+              child: Lottie.asset(
+                  width: size.width,
+                  height: size.height,
+                  decoder: customDecoder,
+                  'assets/animation/main.lottie'),
+            )),
         Form(
             key: _key,
             child: Padding(

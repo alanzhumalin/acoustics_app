@@ -6,7 +6,6 @@ import 'package:acousticsapp/features/ads/presentation/search.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
 import 'package:acousticsapp/features/ads/widget/shimmer_loading_ads.dart';
 import 'package:acousticsapp/features/ads/widget/shimmer_loading_category.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -17,6 +16,7 @@ class Ad extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final textTheme = Theme.of(context).textTheme;
     final sizeScreen = MediaQuery.of(context).size;
+    final searchColor = Theme.of(context).colorScheme.secondaryContainer;
     return Scaffold(
       appBar: AppBar(
           toolbarHeight: 43,
@@ -46,9 +46,8 @@ class Ad extends ConsumerWidget {
                     padding:
                         EdgeInsets.only(left: 10, top: 4, bottom: 4, right: 4),
                     decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: const Color.fromARGB(255, 237, 237, 237),
-                    ),
+                        borderRadius: BorderRadius.circular(8),
+                        color: searchColor),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [

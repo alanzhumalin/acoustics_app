@@ -21,6 +21,7 @@ final ThemeData lightTheme = ThemeData(
         selectedItemColor: Colors.blue, type: BottomNavigationBarType.fixed),
     highlightColor: Colors.transparent,
     colorScheme: ColorScheme.fromSeed(
+        secondaryContainer: const Color.fromARGB(255, 237, 237, 237),
         surfaceContainerHigh: const Color.fromARGB(255, 0, 76, 255),
         surfaceContainerLow: const Color.fromARGB(255, 128, 0, 255),
         surfaceContainer: Color.fromARGB(255, 247, 247, 247),
@@ -47,6 +48,7 @@ final ThemeData blackTheme = ThemeData(
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
         selectedItemColor: Colors.blue, type: BottomNavigationBarType.fixed),
     colorScheme: ColorScheme.fromSeed(
+        secondaryContainer: const Color.fromARGB(255, 68, 68, 68),
         surfaceContainerHigh: const Color.fromARGB(255, 0, 21, 159),
         surfaceContainerLow: const Color.fromARGB(255, 90, 0, 146),
         surfaceContainer: Color.fromARGB(255, 19, 19, 19),
