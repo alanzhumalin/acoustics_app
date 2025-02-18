@@ -19,7 +19,9 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
   @override
   void initState() {
     super.initState();
-    adCategory = ads.where((ad) => ad.category == widget.category).toList();
+    adCategory = ads
+        .where((ad) => ad.categorySelection.category == widget.category)
+        .toList();
     sortAds('price_descending');
   }
 
@@ -117,6 +119,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
+    final color = Theme.of(context).colorScheme.onSecondaryContainer;
 
     return Scaffold(
       appBar: AppBar(
@@ -149,7 +152,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                         const EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                     child: Container(
                       decoration: BoxDecoration(
-                          color: const Color.fromARGB(255, 240, 240, 240),
+                          color: color,
                           borderRadius: BorderRadius.circular(15)),
                       width: double.infinity,
                       child: Row(
@@ -194,13 +197,18 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                       ),
                     ),
                   ),
+                  SizedBox(
+                    height: 10,
+                  ),
                   GridView.builder(
                     shrinkWrap: true,
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: adCategory.length,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                       crossAxisCount: 2,
-                      childAspectRatio: size.width > 366 ? 0.55 : 0.49,
+                      mainAxisSpacing: 7,
+                      crossAxisSpacing: 7,
+                      childAspectRatio: size.width > 366 ? 0.57 : 0.49,
                     ),
                     itemBuilder: (context, index) {
                       final ad = adCategory[index];

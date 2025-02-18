@@ -124,7 +124,7 @@ class _LoginState extends State<Login> {
                                       builder: (context) => Rules()));
                             },
                             child: Text(
-                              'Принимая вы соглашаетесь с правилам',
+                              'Принимая вы соглашаетесь с правилами',
                               style: TextStyle(
                                   decoration: TextDecoration.underline,
                                   fontWeight: FontWeight.bold,

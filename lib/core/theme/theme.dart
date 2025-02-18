@@ -18,9 +18,13 @@ final ThemeData lightTheme = ThemeData(
       titleSmall: TextStyle(color: Colors.black),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        selectedItemColor: Colors.blue, type: BottomNavigationBarType.fixed),
+        backgroundColor: Colors.white,
+        selectedItemColor: Colors.blue,
+        type: BottomNavigationBarType.fixed),
     highlightColor: Colors.transparent,
     colorScheme: ColorScheme.fromSeed(
+        onPrimaryContainer: const Color.fromARGB(221, 236, 236, 236),
+        onSecondaryContainer: const Color.fromARGB(255, 240, 240, 240),
         secondaryContainer: const Color.fromARGB(255, 237, 237, 237),
         surfaceContainerHigh: const Color.fromARGB(255, 0, 76, 255),
         surfaceContainerLow: const Color.fromARGB(255, 128, 0, 255),
@@ -46,8 +50,12 @@ final ThemeData blackTheme = ThemeData(
       titleSmall: TextStyle(color: Colors.white),
     ),
     bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        selectedItemColor: Colors.blue, type: BottomNavigationBarType.fixed),
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.blue,
+        type: BottomNavigationBarType.fixed),
     colorScheme: ColorScheme.fromSeed(
+        onSecondaryContainer: const Color.fromARGB(255, 32, 32, 32),
+        onPrimaryContainer: const Color.fromARGB(221, 70, 70, 70),
         secondaryContainer: const Color.fromARGB(255, 68, 68, 68),
         surfaceContainerHigh: const Color.fromARGB(255, 0, 21, 159),
         surfaceContainerLow: const Color.fromARGB(255, 90, 0, 146),

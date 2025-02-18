@@ -1,11 +1,17 @@
+import 'dart:ui';
+
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/presentation/image_full_screen.dart';
+import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
+import 'package:acousticsapp/features/ads/widget/custom_other_ad_widget.dart';
+import 'package:acousticsapp/shared/widgets/brand_name_widget.dart';
+import 'package:acousticsapp/shared/widgets/category_name_widget.dart';
 import 'package:acousticsapp/shared/widgets/condition_widget.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:intl/intl.dart';
-import 'package:latlong2/latlong.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AdDetail extends StatefulWidget {
@@ -47,8 +53,10 @@ class _AdDetailState extends State<AdDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final textTheme = Theme.of(context).textTheme;
 
+    final size = MediaQuery.of(context).size;
+    final colorContainer = Theme.of(context).colorScheme.onSecondaryContainer;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -67,88 +75,107 @@ class _AdDetailState extends State<AdDetail> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(
-                width: double.infinity,
-                height: size.height * 0.4,
-                child: PageView.builder(
-                    controller: pageController,
-                    itemCount: widget.ad.adImages.length,
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: () async {
-                          final int indexFrom = await Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                pageBuilder:
-                                    (context, animation, secondaryAnimation) =>
-                                        ImageFullScreen(
-                                  imagesLink: widget.ad.adImages,
-                                  indexInitial: index,
-                                ),
-                                transitionsBuilder: (context, animation,
-                                    secondaryAnimation, child) {
-                                  const begin = Offset(0.0, 1.0);
-                                  const end = Offset.zero;
-                                  const curve = Curves.ease;
+            Stack(
+              children: [
+                Container(
+                    color: const Color.fromARGB(255, 244, 244, 244),
+                    width: double.infinity,
+                    height: size.height * 0.4,
+                    child: PageView.builder(
+                        controller: pageController,
+                        itemCount: widget.ad.adImages.length,
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                              onTap: () async {
+                                final int indexFrom = await Navigator.push(
+                                    context,
+                                    PageRouteBuilder(
+                                      transitionDuration:
+                                          const Duration(milliseconds: 200),
+                                      reverseTransitionDuration:
+                                          const Duration(milliseconds: 200),
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
+                                          ImageFullScreen(
+                                        imagesLink: widget.ad.adImages,
+                                        indexInitial: index,
+                                      ),
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
+                                        const begin = Offset(0.0, 1.0);
+                                        const end = Offset.zero;
+                                        const curve = Curves.ease;
 
-                                  var tween = Tween(begin: begin, end: end)
-                                      .chain(CurveTween(curve: curve));
+                                        var tween = Tween(
+                                                begin: begin, end: end)
+                                            .chain(CurveTween(curve: curve));
 
-                                  return SlideTransition(
-                                    position: animation.drive(tween),
-                                    child: child,
-                                  );
-                                },
+                                        return SlideTransition(
+                                          position: animation.drive(tween),
+                                          child: child,
+                                        );
+                                      },
+                                    ));
+                                setState(() {
+                                  pageController.jumpToPage(indexFrom);
+                                });
+                              },
+                              child: CachedNetworkImage(
+                                imageUrl: widget.ad.adImages[index],
+                                fit: BoxFit.contain,
                               ));
-                          setState(() {
-                            pageController.jumpToPage(indexFrom);
-                          });
-                        },
-                        child: Stack(
-                          clipBehavior: Clip.none,
-                          children: [
-                            Center(
-                              child: Image.network(
-                                widget.ad.adImages[index],
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-                            Positioned(
-                              left: 10,
-                              top: 10,
-                              child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(10),
-                                  child: Image.network(
-                                      height: 50, widget.ad.brandImage)),
-                            )
-                          ],
-                        ),
-                      );
-                    })),
-            SizedBox(
-              height: 13,
+                        })),
+                Positioned(
+                  left: 10,
+                  top: 10,
+                  child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: Image.network(
+                          height: 50, widget.ad.categorySelection.brandImage)),
+                ),
+                if (widget.ad.adImages.length != 1)
+                  Positioned(
+                    right: 5,
+                    bottom: 5,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.black,
+                      ),
+                      child: Text(
+                        '${initialIndex + 1}/${widget.ad.adImages.length}',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 13,
+                            color: Colors.white),
+                      ),
+                    ),
+                  )
+              ],
             ),
-            if (widget.ad.adImages.length != 1)
-              Center(
-                  child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                    widget.ad.adImages.length,
-                    (index) => Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 3),
-                          child: Container(
-                            width: initialIndex == index ? 7 : 5,
-                            height: initialIndex == index ? 7 : 5,
-                            decoration: BoxDecoration(
-                                color: initialIndex == index
-                                    ? Colors.blue
-                                    : Colors.grey,
-                                shape: BoxShape.circle),
-                          ),
-                        )),
-              )),
-            Padding(
+
+            // Row(
+            //   mainAxisAlignment: MainAxisAlignment.center,
+            //   children: List.generatfe(
+            //       widget.ad.adImages.length,
+            //       (index) => Padding(
+            //             padding: EdgeInsets.symmetric(horizontal: 3),
+            //             child: Container(
+            //               width: initialIndex == index ? 7 : 5,
+            //               height: initialIndex == index ? 7 : 5,
+            //               decoration: BoxDecoration(
+            //                   color: initialIndex == index
+            //                       ? Colors.blue
+            //                       : Colors.grey,
+            //                   shape: BoxShape.circle),
+            //             ),
+            //           )),
+            // ),
+
+            Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(color: colorContainer),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -157,7 +184,21 @@ class _AdDetailState extends State<AdDetail> {
                     style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 3),
-                  ConditionWidget(ad: widget.ad),
+                  Row(
+                    children: [
+                      ConditionWidget(ad: widget.ad),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      CategoryNameWidget(
+                          brandName: widget.ad.categorySelection.item),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      BrandNameWidget(
+                          brandName: widget.ad.categorySelection.brand)
+                    ],
+                  ),
                   SizedBox(
                     height: 3,
                   ),
@@ -172,13 +213,22 @@ class _AdDetailState extends State<AdDetail> {
                         ),
                       ),
                       Text(
-                        'Опубликован ${widget.ad.createdAt.month}-${widget.ad.createdAt.day}-${widget.ad.createdAt.year}. ${widget.ad.city}',
+                        'Опубликован ${widget.ad.createdAt.month}-${widget.ad.createdAt.day}-${widget.ad.createdAt.year}',
                         style: TextStyle(fontSize: 12),
                       )
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Divider(),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            Container(
+              width: double.infinity,
+              decoration: BoxDecoration(color: colorContainer),
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
                     'ОПИСАНИЕ',
                     style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
@@ -188,8 +238,16 @@ class _AdDetailState extends State<AdDetail> {
                     widget.ad.description,
                     style: TextStyle(fontSize: 13),
                   ),
-                  SizedBox(height: 8),
-                  Divider(),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(color: colorContainer),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
                     'ПРОДАВЕЦ',
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -222,43 +280,87 @@ class _AdDetailState extends State<AdDetail> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 8),
-                  Container(
-                    padding: EdgeInsets.all(9),
-                    decoration: BoxDecoration(color: Colors.grey),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          widget.ad.city,
-                          style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 18),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Местоположение',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
+                      Text(
+                        widget.ad.city,
+                        style: TextStyle(fontWeight: FontWeight.w500),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 200,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: MapLibreMap(
+                        styleString:
+                            "https://api.maptiler.com/maps/76d584d7-2bab-4f56-b07e-b6952e99aa18/style.json?key=BXjwwWbXqov08uZ68gVt",
+                        initialCameraPosition: CameraPosition(
+                          target: LatLng(double.parse(widget.ad.latLng[0]),
+                              double.parse(widget.ad.latLng[1])),
+                          zoom: 9.2,
                         ),
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                            height: 120,
-                            width: 140,
-                            child: FlutterMap(
-                              options: MapOptions(
-                                  initialCenter: LatLng(43.2452, 76.9345),
-                                  // initialZoom: currentZoom,
-                                  initialZoom: 8),
-                              children: [
-                                TileLayer(
-                                  urlTemplate:
-                                      'https://tile.thunderforest.com/mobile-atlas/{z}/{x}/{y}.png?apikey=83c49e07601543538a8907806945e4ed',
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ],
+                        rotateGesturesEnabled: false,
+                        compassEnabled: false,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(height: 8),
+
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 10),
+              decoration: BoxDecoration(color: colorContainer),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                      ),
+                      child: Text(
+                        'Другие обьявления',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      )),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  SizedBox(
+                    height: 350,
+                    child: ListView.separated(
+                      padding: EdgeInsets.symmetric(horizontal: 16),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: 10,
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          width: 10,
+                        );
+                      },
+                      itemBuilder: (context, index) {
+                        final ad = ads[index];
+                        return CustomOtherAdWidget(ad: ad);
+                      },
                     ),
                   )
                 ],
               ),
             ),
+            SizedBox(height: 8),
           ],
         ),
       ),

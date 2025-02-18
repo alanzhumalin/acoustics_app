@@ -1,452 +1,583 @@
+import 'package:acousticsapp/features/ads/data/categories_selection.dart';
+
 class AdModel {
   final String title;
   final String description;
   final String price;
   final String nameOfCustomer;
   final String phoneNumber;
-  final String brand;
-  final String brandImage;
   final String city;
   final DateTime createdAt;
-  final String category;
   final String condition;
   final String id;
-
+  final List<String> latLng;
   final List<String> adImages;
-  const AdModel(
-      {required this.description,
-      required this.nameOfCustomer,
-      required this.phoneNumber,
-      required this.city,
-      required this.brand,
-      required this.price,
-      required this.brandImage,
-      required this.adImages,
-      required this.id,
-      required this.condition,
-      required this.category,
-      required this.title,
-      required this.createdAt});
+  final CategorySelection categorySelection;
 
-  factory AdModel.fromMap(Map<String, dynamic> data) {
+  AdModel({
+    required this.title,
+    required this.description,
+    required this.price,
+    required this.nameOfCustomer,
+    required this.phoneNumber,
+    required this.city,
+    required this.createdAt,
+    required this.condition,
+    required this.id,
+    required this.latLng,
+    required this.adImages,
+    required this.categorySelection,
+  });
+
+  factory AdModel.fromJson(Map<String, dynamic> json) {
     return AdModel(
-        id: data['id'],
-        description: data['description'],
-        adImages: (data['imageLink'] as List<dynamic>)
-            .map((image) => image.toString())
-            .toList(),
-        nameOfCustomer: data['nameOfCustomer'],
-        phoneNumber: data['phoneNumber'],
-        price: data['price'],
-        brandImage: data['brandImage'],
-        brand: data['brand'],
-        title: data['title'],
-        condition: data['condition'],
-        category: data['category'],
-        city: data['city'],
-        createdAt: data['createdAt']);
+      title: json['title'] ?? '',
+      description: json['description'] ?? '',
+      price: json['price'] ?? '',
+      nameOfCustomer: json['nameOfCustomer'] ?? '',
+      phoneNumber: json['phoneNumber'] ?? '',
+      city: json['city'] ?? '',
+      createdAt: DateTime.parse(json['createdAt'] ?? ''),
+      condition: json['condition'] ?? '',
+      id: json['id'] ?? '',
+      latLng: List<String>.from(json['latLng'] ?? []),
+      adImages: List<String>.from(json['adImages'] ?? []),
+      categorySelection:
+          CategorySelection.fromJson(json['categorySelection'] ?? {}),
+    );
   }
 
-  Map<String, dynamic> toMap() {
+  Map<String, dynamic> toJson() {
     return {
+      'title': title,
       'description': description,
-      'adImages': adImages,
+      'price': price,
       'nameOfCustomer': nameOfCustomer,
       'phoneNumber': phoneNumber,
-      'brand': brand,
       'city': city,
-      'brandImage': brandImage,
-      'category': category,
-      'price': price,
+      'createdAt': createdAt.toIso8601String(),
       'condition': condition,
-      'title': title,
-      'createdAt': createdAt
+      'id': id,
+      'latLng': latLng,
+      'adImages': adImages,
+      'categorySelection': categorySelection.toJson(),
     };
   }
 }
 
 List<AdModel> ads = [
   AdModel(
-      id: '221',
-      description: 'Состояние новый.',
-      adImages: [
-        'https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xKara_IIM-BUMP_01.png'
-      ],
-      nameOfCustomer: 'Алан',
-      phoneNumber: '+77789065778',
+    id: '001',
+    title: 'Линейный массив L Acoustics Kara2',
+    description: 'Профессиональная акустика, отличное состояние.',
+    price: '15000000',
+    nameOfCustomer: 'Алан',
+    phoneNumber: '+77789065778',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xKara_IIM-BUMP_01.png'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Акустические системы',
+      subcategory: 'Профессиональная акустика',
+      item: 'Линейные массивы',
+      brand: 'L Acoustics',
       brandImage:
           'https://bristol-pahire.co.uk/wp-content/uploads/2013/07/lacoustics-logo.png',
-      price: '15000000',
-      condition: 'Б/у',
-      brand: 'L Acoustics',
-      category: 'Колонки',
-      title: 'Линейный массив l Acoustics kara2',
-      createdAt: DateTime.now(),
-      city: 'Актобе'),
+    ),
+  ),
+  // 2. Акустические системы - Портативные колонки
   AdModel(
-      id: '221',
-      description: 'Новая акустическая гитара, отличное звучание.',
-      adImages: [
-        'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
-        'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg',
-        'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg'
-      ],
-      nameOfCustomer: 'Алексейe',
-      phoneNumber: '+7 900 123 45 67',
+    id: '002',
+    title: 'JBL PartyBox 310',
+    description: 'Портативная колонка с отличным басом и световыми эффектами.',
+    price: '180000',
+    nameOfCustomer: 'Игорь',
+    phoneNumber: '+77011234567',
+    city: 'Алматы',
+    createdAt: DateTime.now(),
+    condition: 'Новый',
+    latLng: ['43.2220', '76.8512'],
+    adImages: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS4KHa-E07tvEQ4gOoS6eo9H97eXZKiQXxVmQ&s'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Акустические системы',
+      subcategory: 'Портативные колонки',
+      item: 'Bluetooth-колонки',
+      brand: 'JBL',
       brandImage:
-          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
-      price: '80000',
-      condition: 'Б/у',
-      brand: 'Yamaha',
-      category: 'Инструмент',
-      title: 'Акустическая гитара Yamaha',
-      createdAt: DateTime.now(),
-      city: 'Актобе'),
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMln8adYPVuVldzIt4rcnbkyh2aHP0lY3W4g&s',
+    ),
+  ),
+  // 3. Усилители - Стереоусилители
   AdModel(
-      id: '221',
-      description: 'Электрогитара Fender, в отличном состоянии.',
-      adImages: ['https://m.media-amazon.com/images/I/61Z01+68f8L.jpg'],
-      nameOfCustomer: 'Владимир',
+    id: '003',
+    title: 'Marantz PM6007',
+    description: 'Стереоусилитель с высокой мощностью.',
+    price: '250000',
+    nameOfCustomer: 'Анна',
+    phoneNumber: '+77022334455',
+    city: 'Астана',
+    createdAt: DateTime.now(),
+    condition: 'Новый',
+    latLng: ['51.1694', '71.4491'],
+    adImages: [
+      'https://185504.selcdn.ru/static/hifi4you.reshop.kz/catalog/7943/8777971045fb5fe56497ec_medium.jpg'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Усилители',
+      subcategory: 'Типы усилителей',
+      item: 'Стереоусилители',
+      brand: 'Marantz',
+      brandImage:
+          'https://d1yjjnpx0p53s8.cloudfront.net/styles/logo-thumbnail/s3/0017/9898/brand.gif?itok=Gx0jYYeO',
+    ),
+  ),
+  // 4. Процессинг звука - Микшерные пульты
+  AdModel(
+    id: '004',
+    title: 'Behringer X32 Digital Mixer',
+    description: 'Профессиональный цифровой микшерный пульт.',
+    price: '1200000',
+    nameOfCustomer: 'Владимир',
+    phoneNumber: '+77779998888',
+    city: 'Караганда',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['49.8068', '73.1094'],
+    adImages: [
+      'https://www.gopandy.com/wp-content/uploads/2019/10/Behringer-x32-Digital-Mixer-1-1.jpg'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Процессинг звука',
+      subcategory: 'Микшерные пульты',
+      item: 'Цифровые',
+      brand: 'Behringer',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRMX4Cd3OMRbbUQKp-m52n2v2BCkcFH81lv2Q&s',
+    ),
+  ),
+  // 5. Микрофоны и радиосистемы - Вокальные микрофоны
+  AdModel(
+    id: '005',
+    title: 'Shure SM58',
+    description: 'Классический вокальный микрофон для профессионалов.',
+    price: '35000',
+    nameOfCustomer: 'Дмитрий',
+    phoneNumber: '+77770001122',
+    city: 'Шымкент',
+    createdAt: DateTime.now(),
+    condition: 'Новый',
+    latLng: ['42.3175', '69.5958'],
+    adImages: ['https://images.satu.kz/173066842_mikrofon-shure-sm58-lce.jpg'],
+    categorySelection: CategorySelection(
+      category: 'Микрофоны и радиосистемы',
+      subcategory: 'Микрофоны',
+      item: 'Вокальные',
+      brand: 'Shure',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgsyrutszS8r4bOItQnVmQU-MvkFj0hsWuGw&s',
+    ),
+  ),
+  // 6. Музыкальные инструменты - Электрогитара
+  AdModel(
+    id: '006',
+    title: 'Fender Stratocaster',
+    description: 'Культовая электрогитара от Fender.',
+    price: '450000',
+    nameOfCustomer: 'Александр',
+    phoneNumber: '+77775556677',
+    city: 'Алматы',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['43.2554', '76.9121'],
+    adImages: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeqAMBuqUTfnkWfP4LqvgHUnjx3LA7GfiMTw&s'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Электрогитара',
       brand: 'Fender',
       brandImage:
           'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-      phoneNumber: '+7 901 234 56 78',
-      category: 'Инструмент',
-      condition: 'Б/у',
-      price: '250000',
-      title: 'Электрогитара Fender Stratocaster',
-      createdAt: DateTime.now(),
-      city: 'Алматы'),
-  AdModel(
-    id: '221',
-    description: 'Бас-гитара Ibanez, почти новая, мало использовалась.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Ibanez',
-    nameOfCustomer: 'Дмитрий',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    phoneNumber: '+7 902 345 67 89',
-    price: '150000',
-    category: 'Инструмент',
-    condition: 'Б/у',
-    title: 'Бас-гитара Ibanez SR300',
-    city: 'Алматы',
-    createdAt: DateTime.now(),
+    ),
   ),
+  // 7. Оркестровые и этнические инструменты
   AdModel(
-    id: '221',
-    description: 'Классическая гитара для начинающих и профессионалов.',
-    adImages: [
-      'https://www.guitarfromspain.com/5869-medium_default/alhambra-7c-classic-classical-guitar.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Мария',
-    phoneNumber: '+7 903 456 78 90',
-    category: 'Инструмент',
-    brandImage:
-        'https://www.alhambraguitarras.com/layout/frontend/themes/guitarrasalhambra/images/guitarrasalhambra-logo.png',
-    price: '65000',
+    id: '007',
+    title: 'Hohner Marine Band',
+    description: 'Классическая губная гармошка.',
+    price: '15000',
+    nameOfCustomer: 'Павел',
+    phoneNumber: '+77773334444',
+    city: 'Усть-Каменогорск',
+    createdAt: DateTime.now(),
     condition: 'Новый',
-    title: 'Классическая гитара Alhambra',
-    city: 'Алматы',
-    createdAt: DateTime.now(),
+    latLng: ['49.9726', '82.6119'],
+    adImages: ['https://m.media-amazon.com/images/I/71qAOMalOIL.jpg'],
+    categorySelection: CategorySelection(
+      category: 'Оркестровые и этнические инструменты',
+      subcategory: 'Типы инструментов',
+      item: 'Губные гармошки',
+      brand: 'Hohner',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQqLQfkAExDsXVmGaGm8uK9-LVOncNjCKHo_w&s',
+    ),
   ),
+  // 8. Гитарные аксессуары - Процессоры эффектов
   AdModel(
-    id: '221',
-    description: 'Гитара Gibson, редкая модель, коллекционное состояние.',
-    adImages: [
-      'https://images.ctfassets.net/m8onsx4mm13s/4k0ldXqvN8cM2itLyIS5b3/6a732610de017c7bf726680202b7ae50/LPS500PUNH1_front.png'
-    ],
-    brand: 'Gibson',
-    nameOfCustomer: 'Сергей',
-    brandImage:
-        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS3gWbIt3lLWufFHD5ZeVdkON3bXkK5LewRag&s',
-    category: 'Инструмент',
-    phoneNumber: '+7 904 567 89 01',
-    price: '760000',
+    id: '008',
+    title: 'Boss GT-1000',
+    description: 'Педаль эффектов для электрогитары.',
+    price: '300000',
+    nameOfCustomer: 'Виктор',
+    phoneNumber: '+77778889900',
+    city: 'Павлодар',
+    createdAt: DateTime.now(),
     condition: 'Б/у',
-    title: 'Gibson Les Paul Custom',
-    city: 'Алматы',
-    createdAt: DateTime.now(),
+    latLng: ['52.2871', '76.9675'],
+    adImages: [
+      'https://static.roland.com/assets/images/products/main/gt-1000_main.jpg'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Гитарные аксессуары и комплектующие',
+      subcategory: 'Аксессуары',
+      item: 'Процессоры и педали эффектов',
+      brand: 'Boss',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRWvf9arrAIat7YxOY2RqLd7wAdlaUVn1N7zw&s',
+    ),
   ),
+  // 9. Аксессуары для клавишных - Стойки
+  AdModel(
+    id: '009',
+    title: 'Hercules KS120B',
+    description: 'Складная стойка для клавишных.',
+    price: '25000',
+    nameOfCustomer: 'Максим',
+    phoneNumber: '+77005553322',
+    city: 'Костанай',
+    createdAt: DateTime.now(),
+    condition: 'Новый',
+    latLng: ['53.214', '63.6246'],
+    adImages: [
+      'https://herculesstands.com/files/file_pool/1/0o024102952761810651/ks120b_3.png'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Аксессуары и комплектующие для клавишных',
+      subcategory: 'Аксессуары',
+      item: 'Стойки',
+      brand: 'Hercules',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR5lo2VZfFiKAU-gvAfI6fMQXQ7QkE9TMje-A&s',
+    ),
+  ),
+  // 10. DJ-оборудование - DJ-контроллеры
+  AdModel(
+    id: '010',
+    title: 'Pioneer DJ DDJ-1000',
+    description: 'Профессиональный DJ-контроллер с 4 каналами.',
+    price: '750000',
+    nameOfCustomer: 'Андрей',
+    phoneNumber: '+77006665555',
+    city: 'Актау',
+    createdAt: DateTime.now(),
+    condition: 'Новый',
+    latLng: ['43.6588', '51.1975'],
+    adImages: [
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRpOuNQH9AbD1v89UT23bfw_LPCDZuADYcZkw&s'
+    ],
+    categorySelection: CategorySelection(
+      category: 'DJ-оборудование',
+      subcategory: 'Оборудование',
+      item: 'DJ-контроллеры',
+      brand: 'Pioneer DJ',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRb1h5VDsuMqSaBhEs1Z_ptm-T0S68rSINV2Q&s',
+    ),
+  ),
+
   AdModel(
     id: '221',
+    title: 'Линейный массив l Acoustics kara2',
+    description: 'Состояние новый.',
+    price: '15000000',
+    nameOfCustomer: 'Алан',
+    phoneNumber: '+77789065778',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.l-acoustics.com/wp-content/uploads/2021/03/3DR_8xKara_IIM-BUMP_01.png'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Акустические системы',
+      subcategory: 'Профессиональная акустика',
+      item: 'Линейные массивы',
+      brand: 'L Acoustics',
+      brandImage:
+          'https://bristol-pahire.co.uk/wp-content/uploads/2013/07/lacoustics-logo.png',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '222',
+    title: 'Акустическая гитара Yamaha',
+    description: 'Новая акустическая гитара, отличное звучание.',
+    price: '80000',
+    nameOfCustomer: 'Алексей',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Актобе',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['50.28024', '57.20856'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/3f4/3f4f8b543ca065540c04516c45ffc6c4.jpeg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Акустические',
+      brand: 'Yamaha',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSSnwBrZda2hOLLXvomIPX4JUp4-16ki1Eliw&s',
+    ),
+  ),
+  AdModel(
+    id: '223',
+    title: 'Электрогитара Fender Stratocaster',
+    description: 'Электрогитара Fender, в отличном состоянии.',
+    price: '250000',
+    nameOfCustomer: 'Владимир',
+    phoneNumber: '+7 901 234 56 78',
+    city: 'Алматы',
+    createdAt: DateTime.now(),
+    condition: 'Б/у',
+    latLng: ['43.2452', '76.9345'],
+    adImages: [
+      'https://m.media-amazon.com/images/I/61Z01+68f8L.jpg',
+    ],
+    categorySelection: CategorySelection(
+      category: 'Музыкальные инструменты',
+      subcategory: 'Гитары',
+      item: 'Электрогитары',
+      brand: 'Fender',
+      brandImage:
+          'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
+    ),
+  ),
+  AdModel(
+    id: '224',
+    title: 'JBL PartyBox 300',
     description:
-        'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука и встроенным микрофоном. Поддерживает Bluetooth, USB и AUX. Идеальна для вечеринок и мероприятий.',
+        'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука.',
+    price: '150000',
+    nameOfCustomer: 'Иван',
+    phoneNumber: '+7 900 123 45 67',
+    city: 'Алматы',
+    createdAt: DateTime.now(),
+    condition: 'Новый',
+    latLng: ['43.2452', '76.9345'],
     adImages: [
       'https://kh.jbl.com/dw/image/v2/AAUJ_PRD/on/demandware.static/-/Sites-masterCatalog_Harman/default/dw8e0c7057/JBL_Party_Box_300_Hero_14836_X1.png?sw=537&sfrm=png'
     ],
-    brand: 'JBL',
-    brandImage:
-        'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/JBL-Logo.svg/1200px-JBL-Logo.svg.png',
-    nameOfCustomer: 'Иван',
-    phoneNumber: '+7 900 123 45 67',
-    price: '150000',
-    condition: 'Новый',
-    title: 'JBL PartyBox 300',
-    category: 'Колонки',
-    city: 'Алматы',
-    createdAt: DateTime.now(),
+    categorySelection: CategorySelection(
+      category: 'Акустические системы',
+      subcategory: 'Портативные колонки',
+      item: 'Bluetooth-колонки',
+      brand: 'JBL',
+      brandImage:
+          'https://upload.wikimedia.org/wikipedia/commons/thumb/1/1e/JBL-Logo.svg/1200px-JBL-Logo.svg.png',
+    ),
   ),
   AdModel(
-    id: '221',
-    description:
-        'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности. Отлично подходит для вокала и инструментов. Прочный металлический корпус.',
-    adImages: ['https://images.satu.kz/112283671_mikrofon-akg-p3s.jpg'],
-    brand: 'AKG',
-    nameOfCustomer: 'Мария',
-    phoneNumber: '+7 901 234 56 78',
-    price: '25000',
+    id: '225',
     title: 'AKG P3 S',
-    brandImage:
-        'https://cdn.cookielaw.org/logos/68a7fd17-25ad-4562-9af3-cbe40f09076e/7eddad80-2690-405c-bdd3-9bf654c8d45f/3094a13c-2d05-46f9-9bee-095fd7262bc5/AKG-3300x2550pix_white.jpg',
-    condition: 'Б/у',
-    category: 'Микрофон',
-    city: 'Алматы',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
     description:
-        'Портативная колонка Sony MHC-V21D с функцией караоке, световыми эффектами и поддержкой Bluetooth. Идеальна для домашних вечеринок.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Алексей',
-    phoneNumber: '+7 902 345 67 89',
-    price: '125000',
-    condition: 'Б/у',
-    city: 'Алматы',
-    category: 'Колонки',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    title: 'Sony MHC-V21D',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Портативная колонка AUNA Streetstar 15 с мощностью 100 Вт и временем автономной работы до 7 часов. Поддерживает Bluetooth, USB и SD-карты. Идеальна для уличных мероприятий.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Сергей',
-    condition: 'Новый',
-    phoneNumber: '+7 903 456 78 90',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    price: '150000',
-    city: 'Алматы',
-    category: 'Колонки',
-    title: 'AUNA Streetstar 15',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Портативная колонка JBL PartyBox 100 с мощностью 160 Вт и световыми эффектами. В комплекте вокальный микрофон AKG P3 S. Поддерживает Bluetooth 4.2.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Ольга',
-    phoneNumber: '+7 904 567 89 01',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    condition: 'Б/у',
-    category: 'Колонки',
-    price: '170000',
-    city: 'Алматы',
-    title: 'JBL PartyBox 100 + AKG P3 S',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description: 'Новая акустическая гитара, отличное звучание.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Алексей',
-    phoneNumber: '+7 900 123 45 67',
-    condition: 'Новый',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    category: 'Инструмент',
-    price: '80000',
-    city: 'Алматы',
-    title: 'Акустическая гитара Yamaha',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description: 'Электрогитара Fender, в отличном состоянии.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Владимир',
-    condition: 'Б/у',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    phoneNumber: '+7 901 234 56 78',
-    price: '250000',
-    category: 'Инструмент',
-    city: 'Алматы',
-    title: 'Электрогитара Fender Stratocaster',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description: 'Бас-гитара Ibanez, почти новая, мало использовалась.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Дмитрий',
-    phoneNumber: '+7 902 345 67 89',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    price: '150000',
-    condition: 'Б/у',
-    category: 'Инструмент',
-    city: 'Алматы',
-    title: 'Бас-гитара Ibanez SR300',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description: 'Классическая гитара для начинающих и профессионалов.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Мария',
-    condition: 'Новый',
-    phoneNumber: '+7 903 456 78 90',
-    category: 'Инструмент',
-    price: '65000',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    city: 'Алматы',
-    title: 'Классическая гитара Alhambra',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description: 'Гитара Gibson, редкая модель, коллекционное состояние.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Сергей',
-    phoneNumber: '+7 904 567 89 01',
-    city: 'Алматы',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    condition: 'Б/у',
-    category: 'Инструмент',
-    price: '760000',
-    title: 'Gibson Les Paul Custom',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука и встроенным микрофоном. Поддерживает Bluetooth, USB и AUX. Идеальна для вечеринок и мероприятий.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Иван',
-    phoneNumber: '+7 900 123 45 67',
-    category: 'Колонки',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    city: 'Алматы',
-    price: '150000',
-    condition: 'Новый',
-    title: 'JBL PartyBox 300',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности. Отлично подходит для вокала и инструментов. Прочный металлический корпус.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Мария',
-    phoneNumber: '+7 901 234 56 78',
-    city: 'Алматы',
-    category: 'Микрофон',
+        'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности.',
     price: '25000',
-    condition: 'Новый',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    title: 'AKG P3 S',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Портативная колонка Sony MHC-V21D с функцией караоке, световыми эффектами и поддержкой Bluetooth. Идеальна для домашних вечеринок.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Алексей',
-    phoneNumber: '+7 902 345 67 89',
-    condition: 'Новый',
-    price: '125000',
+    nameOfCustomer: 'Мария',
+    phoneNumber: '+7 901 234 56 78',
     city: 'Алматы',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    category: 'Колонки',
-    title: 'Sony MHC-V21D',
     createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Портативная колонка AUNA Streetstar 15 с мощностью 100 Вт и временем автономной работы до 7 часов. Поддерживает Bluetooth, USB и SD-карты. Идеальна для уличных мероприятий.',
-    adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
-    ],
-    brand: 'Fender',
-    nameOfCustomer: 'Сергей',
-    phoneNumber: '+7 903 456 78 90',
-    price: '150000',
-    city: 'Алматы',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    title: 'AUNA Streetstar 15',
     condition: 'Б/у',
-    category: 'Инструмент',
-    createdAt: DateTime.now(),
-  ),
-  AdModel(
-    id: '221',
-    description:
-        'Портативная колонка JBL PartyBox 100 с мощностью 160 Вт и световыми эффектами. В комплекте вокальный микрофон AKG P3 S. Поддерживает Bluetooth 4.2.',
+    latLng: ['43.2452', '76.9345'],
     adImages: [
-      'https://sc1.musik-produktiv.com/pic-010157005l/ibanez-soundgear-sr300edx-czm.jpg'
+      'https://images.satu.kz/112283671_mikrofon-akg-p3s.jpg',
     ],
-    brand: 'Fender',
-    nameOfCustomer: 'Ольга',
-    brandImage:
-        'https://assets.spotlight.fender.com/logos/fender-red-large.jpg',
-    phoneNumber: '+7 904 567 89 01',
-    price: '170000',
-    condition: 'Б/у',
-    category: 'Колонки',
-    city: 'Алматы',
-    title: 'JBL PartyBox 100 + AKG P3 S',
-    createdAt: DateTime.now(),
+    categorySelection: CategorySelection(
+      category: 'Микрофоны и радиосистемы',
+      subcategory: 'Микрофоны',
+      item: 'Вокальные',
+      brand: 'AKG',
+      brandImage:
+          'https://cdn.cookielaw.org/logos/68a7fd17-25ad-4562-9af3-cbe40f09076e/7eddad80-2690-405c-bdd3-9bf654c8d45f/3094a13c-2d05-46f9-9bee-095fd7262bc5/AKG-3300x2550pix_white.jpg',
+    ),
   ),
 ];

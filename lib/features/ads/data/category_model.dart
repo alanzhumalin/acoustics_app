@@ -1,15 +1,21 @@
+import 'category.dart';
+
 class CategoryModel {
-  final String category;
-  final String assets;
+  final List<Category> categories;
 
-  const CategoryModel({required this.assets, required this.category});
+  CategoryModel({required this.categories});
+
+  factory CategoryModel.fromJson(Map<String, dynamic> json) {
+    return CategoryModel(
+      categories: (json['categories'] as List)
+          .map((item) => Category.fromJson(item))
+          .toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'categories': categories.map((category) => category.toJson()).toList(),
+    };
+  }
 }
-
-List<CategoryModel> categories = [
-  CategoryModel(
-      assets: 'assets/categories/microphone.webp', category: 'Микрофон'),
-  CategoryModel(assets: 'assets/categories/speakers.jpeg', category: 'Колонки'),
-  CategoryModel(assets: 'assets/categories/mixer.webp', category: 'Микшер'),
-  CategoryModel(
-      assets: 'assets/categories/instrumental.avif', category: 'Инструмент'),
-];

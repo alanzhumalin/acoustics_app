@@ -582,13 +582,10 @@ class _CreateAdState extends State<CreateAd> {
                       cursorColor: Colors.blue,
                       keyboardType: TextInputType.phone,
                       decoration: InputDecoration(
-                        isDense: true,
-                        prefixIcon: Padding(
-                          padding: const EdgeInsets.only(left: 15, top: 1.5),
-                          child: Text(
-                            "+7 ",
-                            style: TextStyle(fontSize: 16),
-                          ),
+                        prefix: Text(
+                          '+7 ',
+                          style: TextStyle(
+                              color: colorOfText, fontWeight: FontWeight.w500),
                         ),
                         prefixIconConstraints: BoxConstraints(),
                         hintText: '(700) 700 00 00',

@@ -27,6 +27,11 @@ class _SearchState extends State<Search> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -34,7 +39,6 @@ class _SearchState extends State<Search> {
         title: TextField(
           autocorrect: false,
           onChanged: _search,
-          autofocus: true,
           controller: _searchController,
           decoration: const InputDecoration(
             hintText: 'Поиск...',

@@ -74,7 +74,7 @@ class _SmsState extends State<Sms> {
       textStyle: const TextStyle(
         fontWeight: FontWeight.bold,
         fontSize: 22,
-        color: Colors.orange,
+        color: Colors.blue,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(19),
