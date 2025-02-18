@@ -57,6 +57,84 @@ class _ChatDetailState extends ConsumerState<ChatDetail> {
     Future.delayed(Duration(milliseconds: 1), () => scrollDown());
   }
 
+  void showDialogMessage() {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 17, 17, 17),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20))),
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              width: double.infinity,
+              height: 250,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.report_outlined,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        'Заблокировать',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.flag_circle,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        'Пожаловаться',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      )
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.delete,
+                        size: 30,
+                      ),
+                      SizedBox(
+                        width: 12,
+                      ),
+                      Text(
+                        'Переместить в Корзину',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 15),
+                      )
+                    ],
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text(
+                      'Закрыть',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                    ),
+                  )
+                ],
+              ),
+            ));
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -89,6 +167,7 @@ class _ChatDetailState extends ConsumerState<ChatDetail> {
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
                   ),
                 ),
+                InkWell(onTap: showDialogMessage, child: Icon(Icons.more_horiz))
               ],
             ),
             forceMaterialTransparency: true,

@@ -24,7 +24,9 @@ class _ShowPhotoState extends State<ShowPhoto> {
       body: Stack(
         children: [
           Center(
-            child: InteractiveViewer(child: Image.file(File(widget.file.path))),
+            child: InteractiveViewer(
+                clipBehavior: Clip.none,
+                child: Image.file(File(widget.file.path))),
           ),
           Positioned(
               left: 10,

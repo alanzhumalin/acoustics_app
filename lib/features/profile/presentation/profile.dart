@@ -42,7 +42,7 @@ class Profile extends ConsumerWidget {
                   context, MaterialPageRoute(builder: (context) => MyAds()));
             },
             title: Text(
-              'Ваши обьявления',
+              'Ваши объявления',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             trailing: Icon(Icons.arrow_forward_ios),

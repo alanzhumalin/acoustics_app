@@ -1,4 +1,5 @@
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
+import 'package:acousticsapp/features/ads/data/category.dart';
 import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
 import 'package:flutter/material.dart';
 
@@ -11,7 +12,7 @@ class Search extends StatefulWidget {
 
 class _SearchState extends State<Search> {
   final TextEditingController _searchController = TextEditingController();
-  List<AdModel> results = [];
+  List<Category> results = [];
   String userType = '';
 
   void _search(String query) {
@@ -19,9 +20,9 @@ class _SearchState extends State<Search> {
       userType = query;
       results = query.isEmpty
           ? []
-          : ads
-              .where(
-                  (ad) => ad.title.toLowerCase().contains(query.toLowerCase()))
+          : categories
+              .where((category) =>
+                  category.category.toLowerCase().contains(query.toLowerCase()))
               .toList();
     });
   }
@@ -60,35 +61,43 @@ class _SearchState extends State<Search> {
                     style: TextStyle(color: Colors.white),
                   ),
                 )
-              : ListView.separated(
-                  itemCount: results.length,
-                  separatorBuilder: (context, index) {
-                    return SizedBox(height: 12);
-                  },
-                  itemBuilder: (context, index) {
-                    final ad = results[index];
-                    return ListTile(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => AdDetail(ad: ad)));
+              : Padding(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 20.0, vertical: 20),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                    decoration: BoxDecoration(
+                        color: const Color.fromARGB(255, 28, 28, 28),
+                        borderRadius: BorderRadius.circular(10)),
+                    child: ListView.builder(
+                      padding: EdgeInsets.all(0),
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: results.length,
+                      itemBuilder: (context, index) {
+                        final category = results[index];
+                        return SizedBox(
+                          width: double.infinity,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                category.category,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold, fontSize: 14),
+                              ),
+                              if (index + 1 != results.length)
+                                Divider(
+                                  height: 25,
+                                  color:
+                                      const Color.fromARGB(255, 131, 131, 131),
+                                )
+                            ],
+                          ),
+                        );
                       },
-                      leading: ClipRRect(
-                          borderRadius: BorderRadius.circular(13),
-                          child: Image(
-                            width: 50,
-                            height: 60,
-                            image: NetworkImage(ad.adImages[0]),
-                            fit: BoxFit.cover,
-                          )),
-                      title: Text(
-                        ad.title,
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      subtitle: Text('${ad.price} тг.  ${ad.city}'),
-                    );
-                  },
+                    ),
+                  ),
                 ),
     );
   }

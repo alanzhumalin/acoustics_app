@@ -333,7 +333,7 @@ class _AdDetailState extends State<AdDetail> {
                         horizontal: 16,
                       ),
                       child: Text(
-                        'Другие обьявления',
+                        'Другие объявления',
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.bold),
                       )),

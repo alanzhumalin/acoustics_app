@@ -7,6 +7,7 @@ import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
@@ -30,6 +31,48 @@ class _CreateAdState extends State<CreateAd> {
   String selectedBrand = '';
   String selectedCategory = '';
   String selectedCity = '';
+
+  Future<XFile?> _cropImage(XFile file) async {
+    final croppedFile = await ImageCropper().cropImage(
+      sourcePath: file.path,
+      compressFormat: ImageCompressFormat.jpg,
+      compressQuality: 100,
+      uiSettings: [
+        AndroidUiSettings(
+          toolbarTitle: 'Редактировать',
+          toolbarColor: Colors.deepOrange,
+          toolbarWidgetColor: Colors.white,
+          initAspectRatio: CropAspectRatioPreset.square,
+          lockAspectRatio: false,
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio4x3,
+          ],
+        ),
+        IOSUiSettings(
+          title: 'Редактировать',
+          aspectRatioPresets: [
+            CropAspectRatioPreset.original,
+            CropAspectRatioPreset.square,
+            CropAspectRatioPreset.ratio4x3,
+          ],
+        ),
+        WebUiSettings(
+          context: context,
+          presentStyle: WebPresentStyle.dialog,
+          size: const CropperSize(
+            width: 520,
+            height: 520,
+          ),
+        ),
+      ],
+    );
+    if (croppedFile != null) {
+      return XFile(croppedFile.path);
+    }
+  }
+
   Future<void> pickPhoto() async {
     final List<XFile>? pickedFile = await imagePicker.pickMultiImage(
       imageQuality: 80,
@@ -42,9 +85,12 @@ class _CreateAdState extends State<CreateAd> {
             await decodeImageFromList(imageFile.readAsBytesSync());
 
         if (decodedImage.width > 0 && decodedImage.height > 0) {
-          setState(() {
-            pickedFileList.add(file);
-          });
+          final newFile = await _cropImage(file);
+          if (newFile != null) {
+            setState(() {
+              pickedFileList.add(newFile);
+            });
+          }
         } else {
           debugPrint("Некорректное фото: ${file.path}");
         }
@@ -107,7 +153,7 @@ class _CreateAdState extends State<CreateAd> {
         appBar: AppBar(
           forceMaterialTransparency: true,
           title: Text(
-            'Создать обьявления',
+            'Создать объявление',
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),

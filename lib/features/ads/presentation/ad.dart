@@ -4,6 +4,7 @@ import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
 import 'package:acousticsapp/features/ads/presentation/category_detail.dart';
 import 'package:acousticsapp/features/ads/presentation/search.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
+import 'package:acousticsapp/shared/provider/page_scroll_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -36,9 +37,11 @@ class _AdState extends ConsumerState<Ad> {
     final textTheme = Theme.of(context).textTheme;
     final sizeScreen = MediaQuery.of(context).size;
     final searchColor = Theme.of(context).colorScheme.secondaryContainer;
-
+    final _pageScrollControllerProvider =
+        ref.watch(pageScrollControllerProvider);
     return Scaffold(
       body: CustomScrollView(
+        controller: _pageScrollControllerProvider,
         slivers: [
           SliverAppBar(
             floating: true,

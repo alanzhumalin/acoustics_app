@@ -3,16 +3,18 @@ import 'package:acousticsapp/features/chat/presentation/chat.dart';
 import 'package:acousticsapp/features/create_ad/presentation/create_ad.dart';
 import 'package:acousticsapp/features/favorites/presentation/favorites.dart';
 import 'package:acousticsapp/features/profile/presentation/profile.dart';
+import 'package:acousticsapp/shared/provider/page_scroll_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Home extends StatefulWidget {
+class Home extends ConsumerStatefulWidget {
   const Home({super.key});
 
   @override
-  State<Home> createState() => _HomeState();
+  ConsumerState<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends ConsumerState<Home> {
   int selectedIndex = 0;
 
   final List<Widget> _pages = [
@@ -25,7 +27,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    final _pageScrollController = ref.read(pageScrollController);
     final theme = Theme.of(context).bottomNavigationBarTheme.backgroundColor;
+
     return Scaffold(
       body: _pages[selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
@@ -37,6 +41,12 @@ class _HomeState extends State<Home> {
             Theme.of(context).bottomNavigationBarTheme.unselectedItemColor,
         selectedFontSize: 12,
         onTap: (value) {
+          if (value == 0 && selectedIndex == 0) {
+            _pageScrollController.animateTo(0,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut);
+          }
+
           setState(() {
             selectedIndex = value;
           });
