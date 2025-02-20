@@ -1,6 +1,7 @@
 import 'package:acousticsapp/core/theme/theme.dart';
 import 'package:acousticsapp/core/theme/theme_provider.dart';
 import 'package:acousticsapp/features/auth/presentation/login.dart';
+import 'package:acousticsapp/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,7 +21,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: blackTheme,
       themeMode: themeMode,
       theme: theme,
-      home: Login(),
+      home: Home(),
     );
   }
 }

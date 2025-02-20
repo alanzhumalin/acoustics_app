@@ -7,35 +7,39 @@ class ShimmerLoadingCategory extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final sizeScreen = MediaQuery.of(context).size;
+
     return Shimmer.fromColors(
       direction: ShimmerDirection.ltr,
       baseColor: Colors.grey[300]!,
       highlightColor: Colors.white,
       child: SizedBox(
-        height: 150,
-        child: ListView.separated(
+        height: sizeScreen.height * 0.29,
+        child: GridView.builder(
+          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              childAspectRatio: sizeScreen.width > 366 ? 1.1 : 1.2,
+              mainAxisSpacing: 13),
           padding: const EdgeInsets.symmetric(horizontal: 10),
-          separatorBuilder: (context, index) => const SizedBox(width: 20),
+          shrinkWrap: true,
+          itemCount: 8,
+          physics: const ClampingScrollPhysics(),
           scrollDirection: Axis.horizontal,
-          itemCount: 5,
           itemBuilder: (context, index) {
             return Column(
               children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      width: 100,
-                      height: 100,
-                      color: const Color.fromARGB(255, 216, 216, 216),
-                    )),
+                CircleAvatar(
+                  backgroundColor: const Color.fromARGB(255, 216, 216, 216),
+                  radius: 40,
+                ),
                 SizedBox(
                   height: 8,
                 ),
                 ClipRRect(
                   borderRadius: BorderRadius.circular(16),
                   child: Container(
-                    height: 15,
-                    width: 80,
+                    height: 10,
+                    width: 65,
                     color: const Color.fromARGB(255, 216, 216, 216),
                   ),
                 )

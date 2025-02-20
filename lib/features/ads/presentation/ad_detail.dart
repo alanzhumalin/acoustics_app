@@ -78,7 +78,7 @@ class _AdDetailState extends State<AdDetail> {
             Stack(
               children: [
                 Container(
-                    color: const Color.fromARGB(255, 244, 244, 244),
+                    color: const Color.fromARGB(255, 255, 255, 255),
                     width: double.infinity,
                     height: size.height * 0.4,
                     child: PageView.builder(

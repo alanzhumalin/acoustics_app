@@ -5,9 +5,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class CustomAdWidget extends StatelessWidget {
+class CustomAdWidget extends StatefulWidget {
   const CustomAdWidget({super.key, required this.ad});
   final AdModel ad;
+
+  @override
+  State<CustomAdWidget> createState() => _CustomAdWidgetState();
+}
+
+class _CustomAdWidgetState extends State<CustomAdWidget> {
+  bool isSelected = false;
   @override
   Widget build(BuildContext context) {
     final borderColor = Theme.of(context).colorScheme.onPrimaryContainer;
@@ -31,7 +38,22 @@ class CustomAdWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(8),
                   child: Center(
                       child: CachedNetworkImage(
-                    imageUrl: ad.adImages[0],
+                    placeholder: (context, url) {
+                      return SizedBox(
+                        width: double.infinity,
+                        height: 180,
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topLeft: Radius.circular(10),
+                            topRight: Radius.circular(10),
+                          ),
+                          child: Container(
+                            color: const Color.fromARGB(255, 216, 216, 216),
+                          ),
+                        ),
+                      );
+                    },
+                    imageUrl: widget.ad.adImages[0],
                     fit: BoxFit.contain,
                   )),
                 ),
@@ -40,73 +62,88 @@ class CustomAdWidget extends StatelessWidget {
                   right: 3.5,
                   top: 3.5,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image(
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.ad.categorySelection.brandImage,
                         height: 30,
-                        image: NetworkImage(ad.categorySelection.brandImage)),
-                  )),
+                      ))),
             ],
           ),
           Expanded(
-            child: Card(
-              shadowColor: Colors.transparent,
-              margin: EdgeInsets.all(0),
-              color: Theme.of(context).cardTheme.color,
-              child: Padding(
-                padding: const EdgeInsets.only(
-                  left: 10,
-                  right: 10,
-                  top: 10,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+            child: Stack(
+              children: [
+                Card(
+                  shadowColor: Colors.transparent,
+                  margin: EdgeInsets.all(0),
+                  color: Theme.of(context).cardTheme.color,
+                  child: Padding(
+                    padding: const EdgeInsets.only(
+                      left: 10,
+                      right: 5,
+                      top: 10,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            ad.title,
-                            style: textTheme.bodyMedium,
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                          ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.ad.title,
+                                style: textTheme.bodyMedium,
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            ),
+                            SizedBox(
+                              width: 11,
+                            ),
+                            InkWell(
+                              onTap: () {
+                                setState(() {
+                                  isSelected = !isSelected;
+                                });
+                              },
+                              child: isSelected
+                                  ? Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                    )
+                                  : Icon(
+                                      Icons.favorite_outline,
+                                      color:
+                                          const Color.fromARGB(255, 69, 69, 69),
+                                    ),
+                            ),
+                          ],
                         ),
                         const SizedBox(
-                          width: 5,
+                          height: 5,
                         ),
-                        InkWell(
-                          onTap: () {},
-                          child: Icon(
-                            CupertinoIcons.heart,
-                            size: 20,
-                          ),
-                        )
+                        ConditionWidget(ad: widget.ad),
+                        const SizedBox(
+                          height: 5,
+                        ),
+                        Text(
+                          '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
+                          style: textTheme.bodyLarge?.copyWith(
+                              fontWeight: FontWeight.bold, fontSize: 16),
+                        ),
+                        const SizedBox(height: 5),
+                        Text(
+                          widget.ad.city,
+                          style: TextStyle(fontSize: 13),
+                        ),
+                        Text(
+                          '${widget.ad.createdAt.day}-${widget.ad.createdAt.month}-${widget.ad.createdAt.year}',
+                          style: TextStyle(fontSize: 12),
+                        ),
                       ],
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    ConditionWidget(ad: ad),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Text(
-                      '${NumberFormat('#,###', 'ru_RU').format(int.parse(ad.price))} тг.',
-                      style: textTheme.bodyLarge
-                          ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      ad.city,
-                      style: TextStyle(fontSize: 13),
-                    ),
-                    Text(
-                      '${ad.createdAt.day}-${ad.createdAt.month}-${ad.createdAt.year}',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
           )
         ],

@@ -31,7 +31,7 @@ class _CreateAdState extends State<CreateAd> {
   String selectedBrand = '';
   String selectedCategory = '';
   String selectedCity = '';
-
+  String? selectedValue;
   Future<XFile?> _cropImage(XFile file) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: file.path,
@@ -406,6 +406,33 @@ class _CreateAdState extends State<CreateAd> {
                           ),
                         ],
                       ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                    Text(
+                      'Категория',
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    DropdownButton<String>(
+                      menuWidth: double.infinity,
+                      value: selectedValue,
+                      hint: Text('Выберите'),
+                      items: [
+                        DropdownMenuItem(value: 'shop', child: Text('Магазин')),
+                        DropdownMenuItem(value: 'new', child: Text('Новый')),
+                        DropdownMenuItem(value: 'used', child: Text('Б/у')),
+                      ],
+                      onChanged: (String? newValue) {
+                        setState(() {
+                          selectedValue = newValue;
+                          print(selectedValue);
+                        });
+                      },
+                    ),
                     SizedBox(
                       height: 15,
                     ),

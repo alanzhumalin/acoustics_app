@@ -97,6 +97,5 @@ class ShimmerLoadingAds extends StatelessWidget {
             );
           }),
     );
-    ;
   }
 }

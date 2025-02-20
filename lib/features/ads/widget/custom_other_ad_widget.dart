@@ -6,9 +6,16 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-class CustomOtherAdWidget extends StatelessWidget {
+class CustomOtherAdWidget extends StatefulWidget {
   const CustomOtherAdWidget({super.key, required this.ad});
   final AdModel ad;
+
+  @override
+  State<CustomOtherAdWidget> createState() => _CustomOtherAdWidgetState();
+}
+
+class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
+  bool isSelected = false;
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -17,8 +24,8 @@ class CustomOtherAdWidget extends StatelessWidget {
 
     return InkWell(
       onTap: () {
-        Navigator.push(
-            context, MaterialPageRoute(builder: (context) => AdDetail(ad: ad)));
+        Navigator.push(context,
+            MaterialPageRoute(builder: (context) => AdDetail(ad: widget.ad)));
       },
       child: Container(
         width: size.width / 2,
@@ -33,22 +40,25 @@ class CustomOtherAdWidget extends StatelessWidget {
                 Container(
                     height: 190,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(8),
                         color: const Color.fromARGB(255, 255, 255, 255)),
                     width: double.infinity,
-                    child: CachedNetworkImage(
-                      imageUrl: ad.adImages[0],
-                      fit: BoxFit.contain,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.ad.adImages[0],
+                        fit: BoxFit.contain,
+                      ),
                     )),
                 Positioned(
                     right: 3.5,
                     top: 3.5,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(10),
-                      child: Image(
+                        borderRadius: BorderRadius.circular(10),
+                        child: CachedNetworkImage(
+                          imageUrl: widget.ad.categorySelection.brandImage,
                           height: 30,
-                          image: NetworkImage(ad.categorySelection.brandImage)),
-                    )),
+                        ))),
               ],
             ),
             Expanded(
@@ -59,53 +69,64 @@ class CustomOtherAdWidget extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 10,
-                    right: 10,
+                    right: 5,
                     top: 10,
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Expanded(
                             child: Text(
-                              ad.title,
+                              widget.ad.title,
                               style: textTheme.bodyMedium,
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
                           ),
-                          const SizedBox(
-                            width: 5,
+                          SizedBox(
+                            width: 11,
                           ),
                           InkWell(
-                            onTap: () {},
-                            child: Icon(
-                              CupertinoIcons.heart,
-                              size: 20,
-                            ),
-                          )
+                            onTap: () {
+                              setState(() {
+                                isSelected = !isSelected;
+                              });
+                            },
+                            child: isSelected
+                                ? Icon(
+                                    Icons.favorite,
+                                    color: Colors.red,
+                                  )
+                                : Icon(
+                                    Icons.favorite_outline,
+                                    color:
+                                        const Color.fromARGB(255, 69, 69, 69),
+                                  ),
+                          ),
                         ],
                       ),
                       const SizedBox(
                         height: 5,
                       ),
-                      ConditionWidget(ad: ad),
+                      ConditionWidget(ad: widget.ad),
                       const SizedBox(
                         height: 5,
                       ),
                       Text(
-                        '${NumberFormat('#,###', 'ru_RU').format(int.parse(ad.price))} тг.',
+                        '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
                         style: textTheme.bodyLarge?.copyWith(
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       const SizedBox(height: 5),
                       Text(
-                        ad.city,
+                        widget.ad.city,
                         style: TextStyle(fontSize: 13),
                       ),
                       Text(
-                        '${ad.createdAt.day}-${ad.createdAt.month}-${ad.createdAt.year}',
+                        '${widget.ad.createdAt.day}-${widget.ad.createdAt.month}-${widget.ad.createdAt.year}',
                         style: TextStyle(fontSize: 12),
                       ),
                     ],

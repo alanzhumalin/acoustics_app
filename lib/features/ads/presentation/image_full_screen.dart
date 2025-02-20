@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 class ImageFullScreen extends StatefulWidget {
@@ -31,7 +32,7 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.white,
       body: GestureDetector(
         onVerticalDragStart: (details) {
           _startVerticalDrag = details.globalPosition;
@@ -63,7 +64,8 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
                   itemCount: widget.imagesLink.length,
                   controller: pageController,
                   itemBuilder: (context, index) {
-                    return Image.network(widget.imagesLink[index]);
+                    return CachedNetworkImage(
+                        imageUrl: widget.imagesLink[index]);
                   },
                 ),
               ),
@@ -99,11 +101,21 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
             Positioned(
               top: 50,
               left: 10,
-              child: IconButton(
-                onPressed: () {
-                  Navigator.of(context).pop(currentIndex);
-                },
-                icon: const Icon(Icons.arrow_back_ios),
+              child: Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(14)),
+                child: Center(
+                  child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.of(context).pop(currentIndex);
+                    },
+                    icon: const Icon(Icons.arrow_back_ios),
+                  ),
+                ),
               ),
             ),
           ],
