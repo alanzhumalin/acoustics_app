@@ -7,6 +7,7 @@ import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -32,6 +33,7 @@ class _CreateAdState extends State<CreateAd> {
   String selectedCategory = '';
   String selectedCity = '';
   String? selectedValue;
+  int? selectedState;
   Future<XFile?> _cropImage(XFile file) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: file.path,
@@ -40,7 +42,7 @@ class _CreateAdState extends State<CreateAd> {
       uiSettings: [
         AndroidUiSettings(
           toolbarTitle: 'Редактировать',
-          toolbarColor: Colors.deepOrange,
+          toolbarColor: Colors.blue,
           toolbarWidgetColor: Colors.white,
           initAspectRatio: CropAspectRatioPreset.square,
           lockAspectRatio: false,
@@ -144,7 +146,7 @@ class _CreateAdState extends State<CreateAd> {
     final theme = Theme.of(context).textTheme.bodyLarge!.color;
     final size = MediaQuery.of(context).size;
     final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
-
+    final containerColor = Theme.of(context).colorScheme.onSecondary;
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -168,16 +170,14 @@ class _CreateAdState extends State<CreateAd> {
                     InkWell(
                       onTap: pickedFileList.isNotEmpty ? null : pickPhoto,
                       child: ClipRRect(
-                          borderRadius: BorderRadius.circular(18),
+                          borderRadius: BorderRadius.circular(5),
                           child: Container(
                             padding: EdgeInsets.symmetric(
                               vertical: 30,
                             ),
                             width: double.infinity,
                             height: 228,
-                            decoration: BoxDecoration(
-                                color:
-                                    const Color.fromARGB(255, 221, 221, 221)),
+                            decoration: BoxDecoration(color: containerColor),
                             child: pickedFileList.isNotEmpty
                                 ? Center(
                                     child: ListView.separated(
@@ -192,23 +192,73 @@ class _CreateAdState extends State<CreateAd> {
                                         itemBuilder: (context, index) {
                                           return InkWell(
                                               onTap: () {
-                                                Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            ShowPhoto(
-                                                              removeFile:
-                                                                  removeFile,
-                                                              index: index,
-                                                              file:
-                                                                  pickedFileList[
-                                                                      index],
-                                                            )));
+                                                showCupertinoModalPopup(
+                                                    context: context,
+                                                    builder: (context) {
+                                                      return CupertinoActionSheet(
+                                                        actions: [
+                                                          CupertinoActionSheetAction(
+                                                            onPressed: () {
+                                                              removeFile(index);
+                                                              if (context
+                                                                  .mounted) {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              'Удалить фото',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .red),
+                                                            ),
+                                                          ),
+                                                          CupertinoActionSheetAction(
+                                                            onPressed:
+                                                                () async {
+                                                              await Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                      builder: (context) => ShowPhoto(
+                                                                            index:
+                                                                                index,
+                                                                            file:
+                                                                                pickedFileList[index],
+                                                                          )));
+                                                              if (context
+                                                                  .mounted) {
+                                                                Navigator.pop(
+                                                                    context);
+                                                              }
+                                                            },
+                                                            child: Text(
+                                                              'Посмотреть фото',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blue),
+                                                            ),
+                                                          ),
+                                                        ],
+                                                        cancelButton:
+                                                            CupertinoActionSheetAction(
+                                                          isDefaultAction: true,
+                                                          onPressed: () =>
+                                                              Navigator.pop(
+                                                                  context,
+                                                                  null),
+                                                          child: const Text(
+                                                              'Отмена',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .blue)),
+                                                        ),
+                                                      );
+                                                    });
                                               },
                                               child: Center(
                                                 child: ClipRRect(
                                                   borderRadius:
-                                                      BorderRadius.circular(6),
+                                                      BorderRadius.circular(5),
                                                   child: Image.file(
                                                     width: 100,
                                                     height: 100,
@@ -232,7 +282,7 @@ class _CreateAdState extends State<CreateAd> {
                                       'Выберите фото',
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
-                                          color: Colors.white,
+                                          color: colorOfText,
                                           fontSize: 16),
                                     ),
                                   ),
@@ -271,18 +321,16 @@ class _CreateAdState extends State<CreateAd> {
                       maxLength: 40,
                       controller: _titleController,
                       decoration: InputDecoration(
-                        hintText: 'Например Fender Stratocaster',
-                        contentPadding:
-                            EdgeInsets.symmetric(horizontal: 20, vertical: 14),
-                        focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
-                      ),
+                          hintText: 'Например Fender Stratocaster',
+                          contentPadding: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 14),
+                          fillColor: containerColor,
+                          filled: true,
+                          enabledBorder:
+                              OutlineInputBorder(borderSide: BorderSide.none),
+                          focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(5),
+                              borderSide: BorderSide.none)),
                       validator: (value) {
                         if (value == null || value.length < 10) {
                           return 'Название должно быть минимум 10 символов';
@@ -317,7 +365,7 @@ class _CreateAdState extends State<CreateAd> {
                                   ),
                                 ),
                               )
-                            : const Icon(Icons.arrow_drop_down_outlined),
+                            : const Icon(CupertinoIcons.arrow_down),
                         hintStyle: TextStyle(
                             color:
                                 Theme.of(context).textTheme.bodyLarge!.color),
@@ -326,16 +374,13 @@ class _CreateAdState extends State<CreateAd> {
                             : 'Выберите категорию',
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 14),
+                        fillColor: containerColor,
+                        filled: true,
+                        enabledBorder:
+                            OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 2),
-                        ),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
-                          borderSide:
-                              const BorderSide(color: Colors.blue, width: 2),
-                        ),
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (value) {
                         if (selectedCategory.isEmpty) {
@@ -375,7 +420,7 @@ class _CreateAdState extends State<CreateAd> {
                                         ),
                                       ),
                                     )
-                                  : const Icon(Icons.arrow_drop_down_outlined),
+                                  : const Icon(CupertinoIcons.arrow_down),
                               hintStyle: TextStyle(
                                   color: Theme.of(context)
                                       .textTheme
@@ -384,18 +429,15 @@ class _CreateAdState extends State<CreateAd> {
                               hintText: selectedBrand.isNotEmpty
                                   ? selectedBrand
                                   : 'Выберите бренд',
+                              fillColor: containerColor,
+                              filled: true,
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 14),
+                              enabledBorder: OutlineInputBorder(
+                                  borderSide: BorderSide.none),
                               focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                                borderSide: const BorderSide(
-                                    color: Colors.blue, width: 2),
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(14),
-                                borderSide: const BorderSide(
-                                    color: Colors.blue, width: 2),
-                              ),
+                                  borderRadius: BorderRadius.circular(5),
+                                  borderSide: BorderSide.none),
                             ),
                             validator: (value) {
                               if (selectedBrand.isEmpty) {
@@ -410,28 +452,96 @@ class _CreateAdState extends State<CreateAd> {
                       height: 15,
                     ),
                     Text(
-                      'Категория',
+                      'Состояние',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
                     SizedBox(
                       height: 10,
                     ),
-                    DropdownButton<String>(
-                      menuWidth: double.infinity,
-                      value: selectedValue,
-                      hint: Text('Выберите'),
-                      items: [
-                        DropdownMenuItem(value: 'shop', child: Text('Магазин')),
-                        DropdownMenuItem(value: 'new', child: Text('Новый')),
-                        DropdownMenuItem(value: 'used', child: Text('Б/у')),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                elevation: 0.2,
+                                backgroundColor: selectedState == 0
+                                    ? Colors.blue
+                                    : containerColor,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(5),
+                                ),
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  selectedState = 0;
+                                });
+                              },
+                              child: Text(
+                                'Магазин',
+                                style: TextStyle(
+                                    color: selectedState == 0
+                                        ? Colors.white
+                                        : colorOfText,
+                                    fontWeight: FontWeight.bold),
+                              )),
+                        ),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.2,
+                                  backgroundColor: selectedState == 1
+                                      ? Colors.blue
+                                      : containerColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    selectedState = 1;
+                                  });
+                                },
+                                child: Text(
+                                  'Новый',
+                                  style: TextStyle(
+                                      color: selectedState == 1
+                                          ? Colors.white
+                                          : colorOfText,
+                                      fontWeight: FontWeight.bold),
+                                ))),
+                        SizedBox(
+                          width: 5,
+                        ),
+                        Expanded(
+                            child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  elevation: 0.2,
+                                  backgroundColor: selectedState == 2
+                                      ? Colors.blue
+                                      : containerColor,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(5),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    selectedState = 2;
+                                  });
+                                },
+                                child: Text(
+                                  'Б/у',
+                                  style: TextStyle(
+                                      color: selectedState == 2
+                                          ? Colors.white
+                                          : colorOfText,
+                                      fontWeight: FontWeight.bold),
+                                ))),
                       ],
-                      onChanged: (String? newValue) {
-                        setState(() {
-                          selectedValue = newValue;
-                          print(selectedValue);
-                        });
-                      },
                     ),
                     SizedBox(
                       height: 15,
@@ -455,14 +565,13 @@ class _CreateAdState extends State<CreateAd> {
                             'Опишите товар, укажите его состояние и особенности',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                        fillColor: containerColor,
+                        filled: true,
+                        enabledBorder:
+                            OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (value) {
                         if (value == null || value.length < 20) {
@@ -491,14 +600,13 @@ class _CreateAdState extends State<CreateAd> {
                         hintText: 'Введите цену',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                        fillColor: containerColor,
+                        filled: true,
+                        enabledBorder:
+                            OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -524,8 +632,8 @@ class _CreateAdState extends State<CreateAd> {
                         left: 10,
                       ),
                       width: double.infinity,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(14)),
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(5)),
                       child: Column(
                         children: [
                           Row(
@@ -619,14 +727,13 @@ class _CreateAdState extends State<CreateAd> {
                         hintText: 'Ваше имя',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                        fillColor: containerColor,
+                        filled: true,
+                        enabledBorder:
+                            OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (value) {
                         if (value == null || value.length < 3) {
@@ -654,24 +761,29 @@ class _CreateAdState extends State<CreateAd> {
                       cursorErrorColor: Colors.blue,
                       cursorColor: Colors.blue,
                       keyboardType: TextInputType.phone,
+                      autocorrect: false,
+                      autofocus: false,
                       decoration: InputDecoration(
-                        prefix: Text(
-                          '+7 ',
-                          style: TextStyle(
-                              color: colorOfText, fontWeight: FontWeight.w500),
+                        fillColor: containerColor,
+                        filled: true,
+                        prefixIcon: Padding(
+                          padding: const EdgeInsets.only(left: 18, top: 1),
+                          child: Text(
+                            '+7 ',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w500, fontSize: 16),
+                          ),
                         ),
-                        prefixIconConstraints: BoxConstraints(),
+                        prefixIconConstraints:
+                            BoxConstraints(minWidth: 0, minHeight: 0),
                         hintText: '(700) 700 00 00',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
+                        enabledBorder:
+                            OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(14),
-                            borderSide:
-                                BorderSide(color: Colors.blue, width: 2)),
+                            borderRadius: BorderRadius.circular(5),
+                            borderSide: BorderSide.none),
                       ),
                       validator: (value) {
                         if (value == null ||
@@ -697,7 +809,7 @@ class _CreateAdState extends State<CreateAd> {
                             elevation: 0.2,
                             backgroundColor: Colors.blue,
                             shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(5),
                             ),
                           ),
                           onPressed: () {

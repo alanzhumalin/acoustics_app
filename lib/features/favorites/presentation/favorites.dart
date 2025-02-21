@@ -20,57 +20,80 @@ class Favorites extends ConsumerWidget {
         ),
         elevation: 0,
       ),
-      body: ListView.separated(
-          itemCount: 4,
-          separatorBuilder: (context, index) {
-            return SizedBox(
-              height: 12,
-            );
-          },
-          itemBuilder: (context, index) {
-            return Container(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-              color: theme,
-              child: Row(
-                children: [
-                  CircleAvatar(
-                      radius: 30,
-                      backgroundImage: AssetImage('assets/speakers/k1.jpeg')),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  Expanded(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Divider(
+              height: 4,
+              color: const Color.fromARGB(255, 98, 98, 98),
+              thickness: 2,
+            ),
+            ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: 4,
+                itemBuilder: (context, index) {
+                  return Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    color: theme,
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          'Продам L acoustics k1',
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.bold),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
+                        Row(
+                          children: [
+                            CircleAvatar(
+                                radius: 30,
+                                backgroundImage:
+                                    AssetImage('assets/speakers/k1.jpeg')),
+                            SizedBox(
+                              width: 20,
+                            ),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Продам L acoustics k1',
+                                    style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                  Text(
+                                    'Состояние топ покупали как новую L acoustics k1',
+                                    style: TextStyle(
+                                      fontSize: 13,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  CupertinoIcons.heart_fill,
+                                  color: Colors.red,
+                                ))
+                          ],
                         ),
-                        Text(
-                          'Состояние топ покупали как новую L acoustics k1',
-                          style: TextStyle(
-                            fontSize: 13,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
+                        SizedBox(
+                          height: 15,
                         ),
+                        Divider(
+                          height: 0,
+                          thickness: 1.2,
+                          color: const Color.fromARGB(255, 67, 67, 67),
+                        )
                       ],
                     ),
-                  ),
-                  IconButton(
-                      onPressed: () {},
-                      icon: Icon(
-                        CupertinoIcons.heart_fill,
-                        color: Colors.red,
-                      ))
-                ],
-              ),
-            );
-          }),
+                  );
+                }),
+          ],
+        ),
+      ),
     );
   }
 }

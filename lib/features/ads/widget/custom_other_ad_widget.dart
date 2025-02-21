@@ -89,22 +89,27 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
                           SizedBox(
                             width: 11,
                           ),
-                          InkWell(
-                            onTap: () {
+                          IconButton(
+                            isSelected: isSelected,
+                            padding: EdgeInsets.zero,
+                            constraints:
+                                BoxConstraints(minHeight: 10, minWidth: 40),
+                            style: const ButtonStyle(
+                              tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                            ),
+                            selectedIcon: Icon(
+                              Icons.favorite,
+                              color: Colors.red,
+                            ),
+                            onPressed: () {
                               setState(() {
                                 isSelected = !isSelected;
                               });
                             },
-                            child: isSelected
-                                ? Icon(
-                                    Icons.favorite,
-                                    color: Colors.red,
-                                  )
-                                : Icon(
-                                    Icons.favorite_outline,
-                                    color:
-                                        const Color.fromARGB(255, 69, 69, 69),
-                                  ),
+                            icon: Icon(
+                              Icons.favorite_outline,
+                              color: Color.fromARGB(255, 69, 69, 69),
+                            ),
                           ),
                         ],
                       ),

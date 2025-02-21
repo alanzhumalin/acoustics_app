@@ -23,11 +23,12 @@ final ThemeData lightTheme = ThemeData(
         type: BottomNavigationBarType.fixed),
     highlightColor: Colors.transparent,
     colorScheme: ColorScheme.fromSeed(
+        onSecondary: const Color.fromARGB(255, 207, 207, 207),
         onPrimaryContainer: const Color.fromARGB(221, 236, 236, 236),
         onSecondaryContainer: const Color.fromARGB(255, 240, 240, 240),
         secondaryContainer: const Color.fromARGB(255, 237, 237, 237),
-        surfaceContainerHigh: const Color.fromARGB(255, 0, 76, 255),
-        surfaceContainerLow: const Color.fromARGB(255, 128, 0, 255),
+        surfaceContainerHigh: const Color.fromARGB(255, 26, 77, 194),
+        surfaceContainerLow: const Color.fromARGB(255, 29, 29, 29),
         surfaceContainer: Color.fromARGB(255, 247, 247, 247),
         seedColor: Colors.blue,
         brightness: Brightness.light));
@@ -54,11 +55,12 @@ final ThemeData blackTheme = ThemeData(
         selectedItemColor: Colors.blue,
         type: BottomNavigationBarType.fixed),
     colorScheme: ColorScheme.fromSeed(
+        onSecondary: const Color.fromARGB(255, 42, 42, 42),
         onSecondaryContainer: const Color.fromARGB(255, 32, 32, 32),
         onPrimaryContainer: const Color.fromARGB(221, 70, 70, 70),
         secondaryContainer: const Color.fromARGB(255, 68, 68, 68),
-        surfaceContainerHigh: const Color.fromARGB(255, 0, 21, 159),
-        surfaceContainerLow: const Color.fromARGB(255, 90, 0, 146),
+        surfaceContainerHigh: const Color.fromARGB(255, 15, 45, 135),
+        surfaceContainerLow: const Color.fromARGB(255, 46, 46, 46),
         surfaceContainer: Color.fromARGB(255, 19, 19, 19),
         seedColor: const Color.fromARGB(255, 0, 94, 255),
         brightness: Brightness.dark));

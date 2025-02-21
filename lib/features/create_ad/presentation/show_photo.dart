@@ -5,14 +5,13 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ShowPhoto extends StatefulWidget {
-  const ShowPhoto(
-      {super.key,
-      required this.file,
-      required this.index,
-      required this.removeFile});
+  const ShowPhoto({
+    super.key,
+    required this.file,
+    required this.index,
+  });
   final XFile file;
   final int index;
-  final Function removeFile;
   @override
   State<ShowPhoto> createState() => _ShowPhotoState();
 }
@@ -29,28 +28,24 @@ class _ShowPhotoState extends State<ShowPhoto> {
                 child: Image.file(File(widget.file.path))),
           ),
           Positioned(
-              left: 10,
-              top: 50,
-              child: IconButton(
+            left: 10,
+            top: 50,
+            child: Container(
+              height: 40,
+              width: 40,
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(14)),
+              child: Center(
+                child: IconButton(
+                  color: Colors.white,
                   onPressed: () {
-                    Navigator.pop(context);
+                    Navigator.of(context).pop(context);
                   },
-                  icon: Icon(Icons.arrow_back_ios))),
-          Positioned(
-              left: 0,
-              right: 0,
-              bottom: 100,
-              child: InkWell(
-                onTap: () {
-                  widget.removeFile(widget.index);
-                  Navigator.pop(context);
-                },
-                child: Icon(
-                  Icons.delete,
-                  color: Colors.red,
-                  size: 40,
+                  icon: const Icon(Icons.arrow_back_ios),
                 ),
-              ))
+              ),
+            ),
+          ),
         ],
       ),
     );

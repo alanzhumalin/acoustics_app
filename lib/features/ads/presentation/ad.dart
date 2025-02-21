@@ -83,7 +83,7 @@ class _AdState extends ConsumerState<Ad> {
 
     return Scaffold(
       appBar: AppBar(
-        toolbarHeight: 43,
+        toolbarHeight: 60,
         titleSpacing: 10,
         centerTitle: false,
         forceMaterialTransparency: true,
@@ -224,7 +224,7 @@ class _AdState extends ConsumerState<Ad> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
-                    height: 20,
+                    height: 10,
                   ),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),

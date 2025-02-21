@@ -87,15 +87,21 @@ class Profile extends ConsumerWidget {
                     ),
                     actions: [
                       TextButton(
+                        style: ButtonStyle(
+                          splashFactory: NoSplash.splashFactory,
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop(true);
                         },
                         child: Text(
                           'Да',
-                          style: TextStyle(color: Colors.blue),
+                          style: TextStyle(color: Colors.red),
                         ),
                       ),
                       TextButton(
+                        style: ButtonStyle(
+                          splashFactory: NoSplash.splashFactory,
+                        ),
                         onPressed: () {
                           Navigator.of(context).pop(false);
                         },

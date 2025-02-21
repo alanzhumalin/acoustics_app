@@ -77,10 +77,10 @@ class _LoginState extends State<Login> {
                             color: colorOfText, fontWeight: FontWeight.w500),
                       ),
                       focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(5),
                           borderSide: BorderSide(color: Colors.blue, width: 2)),
                       border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(14),
+                          borderRadius: BorderRadius.circular(5),
                           borderSide: BorderSide(color: Colors.blue, width: 2)),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 14),
@@ -142,7 +142,7 @@ class _LoginState extends State<Login> {
                           elevation: 0.2,
                           backgroundColor: Colors.blue,
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(5),
                           ),
                         ),
                         onPressed: () {

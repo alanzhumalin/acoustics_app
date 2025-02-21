@@ -156,7 +156,6 @@ class _ShowMapState extends State<ShowMap> {
                 children: [
                   TextField(
                     onChanged: showCities,
-                    autofocus: true,
                     decoration: InputDecoration(
                       filled: true,
                       fillColor: theme,
@@ -236,7 +235,10 @@ class _ShowMapState extends State<ShowMap> {
                         itemBuilder: (context, index) {
                           return InkWell(
                             onTap: () {
-                              Navigator.of(context).pop(results[index]);
+                              Navigator.of(context).pop({
+                                'text': results[index],
+                                'location': LatLng(31, 13)
+                              });
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(

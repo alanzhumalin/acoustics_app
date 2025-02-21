@@ -313,11 +313,11 @@ class _ChatDetailState extends ConsumerState<ChatDetail> {
                           contentPadding: EdgeInsets.only(
                               left: 10, right: 10, top: 0, bottom: 0),
                           focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(5),
                               borderSide:
                                   BorderSide(color: Colors.blue, width: 2)),
                           border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(14),
+                              borderRadius: BorderRadius.circular(5),
                               borderSide:
                                   BorderSide(color: Colors.blue, width: 2)),
                           hintText: "Введите сообщение",

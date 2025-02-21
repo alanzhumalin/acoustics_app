@@ -155,7 +155,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          toolbarHeight: 43,
+          toolbarHeight: 60,
           titleSpacing: 10,
           forceMaterialTransparency: true,
           title: Row(
