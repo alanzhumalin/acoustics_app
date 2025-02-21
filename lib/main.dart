@@ -21,7 +21,7 @@ class MyApp extends ConsumerWidget {
       darkTheme: blackTheme,
       themeMode: themeMode,
       theme: theme,
-      home: Home(),
+      home: Login(),
     );
   }
 }
