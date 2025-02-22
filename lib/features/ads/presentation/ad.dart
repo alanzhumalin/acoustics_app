@@ -6,6 +6,7 @@ import 'package:acousticsapp/features/ads/presentation/search.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
 import 'package:acousticsapp/features/ads/widget/shimmer_loading_category.dart';
 import 'package:acousticsapp/shared/provider/page_scroll_provider.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -119,6 +120,11 @@ class _AdState extends ConsumerState<Ad> {
                         : null,
                     filled: true,
                     fillColor: searchColor,
+                    suffixIcon: Icon(
+                      CupertinoIcons.search,
+                      color: Colors.blue,
+                      size: 20,
+                    ),
                     constraints: BoxConstraints(maxHeight: 39),
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 0),

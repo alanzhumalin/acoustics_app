@@ -24,7 +24,7 @@ final ThemeData lightTheme = ThemeData(
     highlightColor: Colors.transparent,
     colorScheme: ColorScheme.fromSeed(
         onSecondary: const Color.fromARGB(255, 207, 207, 207),
-        onPrimaryContainer: const Color.fromARGB(221, 236, 236, 236),
+        onPrimaryContainer: const Color.fromARGB(221, 238, 238, 238),
         onSecondaryContainer: const Color.fromARGB(255, 240, 240, 240),
         secondaryContainer: const Color.fromARGB(255, 237, 237, 237),
         surfaceContainerHigh: const Color.fromARGB(255, 26, 77, 194),
@@ -57,7 +57,7 @@ final ThemeData blackTheme = ThemeData(
     colorScheme: ColorScheme.fromSeed(
         onSecondary: const Color.fromARGB(255, 42, 42, 42),
         onSecondaryContainer: const Color.fromARGB(255, 32, 32, 32),
-        onPrimaryContainer: const Color.fromARGB(221, 70, 70, 70),
+        onPrimaryContainer: const Color.fromARGB(221, 23, 23, 23),
         secondaryContainer: const Color.fromARGB(255, 68, 68, 68),
         surfaceContainerHigh: const Color.fromARGB(255, 15, 45, 135),
         surfaceContainerLow: const Color.fromARGB(255, 46, 46, 46),

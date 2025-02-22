@@ -1,48 +1,39 @@
 import 'dart:io';
 
 import 'package:acousticsapp/core/utils/phone_formatter.dart';
+import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_brand.dart';
 import 'package:acousticsapp/features/create_ad/presentation/select_category.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
-class CreateAd extends StatefulWidget {
-  const CreateAd({super.key});
-
+class ChangeAd extends StatefulWidget {
+  const ChangeAd({super.key, required this.ad});
+  final AdModel ad;
   @override
-  State<CreateAd> createState() => _CreateAdState();
+  State<ChangeAd> createState() => _ChangeAdState();
 }
 
-class _CreateAdState extends State<CreateAd> {
-  final TextEditingController _titleController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
+class _ChangeAdState extends State<ChangeAd> {
+  late TextEditingController _titleController;
+  late TextEditingController _descriptionController;
+  late TextEditingController _priceController;
+  late TextEditingController _nameController;
+  late TextEditingController _phoneController;
   final ImagePicker imagePicker = ImagePicker();
-  List<XFile> pickedFileList = <XFile>[];
-  var location = LatLng(43.2452, 76.9345);
+  late List<dynamic> images;
+  late LatLng location;
   final _key = GlobalKey<FormState>();
-  String selectedBrand = '';
-  String selectedCategory = '';
-  String selectedCity = '';
-  int? selectedState;
-
-  bool isTitleError = false;
-  bool isCategoryError = false;
-  bool isBrandError = false;
-  bool isStateError = false;
-  bool isDescriptionError = false;
-  bool isPriceError = false;
-  bool isNameError = false;
-  bool isPhoneError = false;
-
+  List<String> removedImages = [];
+  late String selectedBrand;
+  late String selectedCategory;
+  late String selectedCity;
   Future<XFile?> _cropImage(XFile file) async {
     final croppedFile = await ImageCropper().cropImage(
       sourcePath: file.path,
@@ -99,7 +90,7 @@ class _CreateAdState extends State<CreateAd> {
           final newFile = await _cropImage(file);
           if (newFile != null) {
             setState(() {
-              pickedFileList.add(newFile);
+              images.add(newFile);
             });
           }
         } else {
@@ -132,10 +123,33 @@ class _CreateAdState extends State<CreateAd> {
     }
   }
 
-  void removeFile(int index) {
+  void removeImage(int index) {
     setState(() {
-      pickedFileList.removeAt(index);
+      final item = images[index];
+      if (item is String) {
+        removedImages.add(item);
+      }
+      images.removeAt(index);
     });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _titleController = TextEditingController(text: widget.ad.title);
+    _descriptionController = TextEditingController(text: widget.ad.description);
+    _priceController = TextEditingController(
+      text: widget.ad.price,
+    );
+    _nameController = TextEditingController(text: widget.ad.nameOfCustomer);
+    _phoneController = TextEditingController();
+    images = List.from(widget.ad.adImages);
+    location = LatLng(
+        double.parse(widget.ad.latLng[0]), double.parse(widget.ad.latLng[1]));
+    selectedBrand = widget.ad.categorySelection.brand;
+    selectedCategory = widget.ad.categorySelection.category;
+    selectedCity = widget.ad.city;
   }
 
   @override
@@ -177,7 +191,7 @@ class _CreateAdState extends State<CreateAd> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     InkWell(
-                      onTap: pickedFileList.isNotEmpty ? null : pickPhoto,
+                      onTap: images.isNotEmpty ? null : pickPhoto,
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(5),
                           child: Container(
@@ -187,7 +201,7 @@ class _CreateAdState extends State<CreateAd> {
                             width: double.infinity,
                             height: 228,
                             decoration: BoxDecoration(color: containerColor),
-                            child: pickedFileList.isNotEmpty
+                            child: images.isNotEmpty
                                 ? Center(
                                     child: ListView.separated(
                                         padding: EdgeInsets.symmetric(
@@ -197,7 +211,7 @@ class _CreateAdState extends State<CreateAd> {
                                               width: 10,
                                             ),
                                         scrollDirection: Axis.horizontal,
-                                        itemCount: pickedFileList.length,
+                                        itemCount: images.length,
                                         itemBuilder: (context, index) {
                                           return InkWell(
                                               onTap: () {
@@ -208,7 +222,8 @@ class _CreateAdState extends State<CreateAd> {
                                                         actions: [
                                                           CupertinoActionSheetAction(
                                                             onPressed: () {
-                                                              removeFile(index);
+                                                              removeImage(
+                                                                  index);
                                                               if (context
                                                                   .mounted) {
                                                                 Navigator.pop(
@@ -232,7 +247,7 @@ class _CreateAdState extends State<CreateAd> {
                                                                             index:
                                                                                 index,
                                                                             file:
-                                                                                pickedFileList[index],
+                                                                                images[index],
                                                                           )));
                                                               if (context
                                                                   .mounted) {
@@ -268,20 +283,40 @@ class _CreateAdState extends State<CreateAd> {
                                                 child: ClipRRect(
                                                   borderRadius:
                                                       BorderRadius.circular(5),
-                                                  child: Image.file(
-                                                    width: 100,
-                                                    height: 100,
-                                                    File(pickedFileList[index]
-                                                        .path),
-                                                    fit: BoxFit.cover,
-                                                    errorBuilder: (context,
-                                                        error, stackTrace) {
-                                                      return const Icon(
-                                                          Icons.broken_image,
-                                                          size: 50,
-                                                          color: Colors.red);
-                                                    },
-                                                  ),
+                                                  child: images[index] is String
+                                                      ? Container(
+                                                          color: Colors.white,
+                                                          child:
+                                                              CachedNetworkImage(
+                                                                  imageUrl:
+                                                                      images[
+                                                                          index],
+                                                                  width: 100,
+                                                                  height: 100,
+                                                                  fit: BoxFit
+                                                                      .cover),
+                                                        )
+                                                      : Container(
+                                                          color: Colors.white,
+                                                          child: Image.file(
+                                                            File((images[index]
+                                                                    as XFile)
+                                                                .path),
+                                                            width: 100,
+                                                            height: 100,
+                                                            fit: BoxFit.cover,
+                                                            errorBuilder:
+                                                                (context, error,
+                                                                    stackTrace) {
+                                                              return const Icon(
+                                                                  Icons
+                                                                      .broken_image,
+                                                                  size: 50,
+                                                                  color: Colors
+                                                                      .red);
+                                                            },
+                                                          ),
+                                                        ),
                                                 ),
                                               ));
                                         }),
@@ -297,7 +332,7 @@ class _CreateAdState extends State<CreateAd> {
                                   ),
                           )),
                     ),
-                    if (pickedFileList.isNotEmpty)
+                    if (images.isNotEmpty)
                       Padding(
                         padding: EdgeInsets.only(top: 15),
                         child: Align(
@@ -328,11 +363,6 @@ class _CreateAdState extends State<CreateAd> {
                       cursorErrorColor: Colors.blue,
                       cursorColor: Colors.blue,
                       maxLength: 40,
-                      onChanged: (text) {
-                        setState(() {
-                          isTitleError = false;
-                        });
-                      },
                       controller: _titleController,
                       decoration: InputDecoration(
                           hintText: 'Например Fender Stratocaster',
@@ -340,10 +370,6 @@ class _CreateAdState extends State<CreateAd> {
                               horizontal: 20, vertical: 14),
                           fillColor: containerColor,
                           filled: true,
-                          focusedErrorBorder:
-                              OutlineInputBorder(borderSide: BorderSide.none),
-                          errorBorder:
-                              OutlineInputBorder(borderSide: BorderSide.none),
                           enabledBorder:
                               OutlineInputBorder(borderSide: BorderSide.none),
                           focusedBorder: OutlineInputBorder(
@@ -351,30 +377,11 @@ class _CreateAdState extends State<CreateAd> {
                               borderSide: BorderSide.none)),
                       validator: (value) {
                         if (value == null || value.length < 10) {
-                          setState(() {
-                            isTitleError = true;
-                          });
-                          return null;
+                          return 'Название должно быть минимум 10 символов';
                         }
-
                         return null;
                       },
                     ),
-                    if (isTitleError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Название должно быть минимум 10 символов!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     SizedBox(
                       height: 10,
                     ),
@@ -389,16 +396,7 @@ class _CreateAdState extends State<CreateAd> {
                     TextFormField(
                       readOnly: true,
                       onTap: selectCategory,
-                      onChanged: (value) {
-                        setState(() {
-                          isCategoryError = false;
-                        });
-                      },
                       decoration: InputDecoration(
-                        focusedErrorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        errorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
                         suffixIcon: selectedCategory.isNotEmpty
                             ? TextButton(
                                 onPressed: selectCategory,
@@ -412,6 +410,9 @@ class _CreateAdState extends State<CreateAd> {
                                 ),
                               )
                             : const Icon(CupertinoIcons.arrow_down),
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.bodyLarge!.color),
                         hintText: selectedCategory.isNotEmpty
                             ? selectedCategory
                             : 'Выберите категорию',
@@ -427,32 +428,11 @@ class _CreateAdState extends State<CreateAd> {
                       ),
                       validator: (value) {
                         if (selectedCategory.isEmpty) {
-                          setState(() {
-                            isCategoryError = true;
-                          });
-                          return null;
+                          return 'Выберите категорию';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isCategoryError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Выберите категорию!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     if (selectedCategory.isNotEmpty)
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -471,11 +451,6 @@ class _CreateAdState extends State<CreateAd> {
                           TextFormField(
                             readOnly: true,
                             onTap: selectBrand,
-                            onChanged: (value) {
-                              setState(() {
-                                isBrandError = false;
-                              });
-                            },
                             decoration: InputDecoration(
                               suffixIcon: selectedBrand.isNotEmpty
                                   ? TextButton(
@@ -500,10 +475,6 @@ class _CreateAdState extends State<CreateAd> {
                                   : 'Выберите бренд',
                               fillColor: containerColor,
                               filled: true,
-                              focusedErrorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide.none),
-                              errorBorder: OutlineInputBorder(
-                                  borderSide: BorderSide.none),
                               contentPadding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 14),
                               enabledBorder: OutlineInputBorder(
@@ -514,147 +485,10 @@ class _CreateAdState extends State<CreateAd> {
                             ),
                             validator: (value) {
                               if (selectedBrand.isEmpty) {
-                                setState(() {
-                                  isBrandError = true;
-                                });
-                                return null;
+                                return 'Выберите бренд';
                               }
                               return null;
                             },
-                          ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          if (isBrandError)
-                            Row(
-                              children: [
-                                Icon(Icons.error, color: Colors.red, size: 16),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Выберите категорию!',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
-                            ),
-                        ],
-                      ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Text(
-                      'Состояние',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                    ),
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                elevation: 0.2,
-                                backgroundColor: selectedState == 0
-                                    ? Colors.blue
-                                    : containerColor,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  selectedState = 0;
-                                  isStateError = false;
-                                });
-                              },
-                              child: Text(
-                                'Магазин',
-                                style: TextStyle(
-                                    color: selectedState == 0
-                                        ? Colors.white
-                                        : colorOfText,
-                                    fontWeight: FontWeight.bold),
-                              )),
-                        ),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0.2,
-                                  backgroundColor: selectedState == 1
-                                      ? Colors.blue
-                                      : containerColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedState = 1;
-                                    isStateError = false;
-                                  });
-                                },
-                                child: Text(
-                                  'Новый',
-                                  style: TextStyle(
-                                      color: selectedState == 1
-                                          ? Colors.white
-                                          : colorOfText,
-                                      fontWeight: FontWeight.bold),
-                                ))),
-                        SizedBox(
-                          width: 5,
-                        ),
-                        Expanded(
-                            child: ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  elevation: 0.2,
-                                  backgroundColor: selectedState == 2
-                                      ? Colors.blue
-                                      : containerColor,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    selectedState = 2;
-                                    isStateError = false;
-                                  });
-                                },
-                                child: Text(
-                                  'Б/у',
-                                  style: TextStyle(
-                                      color: selectedState == 2
-                                          ? Colors.white
-                                          : colorOfText,
-                                      fontWeight: FontWeight.bold),
-                                ))),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isStateError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Выберите состояние товара!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
                           ),
                         ],
                       ),
@@ -673,11 +507,6 @@ class _CreateAdState extends State<CreateAd> {
                       cursorErrorColor: Colors.blue,
                       cursorColor: Colors.blue,
                       maxLength: 200,
-                      onChanged: (value) {
-                        setState(() {
-                          isDescriptionError = false;
-                        });
-                      },
                       maxLines: 5,
                       controller: _descriptionController,
                       decoration: InputDecoration(
@@ -687,10 +516,6 @@ class _CreateAdState extends State<CreateAd> {
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                         fillColor: containerColor,
                         filled: true,
-                        focusedErrorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        errorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
                         enabledBorder:
                             OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
@@ -699,32 +524,11 @@ class _CreateAdState extends State<CreateAd> {
                       ),
                       validator: (value) {
                         if (value == null || value.length < 20) {
-                          setState(() {
-                            isDescriptionError = true;
-                          });
-                          return null;
+                          return 'Описание должно быть минимум 20 символов';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isDescriptionError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Описание должно быть не меньше 20 символов!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     SizedBox(
                       height: 10,
                     ),
@@ -741,21 +545,12 @@ class _CreateAdState extends State<CreateAd> {
                       cursorColor: Colors.blue,
                       controller: _priceController,
                       keyboardType: TextInputType.number,
-                      onChanged: (value) {
-                        setState(() {
-                          isPriceError = false;
-                        });
-                      },
                       decoration: InputDecoration(
                         hintText: 'Введите цену',
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                         fillColor: containerColor,
                         filled: true,
-                        focusedErrorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        errorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
                         enabledBorder:
                             OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
@@ -764,32 +559,11 @@ class _CreateAdState extends State<CreateAd> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          setState(() {
-                            isPriceError = true;
-                          });
-                          return null;
+                          return 'Введите цену';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isPriceError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Введите цену!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     SizedBox(
                       height: 10,
                     ),
@@ -897,11 +671,6 @@ class _CreateAdState extends State<CreateAd> {
                     TextFormField(
                       cursorErrorColor: Colors.blue,
                       cursorColor: Colors.blue,
-                      onChanged: (value) {
-                        setState(() {
-                          isNameError = false;
-                        });
-                      },
                       controller: _nameController,
                       decoration: InputDecoration(
                         hintText: 'Ваше имя',
@@ -909,10 +678,6 @@ class _CreateAdState extends State<CreateAd> {
                             EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                         fillColor: containerColor,
                         filled: true,
-                        focusedErrorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        errorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
                         enabledBorder:
                             OutlineInputBorder(borderSide: BorderSide.none),
                         focusedBorder: OutlineInputBorder(
@@ -921,32 +686,11 @@ class _CreateAdState extends State<CreateAd> {
                       ),
                       validator: (value) {
                         if (value == null || value.length < 3) {
-                          setState(() {
-                            isNameError = true;
-                          });
-                          return null;
+                          return 'Введите ваше имя';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isNameError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Введите имя!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     SizedBox(
                       height: 20,
                     ),
@@ -968,18 +712,9 @@ class _CreateAdState extends State<CreateAd> {
                       keyboardType: TextInputType.phone,
                       autocorrect: false,
                       autofocus: false,
-                      onChanged: (value) {
-                        setState(() {
-                          isPhoneError = false;
-                        });
-                      },
                       decoration: InputDecoration(
                         fillColor: containerColor,
                         filled: true,
-                        focusedErrorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
-                        errorBorder:
-                            OutlineInputBorder(borderSide: BorderSide.none),
                         prefixIcon: Padding(
                           padding: const EdgeInsets.only(left: 18, top: 1),
                           child: Text(
@@ -1008,32 +743,11 @@ class _CreateAdState extends State<CreateAd> {
                                     .replaceAll(RegExp(r'[+\(\)\s-]'), '')
                                     .length <=
                                 9) {
-                          setState(() {
-                            isPhoneError = true;
-                          });
-                          return null;
+                          return 'Номер не корректный';
                         }
                         return null;
                       },
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isPhoneError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Номер не корректный!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
                     const SizedBox(
                       height: 20,
                     ),
@@ -1042,14 +756,13 @@ class _CreateAdState extends State<CreateAd> {
                       child: ElevatedButton(
                           style: ElevatedButton.styleFrom(
                             elevation: 0.2,
-                            backgroundColor: Colors.blue,
+                            backgroundColor: Colors.green,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(5),
                             ),
                           ),
                           onPressed: () {
-                            if (_key.currentState!.validate() &&
-                                selectedState != null) {
+                            if (_key.currentState!.validate()) {
                               debugPrint('good');
                               showDialog(
                                   context: context,
@@ -1058,14 +771,10 @@ class _CreateAdState extends State<CreateAd> {
                                       content: Text('го'),
                                     );
                                   });
-                            } else {
-                              setState(() {
-                                isStateError = true;
-                              });
                             }
                           },
                           child: Text(
-                            'Опубликовать',
+                            'Сохранить',
                             style: TextStyle(
                                 fontWeight: FontWeight.bold,
                                 fontSize: 15,

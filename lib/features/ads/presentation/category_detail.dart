@@ -216,6 +216,11 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
               SizedBox(
                 width: 10,
               ),
+              Icon(
+                CupertinoIcons.search,
+                color: Colors.blue,
+                size: 20,
+              ),
             ],
           ),
         ),

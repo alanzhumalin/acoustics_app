@@ -9,6 +9,8 @@ class Favorites extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context).colorScheme.surfaceContainer;
+    final colorDivider = Theme.of(context).colorScheme.onSecondary;
+
     return Scaffold(
       appBar: AppBar(
         forceMaterialTransparency: true,
@@ -25,7 +27,7 @@ class Favorites extends ConsumerWidget {
           children: [
             Divider(
               height: 4,
-              color: const Color.fromARGB(255, 98, 98, 98),
+              color: colorDivider,
               thickness: 2,
             ),
             ListView.builder(
@@ -82,11 +84,7 @@ class Favorites extends ConsumerWidget {
                         SizedBox(
                           height: 15,
                         ),
-                        Divider(
-                          height: 0,
-                          thickness: 1.2,
-                          color: const Color.fromARGB(255, 67, 67, 67),
-                        )
+                        Divider(height: 0, thickness: 1.2, color: colorDivider)
                       ],
                     ),
                   );

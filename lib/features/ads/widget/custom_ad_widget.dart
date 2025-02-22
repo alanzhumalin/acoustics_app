@@ -17,53 +17,50 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
   bool isSelected = false;
   @override
   Widget build(BuildContext context) {
-    final borderColor = Theme.of(context).colorScheme.onPrimaryContainer;
+    final containerColor = Theme.of(context).colorScheme.onPrimaryContainer;
     final textTheme = Theme.of(context).textTheme;
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(width: 1.2, color: borderColor)),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Stack(
             children: [
               Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    color: const Color.fromARGB(255, 255, 255, 255)),
-                height: 190,
-                width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(8),
-                  child: Center(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8)),
+                      color: const Color.fromARGB(255, 255, 255, 255)),
+                  height: 190,
+                  width: double.infinity,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8)),
+                    child: Center(
                       child: CachedNetworkImage(
-                    placeholder: (context, url) {
-                      return SizedBox(
-                        width: double.infinity,
-                        height: 180,
-                        child: ClipRRect(
-                          borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(10),
-                            topRight: Radius.circular(10),
-                          ),
-                          child: Container(
-                            color: const Color.fromARGB(255, 216, 216, 216),
-                          ),
-                        ),
-                      );
-                    },
-                    imageUrl: widget.ad.adImages[0],
-                    fit: BoxFit.contain,
+                        fadeInDuration: Duration.zero,
+                        fadeOutDuration: Duration.zero,
+                        fadeInCurve: Curves.linear,
+                        fadeOutCurve: Curves.linear,
+                        imageUrl: widget.ad.adImages[0],
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   )),
-                ),
-              ),
               Positioned(
                   right: 3.5,
                   top: 3.5,
                   child: ClipRRect(
                       borderRadius: BorderRadius.circular(10),
                       child: CachedNetworkImage(
+                        fadeInDuration: Duration.zero,
+                        fadeOutDuration: Duration.zero,
+                        fadeInCurve: Curves.linear,
+                        fadeOutCurve: Curves.linear,
                         imageUrl: widget.ad.categorySelection.brandImage,
                         height: 30,
                       ))),
@@ -72,10 +69,13 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
           Expanded(
             child: Stack(
               children: [
-                Card(
-                  shadowColor: Colors.transparent,
+                Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          bottomRight: Radius.circular(8)),
+                      color: containerColor),
                   margin: EdgeInsets.all(0),
-                  color: Theme.of(context).cardTheme.color,
                   child: Padding(
                     padding: const EdgeInsets.only(
                       left: 10,
@@ -100,6 +100,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                               width: 11,
                             ),
                             IconButton(
+                              iconSize: 25,
                               isSelected: isSelected,
                               padding: EdgeInsets.zero,
                               constraints:

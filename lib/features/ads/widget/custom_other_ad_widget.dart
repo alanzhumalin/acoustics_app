@@ -30,8 +30,8 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
       child: Container(
         width: size.width / 2,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(width: 1.2, color: borderColor)),
+          borderRadius: BorderRadius.circular(8),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -40,12 +40,20 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
                 Container(
                     height: 190,
                     decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
+                        borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(8),
+                            topRight: Radius.circular(8)),
                         color: const Color.fromARGB(255, 255, 255, 255)),
                     width: double.infinity,
                     child: ClipRRect(
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(8),
+                          topRight: Radius.circular(8)),
                       child: CachedNetworkImage(
+                        fadeInDuration: Duration.zero,
+                        fadeOutDuration: Duration.zero,
+                        fadeInCurve: Curves.linear,
+                        fadeOutCurve: Curves.linear,
                         imageUrl: widget.ad.adImages[0],
                         fit: BoxFit.contain,
                       ),
@@ -56,16 +64,23 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
                     child: ClipRRect(
                         borderRadius: BorderRadius.circular(10),
                         child: CachedNetworkImage(
+                          fadeInDuration: Duration.zero,
+                          fadeOutDuration: Duration.zero,
+                          fadeInCurve: Curves.linear,
+                          fadeOutCurve: Curves.linear,
                           imageUrl: widget.ad.categorySelection.brandImage,
                           height: 30,
                         ))),
               ],
             ),
             Expanded(
-              child: Card(
-                shadowColor: Colors.transparent,
+              child: Container(
+                decoration: BoxDecoration(
+                    color: Theme.of(context).cardTheme.color,
+                    borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8))),
                 margin: EdgeInsets.only(top: 1),
-                color: Theme.of(context).cardTheme.color,
                 child: Padding(
                   padding: const EdgeInsets.only(
                     left: 10,
