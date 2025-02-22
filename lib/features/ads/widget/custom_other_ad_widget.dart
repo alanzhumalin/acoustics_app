@@ -83,10 +83,7 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
                 margin: EdgeInsets.only(top: 1),
                 child: Padding(
                   padding: const EdgeInsets.only(
-                    left: 10,
-                    right: 5,
-                    top: 10,
-                  ),
+                      left: 10, right: 5, top: 10, bottom: 10),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -135,6 +132,7 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
                       const SizedBox(
                         height: 5,
                       ),
+                      Spacer(),
                       Text(
                         '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
                         style: textTheme.bodyLarge?.copyWith(

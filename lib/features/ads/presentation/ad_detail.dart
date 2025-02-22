@@ -36,13 +36,21 @@ class _AdDetailState extends State<AdDetail> {
   }
 
   double _calculateHeight(double screenHeight) {
-    if (screenHeight <= 642) return screenHeight * 0.56;
+    if (screenHeight <= 615) return screenHeight * 0.62;
 
-    if (screenHeight <= 691) return screenHeight * 0.53;
-    if (screenHeight <= 739) return screenHeight * 0.49;
-    if (screenHeight <= 773) return screenHeight * 0.46;
-    if (screenHeight <= 815) return screenHeight * 0.44;
-    if (screenHeight <= 886) return screenHeight * 0.42;
+    if (screenHeight <= 646) return screenHeight * 0.565;
+
+    if (screenHeight <= 672) return screenHeight * 0.535;
+
+    if (screenHeight <= 710) return screenHeight * 0.515;
+
+    if (screenHeight <= 744) return screenHeight * 0.49;
+
+    if (screenHeight <= 782) return screenHeight * 0.47;
+    if (screenHeight <= 816) return screenHeight * 0.45;
+    if (screenHeight <= 850) return screenHeight * 0.43;
+    if (screenHeight <= 894) return screenHeight * 0.41;
+    if (screenHeight <= 928) return screenHeight * 0.39;
     return screenHeight * 0.38;
   }
 

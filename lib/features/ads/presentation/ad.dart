@@ -39,6 +39,10 @@ class _AdState extends ConsumerState<Ad> {
   }
 
   double _calculateHeight(double screenHeight) {
+    if (screenHeight <= 603) return screenHeight * 0.45;
+
+    if (screenHeight <= 649) return screenHeight * 0.42;
+
     if (screenHeight <= 706) return screenHeight * 0.39;
     if (screenHeight <= 749) return screenHeight * 0.36;
     if (screenHeight <= 794) return screenHeight * 0.34;
@@ -47,11 +51,17 @@ class _AdState extends ConsumerState<Ad> {
   }
 
   double calculateWidth(double screenWidth) {
-    if (screenWidth <= 341) return 0.47;
+    if (screenWidth <= 338) return 0.45;
 
-    if (screenWidth <= 362) return 0.49;
-    if (screenWidth <= 397) return 0.52;
-    return 0.57;
+    if (screenWidth <= 352) return 0.48;
+
+    if (screenWidth <= 368) return 0.50;
+
+    if (screenWidth <= 381) return 0.52;
+
+    if (screenWidth <= 403) return 0.54;
+    if (screenWidth <= 421) return 0.56;
+    return 0.60;
   }
 
   @override

@@ -67,89 +67,83 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
             ],
           ),
           Expanded(
-            child: Stack(
-              children: [
-                Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          bottomRight: Radius.circular(8)),
-                      color: containerColor),
-                  margin: EdgeInsets.all(0),
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                      left: 10,
-                      right: 5,
-                      top: 10,
-                    ),
-                    child: Column(
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(8),
+                      bottomRight: Radius.circular(8)),
+                  color: containerColor),
+              margin: EdgeInsets.all(0),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 10, right: 5, top: 10, bottom: 10),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Expanded(
-                              child: Text(
-                                widget.ad.title,
-                                style: textTheme.bodyMedium,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 11,
-                            ),
-                            IconButton(
-                              iconSize: 25,
-                              isSelected: isSelected,
-                              padding: EdgeInsets.zero,
-                              constraints:
-                                  BoxConstraints(minHeight: 10, minWidth: 40),
-                              style: const ButtonStyle(
-                                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                              ),
-                              selectedIcon: Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  isSelected = !isSelected;
-                                });
-                              },
-                              icon: Icon(
-                                Icons.favorite_outline,
-                                color: Color.fromARGB(255, 69, 69, 69),
-                              ),
-                            ),
-                          ],
+                        Expanded(
+                          child: Text(
+                            widget.ad.title,
+                            style: textTheme.bodyMedium,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
-                        const SizedBox(
-                          height: 5,
+                        SizedBox(
+                          width: 11,
                         ),
-                        ConditionWidget(ad: widget.ad),
-                        const SizedBox(
-                          height: 5,
-                        ),
-                        Text(
-                          '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
-                          style: textTheme.bodyLarge?.copyWith(
-                              fontWeight: FontWeight.bold, fontSize: 16),
-                        ),
-                        const SizedBox(height: 5),
-                        Text(
-                          widget.ad.city,
-                          style: TextStyle(fontSize: 13),
-                        ),
-                        Text(
-                          '${widget.ad.createdAt.day}-${widget.ad.createdAt.month}-${widget.ad.createdAt.year}',
-                          style: TextStyle(fontSize: 12),
+                        IconButton(
+                          iconSize: 25,
+                          isSelected: isSelected,
+                          padding: EdgeInsets.zero,
+                          constraints:
+                              BoxConstraints(minHeight: 10, minWidth: 40),
+                          style: const ButtonStyle(
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          selectedIcon: Icon(
+                            Icons.favorite,
+                            color: Colors.red,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              isSelected = !isSelected;
+                            });
+                          },
+                          icon: Icon(
+                            Icons.favorite_outline,
+                            color: Color.fromARGB(255, 255, 255, 255),
+                          ),
                         ),
                       ],
                     ),
-                  ),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    ConditionWidget(ad: widget.ad),
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    Spacer(),
+                    Text(
+                      '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
+                      style: textTheme.bodyLarge
+                          ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
+                    ),
+                    const SizedBox(height: 5),
+                    Text(
+                      widget.ad.city,
+                      style: TextStyle(fontSize: 13),
+                    ),
+                    Text(
+                      '${widget.ad.createdAt.day}-${widget.ad.createdAt.month}-${widget.ad.createdAt.year}',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                  ],
                 ),
-              ],
+              ),
             ),
           )
         ],
