@@ -17,8 +17,9 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
   bool isSelected = false;
   @override
   Widget build(BuildContext context) {
-    final containerColor = Theme.of(context).colorScheme.onPrimaryContainer;
     final textTheme = Theme.of(context).textTheme;
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),

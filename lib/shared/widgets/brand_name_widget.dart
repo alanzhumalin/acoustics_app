@@ -6,14 +6,14 @@ class BrandNameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 4),
+      padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(8),
-        color: const Color.fromARGB(255, 0, 123, 255),
+        borderRadius: BorderRadius.circular(5),
+        color: const Color.fromARGB(255, 238, 238, 238),
       ),
       child: Text(
         brandName,
-        style: TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+        style: TextStyle(color: Colors.black, fontWeight: FontWeight.w400),
       ),
     );
   }

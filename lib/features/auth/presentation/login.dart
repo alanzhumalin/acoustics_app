@@ -23,32 +23,12 @@ class _LoginState extends State<Login> {
     _numberController.dispose();
   }
 
-  Future<LottieComposition?> customDecoder(List<int> bytes) {
-    return LottieComposition.decodeZip(bytes, filePicker: (files) {
-      return files.firstWhere(
-          (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
     final size = MediaQuery.of(context).size;
     return Scaffold(
-        body: Stack(
-      children: [
-        Positioned(
-            left: 0,
-            right: 0,
-            child: Opacity(
-              opacity: 0.2,
-              child: Lottie.asset(
-                  width: size.width,
-                  height: size.height,
-                  decoder: customDecoder,
-                  'assets/animation/main.lottie'),
-            )),
-        Form(
+        body: Form(
             key: _key,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 23),
@@ -168,8 +148,6 @@ class _LoginState extends State<Login> {
                   )
                 ],
               ),
-            )),
-      ],
-    ));
+            )));
   }
 }

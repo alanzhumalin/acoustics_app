@@ -31,13 +31,6 @@ class _SmsState extends State<Sms> {
     _startTimer();
   }
 
-  Future<LottieComposition?> customDecoder(List<int> bytes) {
-    return LottieComposition.decodeZip(bytes, filePicker: (files) {
-      return files.firstWhere(
-          (f) => f.name.startsWith('animations/') && f.name.endsWith('.json'));
-    });
-  }
-
   void _startTimer() {
     _secondsRemaining = 30;
     _isResendButtonVisible = false;
@@ -99,17 +92,6 @@ class _SmsState extends State<Sms> {
     return Scaffold(
       body: Stack(
         children: [
-          Positioned(
-              left: 0,
-              right: 0,
-              child: Opacity(
-                opacity: 0.2,
-                child: Lottie.asset(
-                    width: size.width,
-                    height: size.height,
-                    decoder: customDecoder,
-                    'assets/animation/main.lottie'),
-              )),
           Center(
             child: Form(
               key: _key,

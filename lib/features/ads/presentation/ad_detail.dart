@@ -72,11 +72,12 @@ class _AdDetailState extends State<AdDetail> {
 
   @override
   Widget build(BuildContext context) {
-    final textTheme = Theme.of(context).textTheme;
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
 
     final size = MediaQuery.of(context).size;
-    final colorContainer = Theme.of(context).colorScheme.onSecondaryContainer;
     return Scaffold(
+      backgroundColor: backgroundcolor,
       appBar: AppBar(
         title: Text(
           'Детали объявления',
@@ -97,9 +98,9 @@ class _AdDetailState extends State<AdDetail> {
             Stack(
               children: [
                 Container(
-                    color: const Color.fromARGB(255, 255, 255, 255),
+                    color: containerColor,
+                    height: size.height * 0.34,
                     width: double.infinity,
-                    height: size.height * 0.4,
                     child: PageView.builder(
                         controller: pageController,
                         itemCount: widget.ad.adImages.length,
@@ -141,7 +142,7 @@ class _AdDetailState extends State<AdDetail> {
                               },
                               child: CachedNetworkImage(
                                 imageUrl: widget.ad.adImages[index],
-                                fit: BoxFit.contain,
+                                fit: BoxFit.cover,
                               ));
                         })),
                 Positioned(
@@ -195,7 +196,7 @@ class _AdDetailState extends State<AdDetail> {
 
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(color: colorContainer),
+              decoration: BoxDecoration(color: containerColor),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -244,7 +245,7 @@ class _AdDetailState extends State<AdDetail> {
             SizedBox(height: 8),
             Container(
               width: double.infinity,
-              decoration: BoxDecoration(color: colorContainer),
+              decoration: BoxDecoration(color: containerColor),
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,7 +265,7 @@ class _AdDetailState extends State<AdDetail> {
             SizedBox(height: 8),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-              decoration: BoxDecoration(color: colorContainer),
+              decoration: BoxDecoration(color: containerColor),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -344,7 +345,7 @@ class _AdDetailState extends State<AdDetail> {
 
             Container(
               padding: EdgeInsets.symmetric(vertical: 10),
-              decoration: BoxDecoration(color: colorContainer),
+              decoration: BoxDecoration(color: containerColor),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -386,6 +387,7 @@ class _AdDetailState extends State<AdDetail> {
         ),
       ),
       bottomNavigationBar: BottomAppBar(
+        color: backgroundcolor,
         child: Row(
           children: [
             Expanded(

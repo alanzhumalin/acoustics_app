@@ -37,6 +37,10 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
   }
 
   double _calculateHeight(double screenHeight) {
+    if (screenHeight <= 603) return screenHeight * 0.45;
+
+    if (screenHeight <= 649) return screenHeight * 0.42;
+
     if (screenHeight <= 706) return screenHeight * 0.39;
     if (screenHeight <= 749) return screenHeight * 0.36;
     if (screenHeight <= 794) return screenHeight * 0.34;
@@ -44,12 +48,16 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
     return screenHeight * 0.29;
   }
 
-  double _calculateWidth(double screenWidth) {
-    if (screenWidth <= 341) return 0.47;
+  double calculateWidth(double screenWidth) {
+    if (screenWidth <= 364) return 0.45;
 
-    if (screenWidth <= 362) return 0.49;
-    if (screenWidth <= 397) return 0.52;
-    return 0.57;
+    if (screenWidth <= 384) return 0.48;
+
+    if (screenWidth <= 406) return 0.51;
+
+    if (screenWidth <= 414) return 0.54;
+    if (screenWidth <= 430) return 0.57;
+    return 0.60;
   }
 
   @override
@@ -146,13 +154,15 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
     final size = MediaQuery.of(context).size;
     final color = Theme.of(context).colorScheme.onSecondaryContainer;
     final searchColor = Theme.of(context).colorScheme.secondaryContainer;
-    final containerColor = Theme.of(context).colorScheme.secondaryContainer;
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
 
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: backgroundcolor,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           toolbarHeight: 60,
@@ -194,7 +204,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                               icon: const Icon(Icons.close_sharp))
                           : null,
                       filled: true,
-                      fillColor: searchColor,
+                      fillColor: containerColor,
                       constraints: const BoxConstraints(maxHeight: 39),
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 20, vertical: 0),
@@ -224,7 +234,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
         body: CustomScrollView(slivers: [
           isSearchSelected
               ? userType.isEmpty
-                  ? SliverToBoxAdapter(
+                  ? SliverFillRemaining(
                       child: const Center(
                         child: Text(
                           'Начните вводить для поиска...',
@@ -233,7 +243,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                       ),
                     )
                   : results.isEmpty
-                      ? SliverToBoxAdapter(
+                      ? SliverFillRemaining(
                           child: const Center(
                             child: Text(
                               'Ничего не найдено',
@@ -275,23 +285,11 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 15),
                                     width: double.infinity,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          category.category,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15),
-                                        ),
-                                        const Divider(
-                                          height: 5,
-                                          thickness: 1,
-                                          color: Color.fromARGB(
-                                              255, 131, 131, 131),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      category.category,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
                                     ),
                                   ),
                                 );
@@ -300,7 +298,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                           ),
                         )
               : adCategory.isEmpty
-                  ? SliverToBoxAdapter(
+                  ? SliverFillRemaining(
                       child: Center(
                         child: const Text('Нету таких обьявлении'),
                       ),
@@ -313,7 +311,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                                 horizontal: 20, vertical: 5),
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: color,
+                                  color: containerColor,
                                   borderRadius: BorderRadius.circular(15)),
                               width: double.infinity,
                               child: Row(
@@ -375,7 +373,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                             crossAxisCount: 2,
                             mainAxisSpacing: 7,
                             crossAxisSpacing: 7,
-                            childAspectRatio: _calculateWidth(size.width),
+                            childAspectRatio: calculateWidth(size.width),
                           ),
                           itemBuilder: (context, index) {
                             final ad = adCategory[index];

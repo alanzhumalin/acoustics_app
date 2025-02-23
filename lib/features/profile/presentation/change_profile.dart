@@ -10,11 +10,16 @@ class ChangeName extends StatefulWidget {
 class _ChangeProfileState extends State<ChangeName> {
   final TextEditingController _nameController = TextEditingController();
   final _key = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
+        backgroundColor: backgroundcolor,
         appBar: AppBar(
           title: Text(
             'Ваши данные',
@@ -53,12 +58,14 @@ class _ChangeProfileState extends State<ChangeName> {
                     cursorErrorColor: Colors.blue,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
+                      filled: true,
+                      fillColor: containerColor,
                       focusedBorder: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.blue, width: 2)),
+                          borderSide: BorderSide.none),
                       border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
-                          borderSide: BorderSide(color: Colors.blue, width: 2)),
+                          borderSide: BorderSide.none),
                       contentPadding:
                           EdgeInsets.symmetric(horizontal: 20, vertical: 14),
                       hintText: 'Новое имя',

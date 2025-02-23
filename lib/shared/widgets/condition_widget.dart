@@ -8,29 +8,29 @@ class ConditionWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return ad.condition == 'Б/у'
         ? Container(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 121, 121, 121),
-                borderRadius: BorderRadius.circular(8)),
+                color: const Color.fromARGB(255, 238, 238, 238),
+                borderRadius: BorderRadius.circular(5)),
             child: Text(
               ad.condition,
               style: TextStyle(
                   fontSize: 13,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500),
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400),
             ),
           )
         : Container(
-            padding: EdgeInsets.symmetric(horizontal: 4),
+            padding: EdgeInsets.symmetric(horizontal: 6, vertical: 3),
             decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 0, 164, 30),
-                borderRadius: BorderRadius.circular(8)),
+                color: const Color.fromARGB(255, 238, 238, 238),
+                borderRadius: BorderRadius.circular(5)),
             child: Text(
               ad.condition,
               style: TextStyle(
                   fontSize: 13,
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500),
+                  color: Colors.black,
+                  fontWeight: FontWeight.w400),
             ),
           );
   }

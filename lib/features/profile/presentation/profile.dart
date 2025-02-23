@@ -12,7 +12,11 @@ class Profile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final size = MediaQuery.of(context).size;
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
+
     return Scaffold(
+      backgroundColor: backgroundcolor,
       appBar: AppBar(
         forceMaterialTransparency: true,
         title: Text(
@@ -37,6 +41,7 @@ class Profile extends ConsumerWidget {
             height: size.height * 0.02,
           ),
           ListTile(
+            tileColor: containerColor,
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => MyAds()));
@@ -48,6 +53,7 @@ class Profile extends ConsumerWidget {
             trailing: Icon(Icons.arrow_forward_ios),
           ),
           ListTile(
+            tileColor: containerColor,
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => ChangeName()));
@@ -59,6 +65,7 @@ class Profile extends ConsumerWidget {
             trailing: Icon(Icons.arrow_forward_ios),
           ),
           ListTile(
+            tileColor: containerColor,
             onTap: () {
               Navigator.push(
                   context, MaterialPageRoute(builder: (context) => Politics()));
@@ -70,6 +77,7 @@ class Profile extends ConsumerWidget {
             trailing: Icon(Icons.arrow_forward_ios),
           ),
           ListTile(
+            tileColor: containerColor,
             title: Text(
               'Выйти',
               style: TextStyle(fontWeight: FontWeight.bold),

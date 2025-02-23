@@ -155,12 +155,15 @@ class _CreateAdState extends State<CreateAd> {
     final theme = Theme.of(context).textTheme.bodyLarge!.color;
     final size = MediaQuery.of(context).size;
     final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
-    final containerColor = Theme.of(context).colorScheme.onSecondary;
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
       },
       child: Scaffold(
+        backgroundColor: backgroundcolor,
         appBar: AppBar(
           forceMaterialTransparency: true,
           title: Text(

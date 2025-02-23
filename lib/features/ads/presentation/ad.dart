@@ -52,16 +52,14 @@ class _AdState extends ConsumerState<Ad> {
   }
 
   double calculateWidth(double screenWidth) {
-    if (screenWidth <= 338) return 0.45;
+    if (screenWidth <= 364) return 0.45;
 
-    if (screenWidth <= 352) return 0.48;
+    if (screenWidth <= 384) return 0.48;
 
-    if (screenWidth <= 368) return 0.50;
+    if (screenWidth <= 406) return 0.51;
 
-    if (screenWidth <= 381) return 0.52;
-
-    if (screenWidth <= 403) return 0.54;
-    if (screenWidth <= 421) return 0.56;
+    if (screenWidth <= 414) return 0.54;
+    if (screenWidth <= 430) return 0.57;
     return 0.60;
   }
 
@@ -82,11 +80,14 @@ class _AdState extends ConsumerState<Ad> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final sizeScreen = MediaQuery.of(context).size;
-    final containerColor = Theme.of(context).colorScheme.secondaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
     final scrollController = ref.watch(pageScrollControllerProvider);
     final scrollControllerLinear = ref.watch(scrollControllerProvider);
     final scrollProgress = ref.watch(scrollProgressProvider);
+    final containerColor = Theme.of(context).colorScheme.primaryContainer;
+
     return Scaffold(
+      backgroundColor: backgroundcolor,
       appBar: AppBar(
         toolbarHeight: 60,
         titleSpacing: 10,
@@ -215,23 +216,11 @@ class _AdState extends ConsumerState<Ad> {
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 15, vertical: 15),
                                     width: double.infinity,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          category.category,
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15),
-                                        ),
-                                        const Divider(
-                                          height: 5,
-                                          thickness: 1,
-                                          color: Color.fromARGB(
-                                              255, 131, 131, 131),
-                                        ),
-                                      ],
+                                    child: Text(
+                                      category.category,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 15),
                                     ),
                                   ),
                                 ),
@@ -243,84 +232,89 @@ class _AdState extends ConsumerState<Ad> {
             : SliverMainAxisGroup(slivers: [
                 const SliverToBoxAdapter(
                   child: SizedBox(
-                    height: 10,
+                    height: 5,
                   ),
                 ),
                 SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'Категории',
-                      style: textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 19,
-                      ),
+                  child: Container(
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    color: containerColor,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Text(
+                            'Категории',
+                            style: textTheme.titleMedium?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 19,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        SizedBox(
+                          height: _calculateHeight(sizeScreen.height),
+                          child: GridView.builder(
+                            cacheExtent: 500,
+                            controller: scrollControllerLinear,
+                            gridDelegate:
+                                const SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              childAspectRatio: 1.1,
+                              crossAxisSpacing: 18,
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            shrinkWrap: true,
+                            itemCount: categories.length,
+                            scrollDirection: Axis.horizontal,
+                            itemBuilder: (context, index) {
+                              final item = categories[index];
+                              return RepaintBoundary(
+                                child: InkWell(
+                                    onTap: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => CategoryDetail(
+                                              category: item.category),
+                                        ),
+                                      );
+                                    },
+                                    child: Column(
+                                      children: [
+                                        const CircleAvatar(
+                                          backgroundImage: AssetImage(
+                                              'assets/category_photos/guitar_accecsories.webp'),
+                                          radius: 40,
+                                        ),
+                                        const SizedBox(
+                                          height: 3,
+                                        ),
+                                        Text(
+                                          item.category,
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 12,
+                                            color: textTheme.bodyLarge!.color,
+                                          ),
+                                        ),
+                                      ],
+                                    )),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
                 const SliverToBoxAdapter(
                   child: SizedBox(
-                    height: 20,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: _calculateHeight(sizeScreen.height),
-                    child: GridView.builder(
-                      cacheExtent: 500,
-                      controller: scrollControllerLinear,
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 1.1,
-                        crossAxisSpacing: 18,
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      shrinkWrap: true,
-                      itemCount: categories.length,
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (context, index) {
-                        final item = categories[index];
-                        return RepaintBoundary(
-                          child: InkWell(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) =>
-                                        CategoryDetail(category: item.category),
-                                  ),
-                                );
-                              },
-                              child: Column(
-                                children: [
-                                  const CircleAvatar(
-                                    backgroundImage: AssetImage(
-                                        'assets/category_photos/guitar_accecsories.webp'),
-                                    radius: 40,
-                                  ),
-                                  const SizedBox(
-                                    height: 3,
-                                  ),
-                                  Text(
-                                    item.category,
-                                    textAlign: TextAlign.center,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,
-                                      color: textTheme.bodyLarge!.color,
-                                    ),
-                                  ),
-                                ],
-                              )),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 6,
+                    height: 15,
                   ),
                 ),
                 SliverToBoxAdapter(
@@ -328,6 +322,7 @@ class _AdState extends ConsumerState<Ad> {
                     padding: EdgeInsets.symmetric(
                         horizontal: sizeScreen.width * 0.45),
                     child: LinearProgressIndicator(
+                      backgroundColor: const Color.fromARGB(255, 255, 255, 255),
                       borderRadius: BorderRadius.circular(8),
                       value: scrollProgress,
                       color: Colors.amber,
@@ -346,29 +341,34 @@ class _AdState extends ConsumerState<Ad> {
                   ),
                 ),
                 SliverToBoxAdapter(child: const SizedBox(height: 9)),
-                SliverGrid.builder(
-                  itemCount: ads.length,
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      mainAxisSpacing: 7,
-                      crossAxisSpacing: 7,
-                      childAspectRatio: calculateWidth(sizeScreen.width)),
-                  itemBuilder: (context, index) {
-                    final ad = ads[index];
-                    return RepaintBoundary(
-                      child: InkWell(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => AdDetail(ad: ad),
-                            ),
-                          );
-                        },
-                        child: CustomAdWidget(ad: ad),
-                      ),
-                    );
-                  },
+                SliverPadding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 10,
+                  ),
+                  sliver: SliverGrid.builder(
+                    itemCount: ads.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 10,
+                        crossAxisSpacing: 7,
+                        childAspectRatio: calculateWidth(sizeScreen.width)),
+                    itemBuilder: (context, index) {
+                      final ad = ads[index];
+                      return RepaintBoundary(
+                        child: InkWell(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => AdDetail(ad: ad),
+                              ),
+                            );
+                          },
+                          child: CustomAdWidget(ad: ad),
+                        ),
+                      );
+                    },
+                  ),
                 ),
                 const SliverToBoxAdapter(child: SizedBox(height: 20)),
               ])
