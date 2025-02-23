@@ -373,7 +373,8 @@ class _AdDetailState extends State<AdDetail> {
                       },
                       itemBuilder: (context, index) {
                         final ad = ads[index];
-                        return CustomOtherAdWidget(ad: ad);
+                        return RepaintBoundary(
+                            child: CustomOtherAdWidget(ad: ad));
                       },
                     ),
                   )

@@ -55,11 +55,11 @@ class _LoginState extends State<Login> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Здравствуйте! Введите свой номер телефона для входа',
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 13,
                   ),
                   TextFormField(
@@ -158,7 +158,7 @@ class _LoginState extends State<Login> {
                                         )));
                           }
                         },
-                        child: Text(
+                        child: const Text(
                           'Далее',
                           style: TextStyle(
                               fontWeight: FontWeight.bold,

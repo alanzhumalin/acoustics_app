@@ -162,12 +162,9 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
             children: [
               IconButton(
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                        (Route<dynamic> route) => false);
+                    Navigator.pop(context);
                   },
-                  icon: Icon(Icons.arrow_back_ios)),
+                  icon: const Icon(Icons.arrow_back_ios)),
               Expanded(
                 child: TextField(
                   controller: _searchController,
@@ -194,15 +191,15 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                                   FocusScope.of(context).unfocus();
                                 });
                               },
-                              icon: Icon(Icons.close_sharp))
+                              icon: const Icon(Icons.close_sharp))
                           : null,
                       filled: true,
                       fillColor: searchColor,
-                      constraints: BoxConstraints(maxHeight: 39),
-                      contentPadding:
-                          EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+                      constraints: const BoxConstraints(maxHeight: 39),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 0),
                       hintText: 'Поиск',
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                           fontSize: 15,
                           color: Color.fromARGB(255, 132, 132, 132)),
                       focusedBorder: OutlineInputBorder(
@@ -213,10 +210,10 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                           borderSide: BorderSide.none)),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 10,
               ),
-              Icon(
+              const Icon(
                 CupertinoIcons.search,
                 color: Colors.blue,
                 size: 20,
@@ -224,140 +221,154 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
             ],
           ),
         ),
-        body: isSearchSelected
-            ? userType.isEmpty
-                ? const Center(
-                    child: Text(
-                      'Начните вводить для поиска...',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  )
-                : results.isEmpty
-                    ? const Center(
+        body: CustomScrollView(slivers: [
+          isSearchSelected
+              ? userType.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: const Center(
                         child: Text(
-                          'Ничего не найдено',
-                          style: TextStyle(color: Colors.white),
+                          'Начните вводить для поиска...',
+                          style: TextStyle(color: Colors.grey),
                         ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 20.0, vertical: 20),
-                        child: ListView.builder(
-                          padding: EdgeInsets.all(0),
-                          physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: results.length,
-                          itemBuilder: (context, index) {
-                            final category = results[index];
-                            return GestureDetector(
-                              onTap: () => Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => CategoryDetail(
-                                          category: category.category))),
-                              child: Container(
-                                decoration: BoxDecoration(
-                                    color: containerColor,
-                                    borderRadius: index == 0
-                                        ? BorderRadius.only(
-                                            topLeft: Radius.circular(8),
-                                            topRight: Radius.circular(8))
-                                        : index + 1 == results.length
+                      ),
+                    )
+                  : results.isEmpty
+                      ? SliverToBoxAdapter(
+                          child: const Center(
+                            child: Text(
+                              'Ничего не найдено',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ),
+                        )
+                      : SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20.0, vertical: 20),
+                            child: ListView.builder(
+                              padding: EdgeInsets.all(0),
+                              physics: NeverScrollableScrollPhysics(),
+                              shrinkWrap: true,
+                              itemCount: results.length,
+                              itemBuilder: (context, index) {
+                                final category = results[index];
+                                return GestureDetector(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CategoryDetail(
+                                              category: category.category))),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: containerColor,
+                                        borderRadius: index == 0
                                             ? BorderRadius.only(
-                                                bottomLeft: Radius.circular(8),
-                                                bottomRight: Radius.circular(8))
-                                            : null),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 15, vertical: 15),
-                                width: double.infinity,
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      category.category,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
+                                                topLeft: Radius.circular(8),
+                                                topRight: Radius.circular(8))
+                                            : index + 1 == results.length
+                                                ? BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(8),
+                                                    bottomRight:
+                                                        Radius.circular(8))
+                                                : null),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 15),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          category.category,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
+                                        const Divider(
+                                          height: 5,
+                                          thickness: 1,
+                                          color: Color.fromARGB(
+                                              255, 131, 131, 131),
+                                        ),
+                                      ],
                                     ),
-                                    Divider(
-                                      height: 5,
-                                      thickness: 1,
-                                      color: const Color.fromARGB(
-                                          255, 131, 131, 131),
-                                    ),
-                                  ],
-                                ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                        )
+              : adCategory.isEmpty
+                  ? SliverToBoxAdapter(
+                      child: Center(
+                        child: const Text('Нету таких обьявлении'),
+                      ),
+                    )
+                  : SliverMainAxisGroup(
+                      slivers: [
+                        SliverToBoxAdapter(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 5),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  color: color,
+                                  borderRadius: BorderRadius.circular(15)),
+                              width: double.infinity,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  TextButton.icon(
+                                      style: ButtonStyle(
+                                        splashFactory: NoSplash.splashFactory,
+                                      ),
+                                      icon: Icon(
+                                          CupertinoIcons.slider_horizontal_3,
+                                          color: textTheme.bodyLarge!.color),
+                                      onPressed: () {},
+                                      label: Text(
+                                        'Фильтр',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: textTheme.bodySmall!.color),
+                                      )),
+                                  TextButton.icon(
+                                      style: ButtonStyle(
+                                        splashFactory: NoSplash.splashFactory,
+                                      ),
+                                      icon: Icon(
+                                        CupertinoIcons.sort_down,
+                                        color: textTheme.bodyLarge!.color,
+                                      ),
+                                      onPressed: () async {
+                                        var sortingMethod =
+                                            await showFilterDialog();
+                                        if (sortingMethod != null) {
+                                          setState(() {
+                                            criteria = sortingMethod;
+                                          });
+                                        }
+                                        return;
+                                      },
+                                      label: Text(
+                                        criteria,
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.w400,
+                                            color: textTheme.bodySmall!.color),
+                                      ))
+                                ],
                               ),
-                            );
-                          },
-                        ),
-                      )
-            : adCategory.isEmpty
-                ? Center(
-                    child: Text('Нету таких обьявлении'),
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 5),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: color,
-                                borderRadius: BorderRadius.circular(15)),
-                            width: double.infinity,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                TextButton.icon(
-                                    style: ButtonStyle(
-                                      splashFactory: NoSplash.splashFactory,
-                                    ),
-                                    icon: Icon(
-                                        CupertinoIcons.slider_horizontal_3,
-                                        color: textTheme.bodyLarge!.color),
-                                    onPressed: () {},
-                                    label: Text(
-                                      'Фильтр',
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: textTheme.bodySmall!.color),
-                                    )),
-                                TextButton.icon(
-                                    style: ButtonStyle(
-                                      splashFactory: NoSplash.splashFactory,
-                                    ),
-                                    icon: Icon(
-                                      CupertinoIcons.sort_down,
-                                      color: textTheme.bodyLarge!.color,
-                                    ),
-                                    onPressed: () async {
-                                      var sortingMethod =
-                                          await showFilterDialog();
-                                      if (sortingMethod != null) {
-                                        setState(() {
-                                          criteria = sortingMethod;
-                                        });
-                                      }
-                                      return;
-                                    },
-                                    label: Text(
-                                      criteria,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.w400,
-                                          color: textTheme.bodySmall!.color),
-                                    ))
-                              ],
                             ),
                           ),
                         ),
-                        SizedBox(
-                          height: 10,
+                        const SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
                         ),
-                        GridView.builder(
-                          shrinkWrap: true,
-                          physics: NeverScrollableScrollPhysics(),
+                        SliverGrid.builder(
                           itemCount: adCategory.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
@@ -382,7 +393,7 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                         ),
                       ],
                     ),
-                  ),
+        ]),
       ),
     );
   }

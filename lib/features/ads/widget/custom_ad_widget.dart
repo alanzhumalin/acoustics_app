@@ -29,26 +29,24 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
           Stack(
             children: [
               Container(
+                  constraints: BoxConstraints(maxHeight: 190),
                   decoration: BoxDecoration(
-                      borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(8),
-                          topRight: Radius.circular(8)),
-                      color: const Color.fromARGB(255, 255, 255, 255)),
-                  height: 190,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8)),
+                  ),
                   width: double.infinity,
                   child: ClipRRect(
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(8),
                         topRight: Radius.circular(8)),
-                    child: Center(
-                      child: CachedNetworkImage(
-                        fadeInDuration: Duration.zero,
-                        fadeOutDuration: Duration.zero,
-                        fadeInCurve: Curves.linear,
-                        fadeOutCurve: Curves.linear,
-                        imageUrl: widget.ad.adImages[0],
-                        fit: BoxFit.contain,
-                      ),
+                    child: CachedNetworkImage(
+                      fadeInDuration: Duration.zero,
+                      fadeOutDuration: Duration.zero,
+                      fadeInCurve: Curves.linear,
+                      fadeOutCurve: Curves.linear,
+                      imageUrl: widget.ad.adImages[0],
+                      fit: BoxFit.cover,
                     ),
                   )),
               Positioned(
@@ -73,7 +71,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                       bottomLeft: Radius.circular(8),
                       bottomRight: Radius.circular(8)),
                   color: containerColor),
-              margin: EdgeInsets.all(0),
+              margin: const EdgeInsets.all(0),
               child: Padding(
                 padding: const EdgeInsets.only(
                     left: 10, right: 5, top: 10, bottom: 10),
@@ -91,7 +89,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                             overflow: TextOverflow.ellipsis,
                           ),
                         ),
-                        SizedBox(
+                        const SizedBox(
                           width: 11,
                         ),
                         IconButton(
@@ -103,7 +101,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                           style: const ButtonStyle(
                             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                           ),
-                          selectedIcon: Icon(
+                          selectedIcon: const Icon(
                             Icons.favorite,
                             color: Colors.red,
                           ),
@@ -112,7 +110,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                               isSelected = !isSelected;
                             });
                           },
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.favorite_outline,
                             color: Color.fromARGB(255, 255, 255, 255),
                           ),
@@ -126,12 +124,12 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Spacer(),
                     Text(
                       '${NumberFormat('#,###', 'ru_RU').format(int.parse(widget.ad.price))} тг.',
                       style: textTheme.bodyLarge
                           ?.copyWith(fontWeight: FontWeight.bold, fontSize: 16),
                     ),
+                    const Spacer(),
                     const SizedBox(height: 5),
                     Text(
                       widget.ad.city,

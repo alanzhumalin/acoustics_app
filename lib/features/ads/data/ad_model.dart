@@ -303,7 +303,7 @@ List<AdModel> ads = [
   ),
 
   AdModel(
-    id: '221',
+    id: '011',
     title: 'Линейный массив l Acoustics kara2',
     description: 'Состояние новый.',
     price: '15000000',
@@ -326,7 +326,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '012',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -349,7 +349,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '013',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -372,7 +372,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '014',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -395,7 +395,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '015',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -418,7 +418,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '016',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -441,7 +441,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '017',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -464,7 +464,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '018',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -487,7 +487,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '222',
+    id: '019',
     title: 'Акустическая гитара Yamaha',
     description: 'Новая акустическая гитара, отличное звучание.',
     price: '80000',
@@ -510,7 +510,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '223',
+    id: '020',
     title: 'Электрогитара Fender Stratocaster',
     description: 'Электрогитара Fender, в отличном состоянии.',
     price: '250000',
@@ -533,7 +533,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '224',
+    id: '021',
     title: 'JBL PartyBox 300',
     description:
         'Мощная портативная колонка JBL PartyBox 300 с отличным качеством звука.',
@@ -557,7 +557,7 @@ List<AdModel> ads = [
     ),
   ),
   AdModel(
-    id: '225',
+    id: '022',
     title: 'AKG P3 S',
     description:
         'Профессиональный микрофон AKG P3 S с кардиоидной диаграммой направленности.',

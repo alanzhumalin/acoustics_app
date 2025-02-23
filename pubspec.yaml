@@ -50,6 +50,7 @@ dependencies:
   cached_network_image: ^3.4.1
   image_cropper: ^9.0.0
   extended_masked_text: ^3.0.1
+  flutter_launcher_icons: ^0.14.3
 
   
 
@@ -63,28 +64,10 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^5.0.0
-  flutter_launcher_icons: "^0.14.3"
   
 
 
-flutter_launcher_icons:
-  android: "launcher_icon"
-  ios: true
-  remove_alpha_ios: true  
-  image_path: "assets/logo/logo.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
-  web:
-    generate: true
-    image_path: "assets/logo/logo.webp"
-    background_color: "#hexcode"
-    theme_color: "#hexcode"
-  windows:
-    generate: true
-    image_path: "assets/logo/logo.webp"
-    icon_size: 48 # min:48, max:256, default: 48
-  macos:
-    generate: true
-    image_path: "assets/logo/logo.webp"
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
@@ -98,16 +81,15 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/logo/logo.webp
+    - assets/logo/logo.png
+    - assets/logo/logo2.png
     - assets/speakers/k1.jpeg
     - assets/categories/instrumental.avif
     - assets/categories/microphone.webp
     - assets/categories/mixer.webp
     - assets/categories/speakers.jpeg    
     - assets/porshe.jpg
-    - assets/logo/logo.png
     - assets/marker/marker.png
-    - assets/logo/logo2.png
     - assets/animation/background.lottie
     - assets/animation/second.lottie
     - assets/animation/main.lottie

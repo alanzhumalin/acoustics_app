@@ -10,6 +10,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../scroll_provider.dart';
+
 class Ad extends ConsumerStatefulWidget {
   const Ad({super.key});
 
@@ -18,7 +20,6 @@ class Ad extends ConsumerStatefulWidget {
 }
 
 class _AdState extends ConsumerState<Ad> {
-  final ScrollController _scrollController = ScrollController();
   double value = 0.2;
   var isSearchSelected = false;
   var isCursorShown = false;
@@ -68,30 +69,23 @@ class _AdState extends ConsumerState<Ad> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    _scrollController.addListener(() {
-      setState(() {
-        double progress = _scrollController.offset /
-            _scrollController.position.maxScrollExtent;
-        value = 0.2 + (progress * 0.8);
-      });
-    });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    searchController.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final sizeScreen = MediaQuery.of(context).size;
-    final searchColor = Theme.of(context).colorScheme.secondaryContainer;
     final containerColor = Theme.of(context).colorScheme.secondaryContainer;
     final scrollController = ref.watch(pageScrollControllerProvider);
-
+    final scrollControllerLinear = ref.watch(scrollControllerProvider);
+    final scrollProgress = ref.watch(scrollProgressProvider);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 60,
@@ -129,8 +123,8 @@ class _AdState extends ConsumerState<Ad> {
                             icon: Icon(Icons.arrow_back_ios))
                         : null,
                     filled: true,
-                    fillColor: searchColor,
-                    suffixIcon: Icon(
+                    fillColor: containerColor,
+                    suffixIcon: const Icon(
                       CupertinoIcons.search,
                       color: Colors.blue,
                       size: 20,
@@ -139,7 +133,7 @@ class _AdState extends ConsumerState<Ad> {
                     contentPadding:
                         EdgeInsets.symmetric(horizontal: 20, vertical: 0),
                     hintText: 'Поиск',
-                    hintStyle: TextStyle(
+                    hintStyle: const TextStyle(
                         fontSize: 15,
                         color: Color.fromARGB(255, 132, 132, 132)),
                     focusedBorder: OutlineInputBorder(
@@ -150,99 +144,110 @@ class _AdState extends ConsumerState<Ad> {
                         borderSide: BorderSide.none)),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             if (!isSearchSelected)
-              Icon(
+              const Icon(
                 Icons.notifications,
                 color: Colors.orange,
               )
           ],
         ),
       ),
-      body: isSearchSelected
-          ? userType.isEmpty
-              ? SizedBox(
-                  height: sizeScreen.height,
-                  child: const Center(
-                    child: Text(
-                      'Начните вводить для поиска...',
-                      style: TextStyle(color: Colors.grey),
-                    ),
-                  ),
-                )
-              : results.isEmpty
-                  ? const Center(
+      body: CustomScrollView(controller: scrollController, slivers: [
+        isSearchSelected
+            ? userType.isEmpty
+                ? const SliverFillRemaining(
+                    child: Center(
                       child: Text(
-                        'Ничего не найдено',
+                        'Начните вводить для поиска...',
                         style: TextStyle(color: Colors.grey),
                       ),
-                    )
-                  : Padding(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20.0, vertical: 20),
-                      child: ListView.builder(
-                        padding: EdgeInsets.all(0),
-                        physics: NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: results.length,
-                        itemBuilder: (context, index) {
-                          final category = results[index];
-                          return GestureDetector(
-                            onTap: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => CategoryDetail(
-                                        category: category.category))),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: containerColor,
-                                  borderRadius: index == 0
-                                      ? index + 1 == results.length
-                                          ? BorderRadius.all(Radius.circular(8))
-                                          : BorderRadius.only(
-                                              topLeft: Radius.circular(8),
-                                              topRight: Radius.circular(8))
-                                      : index + 1 == results.length
-                                          ? BorderRadius.only(
-                                              bottomLeft: Radius.circular(8),
-                                              bottomRight: Radius.circular(8))
-                                          : null),
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 15, vertical: 15),
-                              width: double.infinity,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    category.category,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 15),
+                    ),
+                  )
+                : results.isEmpty
+                    ? const SliverFillRemaining(
+                        child: Center(
+                          child: Text(
+                            'Ничего не найдено',
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                      )
+                    : SliverToBoxAdapter(
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 20.0, vertical: 20),
+                          child: ListView.builder(
+                            cacheExtent: 500,
+                            padding: EdgeInsets.all(0),
+                            physics: NeverScrollableScrollPhysics(),
+                            shrinkWrap: true,
+                            itemCount: results.length,
+                            itemBuilder: (context, index) {
+                              final category = results[index];
+                              return RepaintBoundary(
+                                child: GestureDetector(
+                                  onTap: () => Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => CategoryDetail(
+                                              category: category.category))),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                        color: containerColor,
+                                        borderRadius: index == 0
+                                            ? index + 1 == results.length
+                                                ? BorderRadius.all(
+                                                    Radius.circular(8))
+                                                : BorderRadius.only(
+                                                    topLeft: Radius.circular(8),
+                                                    topRight:
+                                                        Radius.circular(8))
+                                            : index + 1 == results.length
+                                                ? BorderRadius.only(
+                                                    bottomLeft:
+                                                        Radius.circular(8),
+                                                    bottomRight:
+                                                        Radius.circular(8))
+                                                : null),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 15, vertical: 15),
+                                    width: double.infinity,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          category.category,
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 15),
+                                        ),
+                                        const Divider(
+                                          height: 5,
+                                          thickness: 1,
+                                          color: Color.fromARGB(
+                                              255, 131, 131, 131),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                  Divider(
-                                    height: 5,
-                                    thickness: 1,
-                                    color: const Color.fromARGB(
-                                        255, 131, 131, 131),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    )
-          : SingleChildScrollView(
-              controller: scrollController,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      )
+            : SliverMainAxisGroup(slivers: [
+                const SliverToBoxAdapter(
+                  child: SizedBox(
                     height: 10,
                   ),
-                  Padding(
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       'Категории',
@@ -252,14 +257,20 @@ class _AdState extends ConsumerState<Ad> {
                       ),
                     ),
                   ),
-                  SizedBox(
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
                     height: 20,
                   ),
-                  SizedBox(
+                ),
+                SliverToBoxAdapter(
+                  child: SizedBox(
                     height: _calculateHeight(sizeScreen.height),
                     child: GridView.builder(
-                      controller: _scrollController,
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      cacheExtent: 500,
+                      controller: scrollControllerLinear,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
                         childAspectRatio: 1.1,
                         crossAxisSpacing: 18,
@@ -270,74 +281,82 @@ class _AdState extends ConsumerState<Ad> {
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (context, index) {
                         final item = categories[index];
-                        return InkWell(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      CategoryDetail(category: item.category),
-                                ),
-                              );
-                            },
-                            child: Column(
-                              children: [
-                                CircleAvatar(
-                                  backgroundImage: AssetImage(
-                                      'assets/category_photos/guitar_accecsories.webp'),
-                                  radius: 40,
-                                ),
-                                SizedBox(
-                                  height: 3,
-                                ),
-                                Text(
-                                  item.category,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 12,
-                                    color: textTheme.bodyLarge!.color,
+                        return RepaintBoundary(
+                          child: InkWell(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        CategoryDetail(category: item.category),
                                   ),
-                                ),
-                              ],
-                            ));
+                                );
+                              },
+                              child: Column(
+                                children: [
+                                  const CircleAvatar(
+                                    backgroundImage: AssetImage(
+                                        'assets/category_photos/guitar_accecsories.webp'),
+                                    radius: 40,
+                                  ),
+                                  const SizedBox(
+                                    height: 3,
+                                  ),
+                                  Text(
+                                    item.category,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 12,
+                                      color: textTheme.bodyLarge!.color,
+                                    ),
+                                  ),
+                                ],
+                              )),
+                        );
                       },
                     ),
                   ),
-                  SizedBox(
+                ),
+                const SliverToBoxAdapter(
+                  child: SizedBox(
                     height: 6,
                   ),
-                  Padding(
+                ),
+                SliverToBoxAdapter(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(
                         horizontal: sizeScreen.width * 0.45),
                     child: LinearProgressIndicator(
                       borderRadius: BorderRadius.circular(8),
-                      value: value,
+                      value: scrollProgress,
                       color: Colors.amber,
                     ),
                   ),
-                  SizedBox(height: 5),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 5)),
+                SliverToBoxAdapter(
+                  child: const Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 10),
                     child: Text(
                       'Рекомендация',
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
                     ),
                   ),
-                  SizedBox(height: 9),
-                  GridView.builder(
-                    shrinkWrap: true,
-                    itemCount: ads.length,
-                    physics: NeverScrollableScrollPhysics(),
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: 7,
-                        crossAxisSpacing: 7,
-                        childAspectRatio: calculateWidth(sizeScreen.width)),
-                    itemBuilder: (context, index) {
-                      final ad = ads[index];
-                      return InkWell(
+                ),
+                SliverToBoxAdapter(child: const SizedBox(height: 9)),
+                SliverGrid.builder(
+                  itemCount: ads.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: 7,
+                      crossAxisSpacing: 7,
+                      childAspectRatio: calculateWidth(sizeScreen.width)),
+                  itemBuilder: (context, index) {
+                    final ad = ads[index];
+                    return RepaintBoundary(
+                      child: InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
@@ -347,13 +366,13 @@ class _AdState extends ConsumerState<Ad> {
                           );
                         },
                         child: CustomAdWidget(ad: ad),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 20),
-                ],
-              ),
-            ),
+                      ),
+                    );
+                  },
+                ),
+                const SliverToBoxAdapter(child: SizedBox(height: 20)),
+              ])
+      ]),
     );
   }
 }

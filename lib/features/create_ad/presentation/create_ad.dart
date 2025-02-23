@@ -1048,7 +1048,14 @@ class _CreateAdState extends State<CreateAd> {
                             ),
                           ),
                           onPressed: () {
-                            if (_key.currentState!.validate() &&
+                            if (!isCategoryError &&
+                                !isBrandError &&
+                                !isDescriptionError &&
+                                !isNameError &&
+                                !isPhoneError &&
+                                !isPriceError &&
+                                !isStateError &&
+                                !isTitleError &&
                                 selectedState != null) {
                               debugPrint('good');
                               showDialog(

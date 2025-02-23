@@ -110,110 +110,112 @@ class _SmsState extends State<Sms> {
                     decoder: customDecoder,
                     'assets/animation/main.lottie'),
               )),
-          Form(
-            key: _key,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 23),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Введите код отправленный на номер ${widget.number}',
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 17),
-                  ),
-                  const SizedBox(height: 20),
-                  Pinput(
-                      controller: _codeController,
-                      autofocus: true,
-                      focusNode: focusNode,
-                      defaultPinTheme: defaultPinTheme,
-                      separatorBuilder: (index) => const SizedBox(width: 8),
-                      hapticFeedbackType: HapticFeedbackType.lightImpact,
-                      onCompleted: (pin) async {
-                        if (_key.currentState!.validate()) {
-                          setState(() {
-                            isLoading = true;
-                          });
-                          await Future.delayed(const Duration(seconds: 2));
-                          setState(() {
-                            isLoading = false;
-                          });
-                          if (context.mounted) {
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(builder: (context) => Home()),
-                              (Route<dynamic> route) => false,
-                            );
+          Center(
+            child: Form(
+              key: _key,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 23),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Введите код отправленный на номер ${widget.number}',
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 17),
+                    ),
+                    const SizedBox(height: 20),
+                    Pinput(
+                        controller: _codeController,
+                        autofocus: true,
+                        focusNode: focusNode,
+                        defaultPinTheme: defaultPinTheme,
+                        separatorBuilder: (index) => const SizedBox(width: 8),
+                        hapticFeedbackType: HapticFeedbackType.lightImpact,
+                        onCompleted: (pin) async {
+                          if (_key.currentState!.validate()) {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            await Future.delayed(const Duration(seconds: 2));
+                            setState(() {
+                              isLoading = false;
+                            });
+                            if (context.mounted) {
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(builder: (context) => Home()),
+                                (Route<dynamic> route) => false,
+                              );
+                            }
                           }
-                        }
-                      },
-                      cursor: Column(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          Container(
-                            margin: const EdgeInsets.only(bottom: 9),
-                            width: 22,
-                            height: 2,
-                            color: Colors.blueAccent,
-                          ),
-                        ],
-                      ),
-                      focusedPinTheme: defaultPinTheme.copyWith(
-                        decoration: defaultPinTheme.decoration!.copyWith(
-                          borderRadius: BorderRadius.circular(8),
-                          border:
-                              Border.all(color: focusedBorderColor, width: 2),
-                        ),
-                      ),
-                      submittedPinTheme: defaultPinTheme.copyWith(
-                        decoration: defaultPinTheme.decoration!.copyWith(
-                          color: fillColor,
-                          borderRadius: BorderRadius.circular(19),
-                          border:
-                              Border.all(color: focusedBorderColor, width: 2),
-                        ),
-                      ),
-                      errorPinTheme: errorPinTheme),
-                  const SizedBox(height: 13),
-                  isLoading
-                      ? Column(
+                        },
+                        cursor: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           children: [
-                            SizedBox(
-                              height: 10,
+                            Container(
+                              margin: const EdgeInsets.only(bottom: 9),
+                              width: 22,
+                              height: 2,
+                              color: Colors.blueAccent,
                             ),
-                            Loader()
                           ],
-                        )
-                      : _isResendButtonVisible
-                          ? TextButton(
-                              onPressed: () {
-                                _startTimer();
-                              },
-                              child: const Text(
-                                'Отправить заново',
-                                style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue),
+                        ),
+                        focusedPinTheme: defaultPinTheme.copyWith(
+                          decoration: defaultPinTheme.decoration!.copyWith(
+                            borderRadius: BorderRadius.circular(8),
+                            border:
+                                Border.all(color: focusedBorderColor, width: 2),
+                          ),
+                        ),
+                        submittedPinTheme: defaultPinTheme.copyWith(
+                          decoration: defaultPinTheme.decoration!.copyWith(
+                            color: fillColor,
+                            borderRadius: BorderRadius.circular(19),
+                            border:
+                                Border.all(color: focusedBorderColor, width: 2),
+                          ),
+                        ),
+                        errorPinTheme: errorPinTheme),
+                    const SizedBox(height: 13),
+                    isLoading
+                        ? Column(
+                            children: [
+                              SizedBox(
+                                height: 10,
                               ),
-                            )
-                          : Column(
-                              children: [
-                                SizedBox(
-                                  height: 14,
-                                ),
-                                Text(
-                                  'Отправить заново через $_secondsRemaining сек.',
-                                  style: const TextStyle(
+                              Loader()
+                            ],
+                          )
+                        : _isResendButtonVisible
+                            ? TextButton(
+                                onPressed: () {
+                                  _startTimer();
+                                },
+                                child: const Text(
+                                  'Отправить заново',
+                                  style: TextStyle(
+                                      fontSize: 14,
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 13,
-                                      color: Colors.grey),
+                                      color: Colors.blue),
                                 ),
-                              ],
-                            ),
-                  const SizedBox(height: 20),
-                ],
+                              )
+                            : Column(
+                                children: [
+                                  SizedBox(
+                                    height: 14,
+                                  ),
+                                  Text(
+                                    'Отправить заново через $_secondsRemaining сек.',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 13,
+                                        color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                    const SizedBox(height: 20),
+                  ],
+                ),
               ),
             ),
           ),

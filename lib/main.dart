@@ -1,10 +1,7 @@
 import 'package:acousticsapp/core/theme/theme.dart';
 import 'package:acousticsapp/core/theme/theme_provider.dart';
-import 'package:acousticsapp/features/ads/data/ad_model.dart';
-import 'package:acousticsapp/features/ads/presentation/ad.dart';
-import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
 import 'package:acousticsapp/features/auth/presentation/login.dart';
-import 'package:acousticsapp/home.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

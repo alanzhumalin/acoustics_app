@@ -15,8 +15,8 @@ class Rules extends StatelessWidget {
         ),
         forceMaterialTransparency: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
