@@ -1,14 +1,11 @@
-import 'package:acousticsapp/features/favorites/widget/shimmer_loading_favorites.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Favorites extends ConsumerWidget {
+class Favorites extends StatelessWidget {
   const Favorites({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final theme = Theme.of(context).colorScheme.surfaceContainer;
+  Widget build(BuildContext context) {
     final colorDivider = Theme.of(context).colorScheme.onSecondary;
     final containerColor = Theme.of(context).colorScheme.primaryContainer;
     final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;

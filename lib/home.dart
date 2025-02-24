@@ -1,24 +1,24 @@
-import 'package:acousticsapp/features/ads/presentation/ad.dart';
+import 'package:acousticsapp/features/ads/presentation/ads.dart';
 import 'package:acousticsapp/features/chat/presentation/chat.dart';
 import 'package:acousticsapp/features/create_ad/presentation/create_ad.dart';
 import 'package:acousticsapp/features/favorites/presentation/favorites.dart';
 import 'package:acousticsapp/features/profile/presentation/profile.dart';
-import 'package:acousticsapp/shared/provider/page_scroll_provider.dart';
+import 'package:acousticsapp/shared/bloc/scroll_home_cubit.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class Home extends ConsumerStatefulWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
 
   @override
-  ConsumerState<Home> createState() => _HomeState();
+  State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends ConsumerState<Home> {
+class _HomeState extends State<Home> {
   int selectedIndex = 0;
 
   final List<Widget> _pages = [
-    Ad(),
+    Ads(),
     Chat(),
     CreateAd(),
     Favorites(),
@@ -27,8 +27,8 @@ class _HomeState extends ConsumerState<Home> {
 
   @override
   Widget build(BuildContext context) {
-    final _pageScrollController = ref.read(pageScrollController);
     final theme = Theme.of(context).bottomNavigationBarTheme.backgroundColor;
+    final scrollCubit = context.read<ScrollHomeCubit>();
 
     return Scaffold(
       body: _pages[selectedIndex],
@@ -42,9 +42,7 @@ class _HomeState extends ConsumerState<Home> {
         selectedFontSize: 12,
         onTap: (value) {
           if (value == 0 && selectedIndex == 0) {
-            _pageScrollController.animateTo(0,
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut);
+            scrollCubit.scrollToTop();
           }
 
           setState(() {
@@ -68,20 +66,21 @@ class _HomeState extends ConsumerState<Home> {
                         : Icons.chat_bubble_outline,
                     color: Colors.orange),
                 Positioned(
-                    top: -12,
-                    right: -4,
-                    child: Container(
-                      padding: EdgeInsets.all(5),
-                      decoration: BoxDecoration(
-                          color: Colors.yellow, shape: BoxShape.circle),
-                      child: Text(
-                        '1',
-                        style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.brown[800],
-                            fontWeight: FontWeight.bold),
-                      ),
-                    )),
+                  top: -12,
+                  right: -4,
+                  child: Container(
+                    padding: EdgeInsets.all(5),
+                    decoration: BoxDecoration(
+                        color: Colors.yellow, shape: BoxShape.circle),
+                    child: Text(
+                      '1',
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.brown[800],
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
               ],
             ),
             label: 'Чат',

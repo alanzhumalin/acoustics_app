@@ -1,16 +1,15 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ChatDetail extends ConsumerStatefulWidget {
+class ChatDetail extends StatefulWidget {
   const ChatDetail({super.key, required this.name});
   final String name;
 
   @override
-  ConsumerState<ChatDetail> createState() => _ChatDetailState();
+  State<ChatDetail> createState() => _ChatDetailState();
 }
 
-class _ChatDetailState extends ConsumerState<ChatDetail> {
+class _ChatDetailState extends State<ChatDetail> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController scrollController = ScrollController();
   final FocusNode focusNode = FocusNode();

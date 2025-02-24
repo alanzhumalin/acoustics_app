@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:acousticsapp/home.dart';
 import 'package:acousticsapp/shared/widgets/loader.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:pinput/pinput.dart';
 
 class Sms extends StatefulWidget {

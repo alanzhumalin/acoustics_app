@@ -1,21 +1,21 @@
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/data/category.dart';
 import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
+import 'package:acousticsapp/features/ads/presentation/search_result.dart';
+import 'package:acousticsapp/features/ads/widget/category_appbar.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
-import 'package:acousticsapp/home.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class CategoryDetail extends ConsumerStatefulWidget {
-  const CategoryDetail({super.key, required this.category});
+class Categories extends StatefulWidget {
+  const Categories({super.key, required this.category});
   final String category;
 
   @override
-  ConsumerState<CategoryDetail> createState() => _CategoryDetailState();
+  State<Categories> createState() => _CategoryDetailState();
 }
 
-class _CategoryDetailState extends ConsumerState<CategoryDetail> {
+class _CategoryDetailState extends State<Categories> {
   late List<AdModel> adCategory;
   String criteria = 'Cначала дороже';
   List<Category> results = [];
@@ -34,18 +34,6 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                   category.category.toLowerCase().contains(query.toLowerCase()))
               .toList();
     });
-  }
-
-  double _calculateHeight(double screenHeight) {
-    if (screenHeight <= 603) return screenHeight * 0.45;
-
-    if (screenHeight <= 649) return screenHeight * 0.42;
-
-    if (screenHeight <= 706) return screenHeight * 0.39;
-    if (screenHeight <= 749) return screenHeight * 0.36;
-    if (screenHeight <= 794) return screenHeight * 0.34;
-    if (screenHeight <= 877) return screenHeight * 0.31;
-    return screenHeight * 0.29;
   }
 
   double calculateWidth(double screenWidth) {
@@ -152,8 +140,6 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final size = MediaQuery.of(context).size;
-    final color = Theme.of(context).colorScheme.onSecondaryContainer;
-    final searchColor = Theme.of(context).colorScheme.secondaryContainer;
     final containerColor = Theme.of(context).colorScheme.primaryContainer;
     final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
 
@@ -163,73 +149,30 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
       },
       child: Scaffold(
         backgroundColor: backgroundcolor,
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          toolbarHeight: 60,
-          titleSpacing: 10,
-          forceMaterialTransparency: true,
-          title: Row(
-            children: [
-              IconButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  icon: const Icon(Icons.arrow_back_ios)),
-              Expanded(
-                child: TextField(
-                  controller: _searchController,
-                  onChanged: search,
-                  onTap: () {
-                    setState(() {
-                      isSearchSelected = true;
-                      isCursorShown = true;
-                    });
-                  },
-                  showCursor: isCursorShown,
-                  cursorColor: Colors.blue,
-                  decoration: InputDecoration(
-                      suffixIcon: isSearchSelected
-                          ? IconButton(
-                              splashColor: Colors.transparent,
-                              onPressed: () {
-                                setState(() {
-                                  isSearchSelected = false;
-                                  isCursorShown = false;
-
-                                  _searchController.clear();
-                                  search('');
-                                  FocusScope.of(context).unfocus();
-                                });
-                              },
-                              icon: const Icon(Icons.close_sharp))
-                          : null,
-                      filled: true,
-                      fillColor: containerColor,
-                      constraints: const BoxConstraints(maxHeight: 39),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 0),
-                      hintText: 'Поиск',
-                      hintStyle: const TextStyle(
-                          fontSize: 15,
-                          color: Color.fromARGB(255, 132, 132, 132)),
-                      focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none),
-                      border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8),
-                          borderSide: BorderSide.none)),
-                ),
-              ),
-              const SizedBox(
-                width: 10,
-              ),
-              const Icon(
-                CupertinoIcons.search,
-                color: Colors.blue,
-                size: 20,
-              ),
-            ],
-          ),
+        appBar: CategoryAppBar(
+          searchController: _searchController,
+          isSearchSelected: isSearchSelected,
+          isCursorShown: isCursorShown,
+          onBackPressed: () {
+            Navigator.pop(context);
+          },
+          onClearPressed: () {
+            setState(() {
+              isSearchSelected = false;
+              isCursorShown = false;
+              _searchController.clear();
+              search('');
+              FocusScope.of(context).unfocus();
+            });
+          },
+          onSearchChanged: search,
+          onSearchTap: () {
+            setState(() {
+              isSearchSelected = true;
+              isCursorShown = true;
+            });
+          },
+          containerColor: containerColor,
         ),
         body: CustomScrollView(slivers: [
           isSearchSelected
@@ -247,56 +190,12 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                           child: const Center(
                             child: Text(
                               'Ничего не найдено',
-                              style: TextStyle(color: Colors.white),
+                              style: TextStyle(color: Colors.grey),
                             ),
                           ),
                         )
-                      : SliverToBoxAdapter(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 20.0, vertical: 20),
-                            child: ListView.builder(
-                              padding: EdgeInsets.all(0),
-                              physics: NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              itemCount: results.length,
-                              itemBuilder: (context, index) {
-                                final category = results[index];
-                                return GestureDetector(
-                                  onTap: () => Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => CategoryDetail(
-                                              category: category.category))),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: containerColor,
-                                        borderRadius: index == 0
-                                            ? BorderRadius.only(
-                                                topLeft: Radius.circular(8),
-                                                topRight: Radius.circular(8))
-                                            : index + 1 == results.length
-                                                ? BorderRadius.only(
-                                                    bottomLeft:
-                                                        Radius.circular(8),
-                                                    bottomRight:
-                                                        Radius.circular(8))
-                                                : null),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 15, vertical: 15),
-                                    width: double.infinity,
-                                    child: Text(
-                                      category.category,
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 15),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        )
+                      : SearchResult(
+                          results: results, containerColor: containerColor)
               : adCategory.isEmpty
                   ? SliverFillRemaining(
                       child: Center(
@@ -366,29 +265,35 @@ class _CategoryDetailState extends ConsumerState<CategoryDetail> {
                             height: 10,
                           ),
                         ),
-                        SliverGrid.builder(
-                          itemCount: adCategory.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            mainAxisSpacing: 7,
-                            crossAxisSpacing: 7,
-                            childAspectRatio: calculateWidth(size.width),
+                        SliverPadding(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 10,
                           ),
-                          itemBuilder: (context, index) {
-                            final ad = adCategory[index];
+                          sliver: SliverGrid.builder(
+                            itemCount: adCategory.length,
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              mainAxisSpacing: 10,
+                              crossAxisSpacing: 7,
+                              childAspectRatio: calculateWidth(size.width),
+                            ),
+                            itemBuilder: (context, index) {
+                              final ad = adCategory[index];
 
-                            return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              AdDetail(ad: ad)));
-                                },
-                                child: CustomAdWidget(ad: ad));
-                          },
+                              return InkWell(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AdDetail(ad: ad)));
+                                  },
+                                  child: CustomAdWidget(ad: ad));
+                            },
+                          ),
                         ),
+                        const SliverToBoxAdapter(child: SizedBox(height: 20)),
                       ],
                     ),
         ]),

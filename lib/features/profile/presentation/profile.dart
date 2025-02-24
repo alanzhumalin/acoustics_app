@@ -4,13 +4,12 @@ import 'package:acousticsapp/features/profile/presentation/my_ads.dart';
 import 'package:acousticsapp/features/profile/presentation/politics.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Profile extends ConsumerWidget {
+class Profile extends StatelessWidget {
   const Profile({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final containerColor = Theme.of(context).colorScheme.primaryContainer;
     final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;

@@ -20,7 +20,6 @@ class _CustomOtherAdWidgetState extends State<CustomOtherAdWidget> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final textTheme = Theme.of(context).textTheme;
-    final borderColor = Theme.of(context).colorScheme.onPrimaryContainer;
 
     return InkWell(
       onTap: () {

@@ -2,7 +2,6 @@ import 'package:acousticsapp/core/utils/phone_formatter.dart';
 import 'package:acousticsapp/features/auth/presentation/rules.dart';
 import 'package:acousticsapp/features/auth/presentation/sms.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,7 +17,6 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _numberController.dispose();
   }
@@ -26,7 +24,6 @@ class _LoginState extends State<Login> {
   @override
   Widget build(BuildContext context) {
     final colorOfText = Theme.of(context).textTheme.bodySmall!.color;
-    final size = MediaQuery.of(context).size;
     return Scaffold(
         body: Form(
             key: _key,

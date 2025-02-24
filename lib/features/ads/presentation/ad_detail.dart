@@ -2,7 +2,6 @@ import 'dart:ui';
 
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/presentation/image_full_screen.dart';
-import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
 import 'package:acousticsapp/features/ads/widget/custom_other_ad_widget.dart';
 import 'package:acousticsapp/shared/widgets/brand_name_widget.dart';
 import 'package:acousticsapp/shared/widgets/category_name_widget.dart';
@@ -374,8 +373,7 @@ class _AdDetailState extends State<AdDetail> {
                       },
                       itemBuilder: (context, index) {
                         final ad = ads[index];
-                        return RepaintBoundary(
-                            child: CustomOtherAdWidget(ad: ad));
+                        return CustomOtherAdWidget(ad: ad);
                       },
                     ),
                   )

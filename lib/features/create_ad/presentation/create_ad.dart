@@ -7,7 +7,6 @@ import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -364,19 +363,13 @@ class _CreateAdState extends State<CreateAd> {
                       },
                     ),
                     if (isTitleError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Название должно быть минимум 10 символов!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Название должно быть минимум 10 символов!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     SizedBox(
                       height: 10,
@@ -442,19 +435,13 @@ class _CreateAdState extends State<CreateAd> {
                       height: 5,
                     ),
                     if (isCategoryError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Выберите категорию!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Выберите категорию!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     if (selectedCategory.isNotEmpty)
                       Column(
@@ -529,19 +516,13 @@ class _CreateAdState extends State<CreateAd> {
                             height: 5,
                           ),
                           if (isBrandError)
-                            Row(
-                              children: [
-                                Icon(Icons.error, color: Colors.red, size: 16),
-                                SizedBox(width: 4),
-                                Text(
-                                  'Выберите категорию!',
-                                  style: TextStyle(
-                                    color: Colors.red,
-                                    fontSize: 13,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ],
+                            Text(
+                              'Выберите бренд!',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontSize: 13,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                         ],
                       ),
@@ -647,19 +628,13 @@ class _CreateAdState extends State<CreateAd> {
                       height: 5,
                     ),
                     if (isStateError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Выберите состояние товара!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Выберите состояние товара!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     SizedBox(
                       height: 15,
@@ -714,19 +689,13 @@ class _CreateAdState extends State<CreateAd> {
                       height: 5,
                     ),
                     if (isDescriptionError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Описание должно быть не меньше 20 символов!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Описание должно быть не меньше 20 символов!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     SizedBox(
                       height: 10,
@@ -779,19 +748,13 @@ class _CreateAdState extends State<CreateAd> {
                       height: 5,
                     ),
                     if (isPriceError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Введите цену!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Введите цену!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     SizedBox(
                       height: 10,
@@ -936,19 +899,13 @@ class _CreateAdState extends State<CreateAd> {
                       height: 5,
                     ),
                     if (isNameError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Введите имя!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Введите имя!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     SizedBox(
                       height: 20,
@@ -1023,19 +980,13 @@ class _CreateAdState extends State<CreateAd> {
                       height: 5,
                     ),
                     if (isPhoneError)
-                      Row(
-                        children: [
-                          Icon(Icons.error, color: Colors.red, size: 16),
-                          SizedBox(width: 4),
-                          Text(
-                            'Номер не корректный!',
-                            style: TextStyle(
-                              color: Colors.red,
-                              fontSize: 13,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
+                      Text(
+                        'Номер не корректный!',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     const SizedBox(
                       height: 20,
@@ -1051,14 +1002,7 @@ class _CreateAdState extends State<CreateAd> {
                             ),
                           ),
                           onPressed: () {
-                            if (!isCategoryError &&
-                                !isBrandError &&
-                                !isDescriptionError &&
-                                !isNameError &&
-                                !isPhoneError &&
-                                !isPriceError &&
-                                !isStateError &&
-                                !isTitleError &&
+                            if (_key.currentState!.validate() &&
                                 selectedState != null) {
                               debugPrint('good');
                               showDialog(
@@ -1068,10 +1012,6 @@ class _CreateAdState extends State<CreateAd> {
                                       content: Text('го'),
                                     );
                                   });
-                            } else {
-                              setState(() {
-                                isStateError = true;
-                              });
                             }
                           },
                           child: Text(
