@@ -18,44 +18,59 @@ class SearchResult extends StatelessWidget {
   Widget build(BuildContext context) {
     return SliverToBoxAdapter(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20),
-        child: ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: results.length,
-          itemBuilder: (context, index) {
-            final category = results[index];
-            return GestureDetector(
-              onTap: () {
-                context.read<SearchCubit>().saveQuery(category.category);
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 5,
+            ),
+            Text(
+              'Найдено ${results.length} результатов:',
+              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const NeverScrollableScrollPhysics(),
+              itemCount: results.length,
+              itemBuilder: (context, index) {
+                final category = results[index];
+                return GestureDetector(
+                  onTap: () {
+                    context.read<SearchCubit>().saveQuery(category.category);
 
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => Categories(
-                      category: category.category,
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => Categories(
+                          category: category.category,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: containerColor,
+                      borderRadius: _getBorderRadius(index),
+                    ),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 15, vertical: 15),
+                    width: double.infinity,
+                    child: Text(
+                      category.category,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
                     ),
                   ),
                 );
               },
-              child: Container(
-                decoration: BoxDecoration(
-                  color: containerColor,
-                  borderRadius: _getBorderRadius(index),
-                ),
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 15, vertical: 15),
-                width: double.infinity,
-                child: Text(
-                  category.category,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 15,
-                  ),
-                ),
-              ),
-            );
-          },
+            ),
+          ],
         ),
       ),
     );
