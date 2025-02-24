@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
@@ -24,6 +25,8 @@ class AdDetail extends StatefulWidget {
 class _AdDetailState extends State<AdDetail> {
   final PageController pageController = PageController();
   int initialIndex = 0;
+  bool isExpanded = false;
+
   Future<void> _makeCall(String phoneNumber) async {
     final Uri phoneUrl = Uri(scheme: 'tel', path: phoneNumber);
 
@@ -66,6 +69,7 @@ class _AdDetailState extends State<AdDetail> {
   @override
   void dispose() {
     pageController.dispose();
+
     super.dispose();
   }
 
@@ -73,6 +77,7 @@ class _AdDetailState extends State<AdDetail> {
   Widget build(BuildContext context) {
     final containerColor = Theme.of(context).colorScheme.primaryContainer;
     final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
+    bool shouldShowButton = widget.ad.description.length > 200;
 
     final size = MediaQuery.of(context).size;
     return Scaffold(
@@ -242,6 +247,7 @@ class _AdDetailState extends State<AdDetail> {
               ),
             ),
             SizedBox(height: 8),
+
             Container(
               width: double.infinity,
               decoration: BoxDecoration(color: containerColor),
@@ -255,12 +261,32 @@ class _AdDetailState extends State<AdDetail> {
                   ),
                   SizedBox(height: 8),
                   Text(
-                    widget.ad.description,
+                    isExpanded
+                        ? widget.ad.description
+                        : widget.ad.description.substring(
+                            0, min(widget.ad.description.length, 200)),
                     style: TextStyle(fontSize: 13),
                   ),
+                  if (shouldShowButton)
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          isExpanded = !isExpanded;
+                        });
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 5),
+                        child: Text(
+                          isExpanded ? 'Скрыть' : 'Показать больше',
+                          style: TextStyle(
+                              color: Colors.blue, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
                 ],
               ),
             ),
+
             SizedBox(height: 8),
             Container(
               padding: EdgeInsets.symmetric(horizontal: 16, vertical: 10),

@@ -580,4 +580,58 @@ List<AdModel> ads = [
           'https://cdn.cookielaw.org/logos/68a7fd17-25ad-4562-9af3-cbe40f09076e/7eddad80-2690-405c-bdd3-9bf654c8d45f/3094a13c-2d05-46f9-9bee-095fd7262bc5/AKG-3300x2550pix_white.jpg',
     ),
   ),
+
+  AdModel(
+    id: '023',
+    title: 'Цифровая вокальная радиосистема Shure QLXD24E/SM58-H51',
+    description:
+        'Беспроводная цифровая система с профессиональными функциями, простая в настройке и работе. Система  обеспечивает четкий бесперебойный сигнал в радиусе 100 м. Особенности: 24-битный чистый цифровой аудио сигнал, частотный диапазон от 20 Гц до20 кГц, динамический диапазон более 120 дБ, полоса настройки 64 МГц, до 60 совместимых систем на частотную полосу, до 129 совместимых систем при использовании нескольких полос. Ручной динамический вокальный мирофон с капсюлем SM58, направленность кардиоидная, частотный диапазон  50–15 000 Гц., чуствительность (1 кГц): -54,5 dBV/Pa / 1,88 mV/Pa. Частота H51 (534-598МГц).',
+    price: '786459',
+    nameOfCustomer: 'MuzZone',
+    phoneNumber: '+77010709003',
+    city: 'Алматы',
+    createdAt: DateTime.now(),
+    condition: 'Магазин',
+    latLng: ['43.2452', '76.9345'],
+    adImages: [
+      'https://muzzone.kz/images/thumbnails/1100/900/detailed/15/qlxd24esm58-h51-MZ.jpg',
+      'https://muzsound.kz/image/cache/catalog/МИКРОФОНЫ/РАДИОМИКРОФОНЫ/SHURE/SHURE%20QLXD-4/shure-qlxd24-b58-21225584038255-500x500.jpg',
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTL8M3OxGAohsAqjPc855RscnHaYbwJKZJhuw&s'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Микрофоны',
+      subcategory: 'Микрофоны',
+      item: 'Вокальные',
+      brand: 'Shure',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgsyrutszS8r4bOItQnVmQU-MvkFj0hsWuGw&s',
+    ),
+  ),
+
+  AdModel(
+    id: '024',
+    title: 'Радиосистема Shure QLXD24E/KSM9-K51',
+    description:
+        'Цифровая вокальная радиосистема с ручным передатчиком KSM9 606-670MHz',
+    price: '1215115',
+    nameOfCustomer: '1music',
+    phoneNumber: '+77010709003',
+    city: 'Алматы',
+    createdAt: DateTime.now(),
+    condition: 'Магазин',
+    latLng: ['43.2452', '76.9345'],
+    adImages: [
+      'https://www.1music.kz/upload/iblock/ee0/ee0762ab570ce10721e496629b5734d8.jpeg',
+      'https://www.1music.kz/upload/iblock/ac2/ac20ac0822c71fa922c711cf335b553d.jpeg',
+      'https://www.1music.kz/upload/iblock/8ff/8ff820408e57aa9261f5e093890e9fef.jpeg'
+    ],
+    categorySelection: CategorySelection(
+      category: 'Микрофоны',
+      subcategory: 'Микрофоны',
+      item: 'Вокальные',
+      brand: 'Shure',
+      brandImage:
+          'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQgsyrutszS8r4bOItQnVmQU-MvkFj0hsWuGw&s',
+    ),
+  ),
 ];

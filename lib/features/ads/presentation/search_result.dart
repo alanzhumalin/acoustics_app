@@ -26,7 +26,9 @@ class SearchResult extends StatelessWidget {
               height: 5,
             ),
             Text(
-              'Найдено ${results.length} результатов:',
+              results.length != 1
+                  ? 'Найдено ${results.length} результатов:'
+                  : 'Найдено ${results.length} результат:',
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
             ),
             SizedBox(

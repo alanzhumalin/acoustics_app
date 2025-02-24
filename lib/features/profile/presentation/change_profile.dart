@@ -1,15 +1,39 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
-class ChangeName extends StatefulWidget {
-  const ChangeName({super.key});
+class ChangeProfile extends StatefulWidget {
+  const ChangeProfile({super.key});
 
   @override
-  State<ChangeName> createState() => _ChangeProfileState();
+  State<ChangeProfile> createState() => _ChangeProfileState();
 }
 
-class _ChangeProfileState extends State<ChangeName> {
+class _ChangeProfileState extends State<ChangeProfile> {
   final TextEditingController _nameController = TextEditingController();
   final _key = GlobalKey<FormState>();
+  final ImagePicker imagePicker = ImagePicker();
+  XFile? image;
+
+  Future<void> pickPhoto() async {
+    final photo = await imagePicker.pickImage(source: ImageSource.camera);
+    if (photo != null) {
+      setState(() {
+        image = photo;
+      });
+    }
+    Navigator.pop(context);
+  }
+
+  Future<void> pickImage() async {
+    final photo = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (photo != null) {
+      setState(() {
+        image = photo;
+      });
+    }
+    Navigator.pop(context);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,18 +58,79 @@ class _ChangeProfileState extends State<ChangeName> {
               key: _key,
               child: Column(
                 children: [
-                  CircleAvatar(
-                    radius: 80,
-                    backgroundColor: Colors.blue,
-                    child: Icon(
-                      Icons.add,
-                      color: Colors.white,
-                      size: 34,
-                    ),
+                  Stack(
+                    alignment: Alignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 80,
+                        backgroundImage:
+                            image != null ? FileImage(File(image!.path)) : null,
+                        child: image == null
+                            ? Icon(Icons.person, size: 80, color: Colors.grey)
+                            : null,
+                      ),
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          child: IconButton(
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor: backgroundcolor,
+                                      title: Text(
+                                        'Выберите одну опцию',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16),
+                                      ),
+                                      content: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          ListTile(
+                                            leading: Icon(
+                                              Icons.camera,
+                                              color: Colors.blue,
+                                              size: 23,
+                                            ),
+                                            title: Text(
+                                              'Камера',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14),
+                                            ),
+                                            onTap: pickPhoto,
+                                          ),
+                                          ListTile(
+                                            leading: Icon(
+                                              Icons.image,
+                                              color: Colors.blue,
+                                              size: 23,
+                                            ),
+                                            title: Text(
+                                              'Галерея',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 14),
+                                            ),
+                                            onTap: pickImage,
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  });
+                            },
+                            icon: Icon(Icons.add_a_photo_outlined,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   TextFormField(
                     autocorrect: false,
                     controller: _nameController,
@@ -55,7 +140,6 @@ class _ChangeProfileState extends State<ChangeName> {
                       }
                       return null;
                     },
-                    cursorErrorColor: Colors.blue,
                     cursorColor: Colors.blue,
                     decoration: InputDecoration(
                       filled: true,
@@ -71,9 +155,7 @@ class _ChangeProfileState extends State<ChangeName> {
                       hintText: 'Новое имя',
                     ),
                   ),
-                  SizedBox(
-                    height: 20,
-                  ),
+                  SizedBox(height: 20),
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(

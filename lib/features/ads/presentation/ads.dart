@@ -90,8 +90,12 @@ class _AdState extends State<Ads> {
             isSearchSelected = false;
             isCursorShown = false;
             searchController.clear();
+
             search('');
-            FocusScope.of(context).unfocus();
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              FocusManager.instance.primaryFocus?.unfocus();
+            });
           });
         },
         onSearchChanged: search,
@@ -134,7 +138,7 @@ class _AdState extends State<Ads> {
                                           'Последние запросы',
                                           style:
                                               textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.w500,
+                                            fontWeight: FontWeight.bold,
                                             fontSize: 19,
                                           ),
                                         ),

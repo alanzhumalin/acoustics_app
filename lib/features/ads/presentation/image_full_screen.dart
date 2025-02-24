@@ -32,7 +32,6 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       body: GestureDetector(
         onVerticalDragStart: (details) {
           _startVerticalDrag = details.globalPosition;
@@ -65,6 +64,7 @@ class _ImageFullScreenState extends State<ImageFullScreen> {
                   controller: pageController,
                   itemBuilder: (context, index) {
                     return CachedNetworkImage(
+                        fit: BoxFit.contain,
                         imageUrl: widget.imagesLink[index]);
                   },
                 ),

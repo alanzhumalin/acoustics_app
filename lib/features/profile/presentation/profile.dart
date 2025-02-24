@@ -55,7 +55,7 @@ class Profile extends StatelessWidget {
             tileColor: containerColor,
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ChangeName()));
+                  MaterialPageRoute(builder: (context) => ChangeProfile()));
             },
             title: Text(
               'Изменить данные',

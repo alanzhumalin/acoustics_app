@@ -162,7 +162,9 @@ class _CategoryDetailState extends State<Categories> {
               isCursorShown = false;
               _searchController.clear();
               search('');
-              FocusScope.of(context).unfocus();
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                FocusManager.instance.primaryFocus?.unfocus();
+              });
             });
           },
           onSearchChanged: search,
