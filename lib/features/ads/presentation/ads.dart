@@ -6,6 +6,7 @@ import 'package:acousticsapp/features/ads/widget/ad_appbar.dart';
 import 'package:acousticsapp/features/ads/presentation/search_result.dart';
 import 'package:acousticsapp/features/ads/widget/ad_grid.dart';
 import 'package:acousticsapp/features/ads/widget/category_grid.dart';
+import 'package:acousticsapp/features/ads/widget/sponsors.dart';
 import 'package:acousticsapp/shared/bloc/scroll_home_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -74,9 +75,10 @@ class _AdState extends State<Ads> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final sizeScreen = MediaQuery.of(context).size;
-    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
     final scrollLinearCubit = context.read<ScrollLinearCubit>();
     final containerColor = Theme.of(context).colorScheme.primaryContainer;
+    final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
+
     final scrollController = context.read<ScrollHomeCubit>().state;
 
     return Scaffold(
@@ -213,6 +215,9 @@ class _AdState extends State<Ads> {
                 },
               )
             : SliverMainAxisGroup(slivers: [
+                SliverToBoxAdapter(
+                  child: Sponsors(),
+                ),
                 const SliverToBoxAdapter(
                   child: SizedBox(
                     height: 5,
@@ -236,7 +241,7 @@ class _AdState extends State<Ads> {
                           ),
                         ),
                         SizedBox(
-                          height: 5,
+                          height: 10,
                         ),
                         CategoryGrid(
                             height: _calculateHeight(sizeScreen.height),

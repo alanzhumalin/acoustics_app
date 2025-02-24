@@ -1,3 +1,4 @@
+import 'package:acousticsapp/features/ads/presentation/notifications.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -71,9 +72,15 @@ class AdAppbar extends StatelessWidget implements PreferredSizeWidget {
           ),
           const SizedBox(width: 10),
           if (!isSearchSelected)
-            const Icon(
-              Icons.notifications,
-              color: Colors.orange,
+            GestureDetector(
+              onTap: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => Notifications()));
+              },
+              child: const Icon(
+                Icons.notifications,
+                color: Colors.orange,
+              ),
             ),
         ],
       ),

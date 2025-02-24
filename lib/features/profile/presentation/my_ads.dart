@@ -26,8 +26,6 @@ class MyAds extends StatelessWidget {
         forceMaterialTransparency: true,
       ),
       body: ListView.separated(
-          shrinkWrap: true,
-          physics: NeverScrollableScrollPhysics(),
           itemBuilder: (context, index) {
             return Container(
               padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),

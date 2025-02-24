@@ -116,6 +116,7 @@ class _CreateAdState extends State<CreateAd> {
       setState(() {
         selectedCategory = result;
         selectedBrand = '';
+        isCategoryError = false;
       });
     }
   }
@@ -127,6 +128,7 @@ class _CreateAdState extends State<CreateAd> {
     if (result != null && result.isNotEmpty) {
       setState(() {
         selectedBrand = result;
+        isBrandError = false;
       });
     }
   }
@@ -411,6 +413,9 @@ class _CreateAdState extends State<CreateAd> {
                         hintText: selectedCategory.isNotEmpty
                             ? selectedCategory
                             : 'Выберите категорию',
+                        hintStyle: TextStyle(
+                            color:
+                                Theme.of(context).textTheme.bodyLarge!.color),
                         contentPadding: const EdgeInsets.symmetric(
                             horizontal: 20, vertical: 14),
                         fillColor: containerColor,
@@ -624,14 +629,11 @@ class _CreateAdState extends State<CreateAd> {
                                 ))),
                       ],
                     ),
-                    SizedBox(
-                      height: 5,
-                    ),
-                    if (isStateError)
+                    if (selectedState == null)
                       Text(
-                        'Выберите состояние товара!',
+                        '* Не забудьте выбрать состояние товара!',
                         style: TextStyle(
-                          color: Colors.red,
+                          color: Colors.blue,
                           fontSize: 13,
                           fontWeight: FontWeight.bold,
                         ),
@@ -1003,6 +1005,14 @@ class _CreateAdState extends State<CreateAd> {
                           ),
                           onPressed: () {
                             if (_key.currentState!.validate() &&
+                                !isTitleError &&
+                                !isCategoryError &&
+                                !isBrandError &&
+                                !isStateError &&
+                                !isDescriptionError &&
+                                !isPriceError &&
+                                !isNameError &&
+                                !isPhoneError &&
                                 selectedState != null) {
                               debugPrint('good');
                               showDialog(

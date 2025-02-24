@@ -13,6 +13,8 @@ class ScrollHomeCubit extends Cubit<ScrollController> {
     );
   }
 
+  void offSet() {}
+
   @override
   Future<void> close() {
     state.dispose();
