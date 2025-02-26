@@ -7,6 +7,7 @@ import 'package:acousticsapp/features/ads/domain/usecases/save_search_query.dart
 import 'package:acousticsapp/features/ads/presentation/cubit/scroll_cubit.dart';
 import 'package:acousticsapp/features/ads/presentation/cubit/search_cubit.dart';
 import 'package:acousticsapp/home.dart';
+import 'package:acousticsapp/shared/bloc/index_bottom_nav_bar.dart';
 import 'package:acousticsapp/shared/bloc/scroll_home_cubit.dart';
 
 import 'package:flutter/material.dart';
@@ -28,6 +29,7 @@ void main() {
         BlocProvider(create: (_) => ThemeCubit()),
         BlocProvider(create: (_) => ScrollLinearCubit()),
         BlocProvider(create: (_) => ScrollHomeCubit()),
+        BlocProvider(create: (_) => IndexBottomNavBar()),
         BlocProvider(
             create: (_) => SearchCubit(
                   getRecentSearches: getRecentSearches,

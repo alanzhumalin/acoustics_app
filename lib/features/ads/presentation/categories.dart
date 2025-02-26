@@ -1,5 +1,6 @@
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/data/category.dart';
+import 'package:acousticsapp/features/ads/data/sub_category.dart';
 import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
 import 'package:acousticsapp/features/ads/presentation/search_result.dart';
 import 'package:acousticsapp/features/ads/widget/category_appbar.dart';
@@ -19,7 +20,7 @@ class _CategoryDetailState extends State<Categories> {
   late List<AdModel> adCategory;
   String criteria = 'Cначала дороже';
   List<Category> results = [];
-
+  List<Subcategory> subcategories = [];
   final TextEditingController _searchController = TextEditingController();
   String userType = '';
   var isSearchSelected = false;
@@ -55,6 +56,13 @@ class _CategoryDetailState extends State<Categories> {
         .where((ad) => ad.categorySelection.category == widget.category)
         .toList();
     sortAds('price_descending');
+    subcategories = categories
+        .where((category) => category.category == widget.category)
+        .expand((category) => category.subcategories)
+        .toList();
+
+    // .firstWhere((category) => category.category == widget.category)
+    // .subcategories;
   }
 
   void sortAds(String criterion) {
@@ -206,60 +214,134 @@ class _CategoryDetailState extends State<Categories> {
                     )
                   : SliverMainAxisGroup(
                       slivers: [
+                        // SliverToBoxAdapter(
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.symmetric(
+                        //         horizontal: 20, vertical: 5),
+                        //     child: Container(
+                        //       decoration: BoxDecoration(
+                        //           color: containerColor,
+                        //           borderRadius: BorderRadius.circular(15)),
+                        //       width: double.infinity,
+                        //       child: Row(
+                        //         mainAxisAlignment:
+                        //             MainAxisAlignment.spaceBetween,
+                        //         children: [
+                        //           TextButton.icon(
+                        //               style: ButtonStyle(
+                        //                 splashFactory: NoSplash.splashFactory,
+                        //               ),
+                        //               icon: Icon(
+                        //                   CupertinoIcons.slider_horizontal_3,
+                        //                   color: textTheme.bodyLarge!.color),
+                        //               onPressed: () {},
+                        //               label: Text(
+                        //                 'Фильтр',
+                        //                 style: TextStyle(
+                        //                     fontWeight: FontWeight.w400,
+                        //                     color: textTheme.bodySmall!.color),
+                        //               )),
+                        SliverToBoxAdapter(
+                          child: Divider(
+                            height: 1,
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
+                        ),
                         SliverToBoxAdapter(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(
-                                horizontal: 20, vertical: 5),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: containerColor,
-                                  borderRadius: BorderRadius.circular(15)),
-                              width: double.infinity,
-                              child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  TextButton.icon(
-                                      style: ButtonStyle(
-                                        splashFactory: NoSplash.splashFactory,
-                                      ),
-                                      icon: Icon(
-                                          CupertinoIcons.slider_horizontal_3,
-                                          color: textTheme.bodyLarge!.color),
-                                      onPressed: () {},
-                                      label: Text(
-                                        'Фильтр',
+                                horizontal: 10, vertical: 0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        widget.category,
                                         style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            color: textTheme.bodySmall!.color),
-                                      )),
-                                  TextButton.icon(
-                                      style: ButtonStyle(
-                                        splashFactory: NoSplash.splashFactory,
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 18),
                                       ),
-                                      icon: Icon(
-                                        CupertinoIcons.sort_down,
-                                        color: textTheme.bodyLarge!.color,
-                                      ),
-                                      onPressed: () async {
-                                        var sortingMethod =
-                                            await showFilterDialog();
-                                        if (sortingMethod != null) {
-                                          setState(() {
-                                            criteria = sortingMethod;
-                                          });
-                                        }
-                                        return;
-                                      },
-                                      label: Text(
-                                        criteria,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.w400,
-                                            color: textTheme.bodySmall!.color),
-                                      ))
-                                ],
-                              ),
+                                      Text('${adCategory.length} товаров')
+                                    ],
+                                  ),
+                                ),
+                                IconButton(
+                                  style: ButtonStyle(
+                                    splashFactory: NoSplash.splashFactory,
+                                  ),
+                                  icon: Icon(
+                                    Icons.filter_list,
+                                    color: textTheme.bodyLarge!.color,
+                                  ),
+                                  onPressed: () async {
+                                    var sortingMethod =
+                                        await showFilterDialog();
+                                    if (sortingMethod != null) {
+                                      setState(() {
+                                        criteria = sortingMethod;
+                                      });
+                                    }
+                                    return;
+                                  },
+                                ),
+                              ],
                             ),
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: Divider(
+                            height: 1,
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
+                        ),
+                        SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: size.height * 0.042,
+                            child: ListView.separated(
+                                padding: EdgeInsets.symmetric(horizontal: 10),
+                                scrollDirection: Axis.horizontal,
+                                separatorBuilder: (context, index) {
+                                  return SizedBox(
+                                    width: 10,
+                                  );
+                                },
+                                itemCount: subcategories.length,
+                                itemBuilder: (context, index) {
+                                  final item = subcategories[index];
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                        vertical: 7, horizontal: 12),
+                                    decoration: BoxDecoration(
+                                        color: const Color.fromARGB(
+                                            221, 15, 41, 156),
+                                        borderRadius:
+                                            BorderRadius.circular(25)),
+                                    child: Center(
+                                      child: Text(
+                                        item.subcategory,
+                                        style: TextStyle(
+                                            color: Colors.white, fontSize: 14),
+                                      ),
+                                    ),
+                                  );
+                                }),
                           ),
                         ),
                         const SliverToBoxAdapter(
@@ -267,6 +349,76 @@ class _CategoryDetailState extends State<Categories> {
                             height: 10,
                           ),
                         ),
+                        const SliverToBoxAdapter(
+                          child: Divider(
+                            height: 1,
+                          ),
+                        ),
+
+                        const SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
+                        ),
+
+                        SliverToBoxAdapter(
+                            child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text('Цена'),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text('Бренд'),
+                              ),
+                              SizedBox(
+                                width: 10,
+                              ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text('Местоположение'),
+                              )
+                            ],
+                          ),
+                        )),
+                        const SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
+                        ),
+
+                        const SliverToBoxAdapter(
+                          child: Divider(
+                            height: 1,
+                          ),
+                        ),
+                        const SliverToBoxAdapter(
+                          child: SizedBox(
+                            height: 10,
+                          ),
+                        ),
+
                         SliverPadding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 10,
