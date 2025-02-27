@@ -2,44 +2,31 @@ import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/data/category.dart';
 import 'package:acousticsapp/features/ads/data/sub_category.dart';
 import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
+import 'package:acousticsapp/features/ads/presentation/item_sub.dart';
 import 'package:acousticsapp/features/ads/presentation/search_result.dart';
-import 'package:acousticsapp/features/ads/presentation/sub_categories.dart';
 import 'package:acousticsapp/features/ads/widget/category_appbar.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
-class Categories extends StatefulWidget {
-  const Categories({super.key, required this.category});
+class SubCategories extends StatefulWidget {
+  const SubCategories(
+      {super.key, required this.subcategory, required this.category});
+  final String subcategory;
   final String category;
-
   @override
-  State<Categories> createState() => _CategoryDetailState();
+  State<SubCategories> createState() => _SubCategoriesState();
 }
 
-class _CategoryDetailState extends State<Categories> {
+class _SubCategoriesState extends State<SubCategories> {
   late List<AdModel> adCategory;
-  late FixedExtentScrollController scrollController;
-
   String criteria = 'Cначала дороже';
   List<Category> results = [];
-  List<Subcategory> subcategories = [];
-  List<String> brands = [];
-  int selectedIndex = 0;
-  String selectedRangePrice = '';
-  String selectedBrand = '';
+  List<String> items = [];
   final TextEditingController _searchController = TextEditingController();
   String userType = '';
-  var maxPrice = 0;
   var isSearchSelected = false;
   var isCursorShown = false;
-
-  double minPriceOf = 0;
-  late double maxPriceOf;
-  late RangeValues rangeValues;
-
-  // RangeValues rangeValues =
   void search(String query) {
     setState(() {
       userType = query;
@@ -68,23 +55,15 @@ class _CategoryDetailState extends State<Categories> {
   void initState() {
     super.initState();
     adCategory = ads
-        .where((ad) => ad.categorySelection.category == widget.category)
+        .where((ad) => ad.categorySelection.subcategory == widget.subcategory)
         .toList();
-    maxPrice = adCategory
-        .map((ad) => int.tryParse(ad.price) ?? 0)
-        .fold(0, (max, price) => price > max ? price : max);
     sortAds('price_descending');
-    subcategories = categories
+    items = categories
         .where((category) => category.category == widget.category)
         .expand((category) => category.subcategories)
+        .expand((item) => item.items)
         .toList();
-    brands = categories
-        .where((category) => category.category == widget.category)
-        .expand((brand) => brand.brands)
-        .toList();
-    maxPriceOf = maxPrice > 0 ? maxPrice.toDouble() : 100000;
-    rangeValues = RangeValues(minPriceOf, maxPriceOf);
-    scrollController = FixedExtentScrollController(initialItem: selectedIndex);
+
     // .firstWhere((category) => category.category == widget.category)
     // .subcategories;
   }
@@ -166,198 +145,6 @@ class _CategoryDetailState extends State<Categories> {
         );
       },
     );
-  }
-
-  void showBrandPicker(Color backgroundColor) {
-    scrollController = FixedExtentScrollController(initialItem: selectedIndex);
-
-    showCupertinoModalPopup(
-      context: context,
-      builder: (BuildContext context) {
-        return SizedBox(
-          height: MediaQuery.of(context).size.height * 0.4,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 16),
-                color: backgroundColor,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    CupertinoButton(
-                      child: Text('Сбросить',
-                          style: TextStyle(
-                              color: Colors.red, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        setState(() {
-                          selectedBrand = '';
-                          selectedIndex = 0;
-                        });
-                        Navigator.pop(context);
-                      },
-                    ),
-                    CupertinoButton(
-                      child: Text('Готово',
-                          style: TextStyle(
-                              color: Colors.blue, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        if (brands.isNotEmpty) {
-                          setState(() {
-                            selectedBrand = brands[selectedIndex];
-                          });
-                        }
-
-                        Navigator.pop(context);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: CupertinoPicker(
-                  scrollController: scrollController,
-                  backgroundColor: backgroundColor,
-                  itemExtent: 50,
-                  onSelectedItemChanged: (int index) {
-                    setState(() {
-                      selectedIndex = index;
-                    });
-                  },
-                  children: brands
-                      .map((brand) => Center(
-                              child: Text(
-                            brand,
-                            style: TextStyle(color: Colors.blue),
-                          )))
-                      .toList(),
-                ),
-              ),
-            ],
-          ),
-        );
-      },
-    );
-  }
-
-  void showFilterPrice(Color backgroundColor) {
-    showModalBottomSheet(
-      isScrollControlled: true,
-      context: context,
-      showDragHandle: true,
-      backgroundColor: backgroundColor,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setModalState) {
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 30, left: 16, right: 16),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Цена',
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  const SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                          '${NumberFormat('#,###', 'ru_RU').format(rangeValues.start.toInt())} тг',
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                      Text(
-                          '${NumberFormat('#,###', 'ru_RU').format(rangeValues.end.toInt())} тг',
-                          style: const TextStyle(
-                              fontSize: 15, fontWeight: FontWeight.bold)),
-                    ],
-                  ),
-                  RangeSlider(
-                    min: minPriceOf,
-                    max: maxPriceOf,
-                    divisions: 500,
-                    values: rangeValues,
-                    onChanged: (RangeValues newValues) {
-                      setModalState(() {
-                        rangeValues = RangeValues(
-                          newValues.start.roundToDouble(),
-                          newValues.end.roundToDouble(),
-                        );
-
-                        selectedRangePrice =
-                            '${newValues.start.toInt()}-${newValues.end.toInt()}';
-                      });
-                    },
-                    activeColor: Colors.blue,
-                    inactiveColor: Colors.white,
-                    overlayColor: WidgetStateColor.transparent,
-                  ),
-                  const SizedBox(height: 10),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0.2,
-                            backgroundColor: Colors.red,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              selectedRangePrice = '';
-                              rangeValues = RangeValues(minPriceOf, maxPriceOf);
-                            });
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Сбросить",
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ),
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Expanded(
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            elevation: 0.2,
-                            backgroundColor: Colors.blue,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                          ),
-                          onPressed: () {
-                            setState(() {
-                              selectedRangePrice =
-                                  '${rangeValues.start.toInt()}-${rangeValues.end.toInt()}';
-                            });
-                            Navigator.pop(context);
-                          },
-                          child: const Text(
-                            "Применить",
-                            style: TextStyle(color: Colors.white, fontSize: 15),
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  void dispose() {
-    scrollController.dispose();
-
-    super.dispose();
   }
 
   @override
@@ -480,7 +267,7 @@ class _CategoryDetailState extends State<Categories> {
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        widget.category,
+                                        widget.subcategory,
                                         style: TextStyle(
                                             fontWeight: FontWeight.bold,
                                             fontSize: 18),
@@ -538,17 +325,16 @@ class _CategoryDetailState extends State<Categories> {
                                     width: 10,
                                   );
                                 },
-                                itemCount: subcategories.length,
+                                itemCount: items.length,
                                 itemBuilder: (context, index) {
-                                  final item = subcategories[index];
+                                  final item = items[index];
                                   return InkWell(
                                     onTap: () {
                                       Navigator.push(
                                         context,
                                         MaterialPageRoute(
-                                          builder: (context) => SubCategories(
-                                              subcategory: item.subcategory,
-                                              category: widget.category),
+                                          builder: (context) =>
+                                              ItemSub(item: item),
                                         ),
                                       );
                                     },
@@ -559,10 +345,10 @@ class _CategoryDetailState extends State<Categories> {
                                           color: const Color.fromARGB(
                                               221, 15, 41, 156),
                                           borderRadius:
-                                              BorderRadius.circular(5)),
+                                              BorderRadius.circular(25)),
                                       child: Center(
                                         child: Text(
-                                          item.subcategory,
+                                          item,
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14),
@@ -591,112 +377,18 @@ class _CategoryDetailState extends State<Categories> {
                         ),
 
                         SliverToBoxAdapter(
-                            child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
+                            child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10),
                           child: Row(
                             children: [
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showFilterPrice(backgroundcolor);
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 7, horizontal: 12),
-                                  decoration: BoxDecoration(
-                                    color: selectedRangePrice.isEmpty
-                                        ? null
-                                        : Colors.blueAccent,
-                                    border: selectedRangePrice.isEmpty
-                                        ? Border.all(color: Colors.grey)
-                                        : Border.all(color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        selectedRangePrice.isNotEmpty
-                                            ? '${NumberFormat('#,###', 'ru_RU').format(int.parse(selectedRangePrice.split('-')[0]))} - ${NumberFormat('#,###', 'ru_RU').format(int.parse(selectedRangePrice.split('-')[1]))} тг'
-                                            : 'Цена',
-                                      ),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      selectedRangePrice.isNotEmpty
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedRangePrice = '';
-                                                  rangeValues = RangeValues(
-                                                      minPriceOf, maxPriceOf);
-                                                });
-                                              },
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                            )
-                                          : Icon(
-                                              Icons.arrow_drop_down_rounded,
-                                              color: Colors.white,
-                                              size: 20,
-                                            )
-                                    ],
-                                  ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                              ),
-                              SizedBox(
-                                width: 10,
-                              ),
-                              GestureDetector(
-                                onTap: () {
-                                  showBrandPicker(backgroundcolor);
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: 7, horizontal: 12),
-                                  decoration: BoxDecoration(
-                                    color: selectedBrand.isEmpty
-                                        ? null
-                                        : Colors.blueAccent,
-                                    border: selectedBrand.isEmpty
-                                        ? Border.all(color: Colors.grey)
-                                        : Border.all(color: Colors.blue),
-                                    borderRadius: BorderRadius.circular(5),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      Text(selectedBrand.isNotEmpty
-                                          ? selectedBrand
-                                          : 'Бренд'),
-                                      SizedBox(
-                                        width: 5,
-                                      ),
-                                      selectedBrand.isNotEmpty
-                                          ? GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  selectedBrand = '';
-                                                  selectedIndex = 0;
-                                                });
-                                              },
-                                              child: Icon(
-                                                Icons.delete,
-                                                color: Colors.white,
-                                                size: 20,
-                                              ),
-                                            )
-                                          : Icon(
-                                              Icons.arrow_drop_down_rounded,
-                                              color: Colors.white,
-                                              size: 20,
-                                            )
-                                    ],
-                                  ),
-                                ),
+                                child: Text('Цена'),
                               ),
                               SizedBox(
                                 width: 10,
@@ -706,13 +398,22 @@ class _CategoryDetailState extends State<Categories> {
                                     vertical: 7, horizontal: 12),
                                 decoration: BoxDecoration(
                                   border: Border.all(color: Colors.grey),
-                                  borderRadius: BorderRadius.circular(5),
+                                  borderRadius: BorderRadius.circular(15),
                                 ),
-                                child: Text('Город'),
+                                child: Text('Бренд'),
                               ),
                               SizedBox(
                                 width: 10,
                               ),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: 7, horizontal: 12),
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey),
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Text('Местоположение'),
+                              )
                             ],
                           ),
                         )),

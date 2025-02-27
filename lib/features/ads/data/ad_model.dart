@@ -175,7 +175,7 @@ List<AdModel> ads = [
     latLng: ['42.3175', '69.5958'],
     adImages: ['https://images.satu.kz/173066842_mikrofon-shure-sm58-lce.jpg'],
     categorySelection: CategorySelection(
-      category: 'Микрофоны и радиосистемы',
+      category: 'Микрофоны',
       subcategory: 'Микрофоны',
       item: 'Вокальные',
       brand: 'Shure',
@@ -572,7 +572,7 @@ List<AdModel> ads = [
       'https://images.satu.kz/112283671_mikrofon-akg-p3s.jpg',
     ],
     categorySelection: CategorySelection(
-      category: 'Микрофоны и радиосистемы',
+      category: 'Микрофоны',
       subcategory: 'Микрофоны',
       item: 'Вокальные',
       brand: 'AKG',
