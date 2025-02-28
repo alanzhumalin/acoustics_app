@@ -6,9 +6,11 @@ import 'package:acousticsapp/features/ads/presentation/search_result.dart';
 import 'package:acousticsapp/features/ads/presentation/sub_categories.dart';
 import 'package:acousticsapp/features/ads/widget/category_appbar.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
+import 'package:acousticsapp/features/ads/widget/filter_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class Categories extends StatefulWidget {
   const Categories({super.key, required this.category});
@@ -29,17 +31,18 @@ class _CategoryDetailState extends State<Categories> {
   int selectedIndex = 0;
   String selectedRangePrice = '';
   String selectedBrand = '';
+  List<String>? items;
   final TextEditingController _searchController = TextEditingController();
   String userType = '';
   var maxPrice = 0;
   var isSearchSelected = false;
   var isCursorShown = false;
-
+  String? selectedSubCategory;
+  String? selectedItem;
   double minPriceOf = 0;
   late double maxPriceOf;
-  late RangeValues rangeValues;
+  late SfRangeValues _values;
 
-  // RangeValues rangeValues =
   void search(String query) {
     setState(() {
       userType = query;
@@ -83,89 +86,34 @@ class _CategoryDetailState extends State<Categories> {
         .expand((brand) => brand.brands)
         .toList();
     maxPriceOf = maxPrice > 0 ? maxPrice.toDouble() : 100000;
-    rangeValues = RangeValues(minPriceOf, maxPriceOf);
     scrollController = FixedExtentScrollController(initialItem: selectedIndex);
-    // .firstWhere((category) => category.category == widget.category)
-    // .subcategories;
+
+    _values = SfRangeValues(minPriceOf, maxPriceOf);
   }
 
   void sortAds(String criterion) {
+    List<AdModel> sortedAds = List.from(adCategory);
+
     switch (criterion) {
       case 'price_ascending':
-        setState(() {
-          adCategory
-              .sort((a, b) => int.parse(a.price).compareTo(int.parse(b.price)));
-        });
+        sortedAds
+            .sort((a, b) => int.parse(a.price).compareTo(int.parse(b.price)));
         break;
       case 'price_descending':
-        setState(() {
-          adCategory
-              .sort((a, b) => int.parse(b.price).compareTo(int.parse(a.price)));
-        });
+        sortedAds
+            .sort((a, b) => int.parse(b.price).compareTo(int.parse(a.price)));
         break;
       case 'date_ascending':
-        setState(() {
-          adCategory.sort((a, b) => a.createdAt.compareTo(b.createdAt));
-        });
+        sortedAds.sort((a, b) => a.createdAt.compareTo(b.createdAt));
         break;
       case 'date_descending':
-        setState(() {
-          adCategory.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        });
-        break;
-      default:
+        sortedAds.sort((a, b) => b.createdAt.compareTo(a.createdAt));
         break;
     }
-  }
 
-  Future<String?> showFilterDialog() async {
-    return await showCupertinoModalPopup<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return CupertinoActionSheet(
-          title: const Text('Фильтр'),
-          actions: [
-            CupertinoActionSheetAction(
-              child: const Text('Сначала дешевле',
-                  style: TextStyle(color: Colors.blue)),
-              onPressed: () {
-                sortAds('price_ascending');
-                Navigator.of(context).pop('Сначала дешевле');
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: const Text('Сначала дороже',
-                  style: TextStyle(color: Colors.blue)),
-              onPressed: () {
-                sortAds('price_descending');
-                Navigator.of(context).pop('Сначала дороже');
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: const Text('Сначала новые обьявления',
-                  style: TextStyle(color: Colors.blue)),
-              onPressed: () {
-                sortAds('date_descending');
-                Navigator.of(context).pop('Сначала новые обьявления');
-              },
-            ),
-            CupertinoActionSheetAction(
-              child: const Text('Сначала старые обьявления',
-                  style: TextStyle(color: Colors.blue)),
-              onPressed: () {
-                sortAds('date_ascending');
-                Navigator.of(context).pop('Сначала старые обьявления');
-              },
-            ),
-          ],
-          cancelButton: CupertinoActionSheetAction(
-            isDefaultAction: true,
-            onPressed: () => Navigator.pop(context, null),
-            child: const Text('Отмена', style: TextStyle(color: Colors.red)),
-          ),
-        );
-      },
-    );
+    setState(() {
+      adCategory = sortedAds;
+    });
   }
 
   void showBrandPicker(Color backgroundColor) {
@@ -228,7 +176,9 @@ class _CategoryDetailState extends State<Categories> {
                       .map((brand) => Center(
                               child: Text(
                             brand,
-                            style: TextStyle(color: Colors.blue),
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontWeight: FontWeight.w500),
                           )))
                       .toList(),
                 ),
@@ -263,34 +213,29 @@ class _CategoryDetailState extends State<Categories> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                          '${NumberFormat('#,###', 'ru_RU').format(rangeValues.start.toInt())} тг',
+                          '${NumberFormat('#,###', 'ru_RU').format(_values.start.toInt())} тг',
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                       Text(
-                          '${NumberFormat('#,###', 'ru_RU').format(rangeValues.end.toInt())} тг',
+                          '${NumberFormat('#,###', 'ru_RU').format(_values.end.toInt())} тг',
                           style: const TextStyle(
                               fontSize: 15, fontWeight: FontWeight.bold)),
                     ],
                   ),
-                  RangeSlider(
+                  const SizedBox(height: 10),
+                  SfRangeSlider(
                     min: minPriceOf,
                     max: maxPriceOf,
-                    divisions: 500,
-                    values: rangeValues,
-                    onChanged: (RangeValues newValues) {
-                      setModalState(() {
-                        rangeValues = RangeValues(
-                          newValues.start.roundToDouble(),
-                          newValues.end.roundToDouble(),
-                        );
-
-                        selectedRangePrice =
-                            '${newValues.start.toInt()}-${newValues.end.toInt()}';
-                      });
-                    },
+                    values: _values,
                     activeColor: Colors.blue,
                     inactiveColor: Colors.white,
-                    overlayColor: WidgetStateColor.transparent,
+                    onChanged: (value) {
+                      setModalState(() {
+                        _values = SfRangeValues(value.start, value.end);
+                      });
+                      selectedRangePrice =
+                          '${value.start.toInt()}-${value.end.toInt()}';
+                    },
                   ),
                   const SizedBox(height: 10),
                   Row(
@@ -307,7 +252,7 @@ class _CategoryDetailState extends State<Categories> {
                           onPressed: () {
                             setState(() {
                               selectedRangePrice = '';
-                              rangeValues = RangeValues(minPriceOf, maxPriceOf);
+                              _values = SfRangeValues(minPriceOf, maxPriceOf);
                             });
                             Navigator.pop(context);
                           },
@@ -332,7 +277,7 @@ class _CategoryDetailState extends State<Categories> {
                           onPressed: () {
                             setState(() {
                               selectedRangePrice =
-                                  '${rangeValues.start.toInt()}-${rangeValues.end.toInt()}';
+                                  '${_values.start.toInt()}-${_values.end.toInt()}';
                             });
                             Navigator.pop(context);
                           },
@@ -430,33 +375,6 @@ class _CategoryDetailState extends State<Categories> {
                     )
                   : SliverMainAxisGroup(
                       slivers: [
-                        // SliverToBoxAdapter(
-                        //   child: Padding(
-                        //     padding: const EdgeInsets.symmetric(
-                        //         horizontal: 20, vertical: 5),
-                        //     child: Container(
-                        //       decoration: BoxDecoration(
-                        //           color: containerColor,
-                        //           borderRadius: BorderRadius.circular(15)),
-                        //       width: double.infinity,
-                        //       child: Row(
-                        //         mainAxisAlignment:
-                        //             MainAxisAlignment.spaceBetween,
-                        //         children: [
-                        //           TextButton.icon(
-                        //               style: ButtonStyle(
-                        //                 splashFactory: NoSplash.splashFactory,
-                        //               ),
-                        //               icon: Icon(
-                        //                   CupertinoIcons.slider_horizontal_3,
-                        //                   color: textTheme.bodyLarge!.color),
-                        //               onPressed: () {},
-                        //               label: Text(
-                        //                 'Фильтр',
-                        //                 style: TextStyle(
-                        //                     fontWeight: FontWeight.w400,
-                        //                     color: textTheme.bodySmall!.color),
-                        //               )),
                         SliverToBoxAdapter(
                           child: Divider(
                             height: 1,
@@ -474,20 +392,19 @@ class _CategoryDetailState extends State<Categories> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Container(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        widget.category,
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 18),
-                                      ),
-                                      Text('${adCategory.length} товаров')
-                                    ],
-                                  ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      selectedSubCategory == null
+                                          ? widget.category
+                                          : selectedSubCategory!,
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                    Text('${adCategory.length} товаров')
+                                  ],
                                 ),
                                 IconButton(
                                   style: ButtonStyle(
@@ -498,8 +415,8 @@ class _CategoryDetailState extends State<Categories> {
                                     color: textTheme.bodyLarge!.color,
                                   ),
                                   onPressed: () async {
-                                    var sortingMethod =
-                                        await showFilterDialog();
+                                    var sortingMethod = await showFilterDialog(
+                                        context, sortAds);
                                     if (sortingMethod != null) {
                                       setState(() {
                                         criteria = sortingMethod;
@@ -538,19 +455,47 @@ class _CategoryDetailState extends State<Categories> {
                                     width: 10,
                                   );
                                 },
-                                itemCount: subcategories.length,
+                                itemCount: items == null
+                                    ? subcategories.length
+                                    : items!.length,
                                 itemBuilder: (context, index) {
-                                  final item = subcategories[index];
+                                  final item = items == null
+                                      ? subcategories[index]
+                                      : items![index];
                                   return InkWell(
                                     onTap: () {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                          builder: (context) => SubCategories(
-                                              subcategory: item.subcategory,
-                                              category: widget.category),
-                                        ),
-                                      );
+                                      setState(() {
+                                        if (selectedSubCategory != null) {
+                                          selectedItem =
+                                              (item as String).toString();
+                                        }
+                                        print(selectedItem);
+                                        print(item.toString());
+                                        selectedSubCategory = items == null
+                                            ? (item as Subcategory).subcategory
+                                            : (item as String).toString();
+                                        adCategory = items == null
+                                            ? ads
+                                                .where((ad) =>
+                                                    ad.categorySelection
+                                                        .subcategory ==
+                                                    selectedSubCategory)
+                                                .toList()
+                                            : ads
+                                                .where((ad) =>
+                                                    ad.categorySelection.item ==
+                                                    selectedItem)
+                                                .toList();
+
+                                        items = subcategories
+                                            .where((sub) =>
+                                                sub.subcategory ==
+                                                selectedSubCategory)
+                                            .expand((sub) => sub.items)
+                                            .toList();
+
+                                        sortAds('price_descending');
+                                      });
                                     },
                                     child: Container(
                                       padding: EdgeInsets.symmetric(
@@ -562,7 +507,10 @@ class _CategoryDetailState extends State<Categories> {
                                               BorderRadius.circular(5)),
                                       child: Center(
                                         child: Text(
-                                          item.subcategory,
+                                          items == null
+                                              ? (item as Subcategory)
+                                                  .subcategory
+                                              : (item as String).toString(),
                                           style: TextStyle(
                                               color: Colors.white,
                                               fontSize: 14),
@@ -583,13 +531,11 @@ class _CategoryDetailState extends State<Categories> {
                             height: 1,
                           ),
                         ),
-
                         const SliverToBoxAdapter(
                           child: SizedBox(
                             height: 10,
                           ),
                         ),
-
                         SliverToBoxAdapter(
                             child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
@@ -629,7 +575,7 @@ class _CategoryDetailState extends State<Categories> {
                                               onTap: () {
                                                 setState(() {
                                                   selectedRangePrice = '';
-                                                  rangeValues = RangeValues(
+                                                  _values = SfRangeValues(
                                                       minPriceOf, maxPriceOf);
                                                 });
                                               },
@@ -721,7 +667,6 @@ class _CategoryDetailState extends State<Categories> {
                             height: 10,
                           ),
                         ),
-
                         const SliverToBoxAdapter(
                           child: Divider(
                             height: 1,
@@ -732,7 +677,6 @@ class _CategoryDetailState extends State<Categories> {
                             height: 10,
                           ),
                         ),
-
                         SliverPadding(
                           padding: EdgeInsets.symmetric(
                             horizontal: 10,
