@@ -54,6 +54,7 @@ dependencies:
   flutter_bloc: ^9.0.0
   carousel_slider: ^5.0.0
   syncfusion_flutter_sliders: ^28.2.7
+  google_fonts: ^6.2.1
 
   
 

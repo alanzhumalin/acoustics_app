@@ -30,7 +30,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
           Stack(
             children: [
               Container(
-                height: 190,
+                height: 175,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8),
@@ -90,7 +90,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                   margin: const EdgeInsets.all(0),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 10, right: 5, top: 10, bottom: 10),
+                        left: 8, right: 5, top: 5, bottom: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -100,7 +100,9 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                             Expanded(
                               child: Text(
                                 widget.ad.title,
-                                style: textTheme.bodyMedium,
+                                style: TextStyle(
+                                  fontSize: 14,
+                                ),
                                 maxLines: 2,
                                 overflow: TextOverflow.ellipsis,
                               ),

@@ -1,4 +1,4 @@
-import 'package:acousticsapp/features/ads/presentation/cubit/search_cubit.dart';
+import 'package:acousticsapp/features/ads/presentation/cubit/recent_search_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../data/category.dart';
@@ -42,7 +42,9 @@ class SearchResult extends StatelessWidget {
                 final category = results[index];
                 return GestureDetector(
                   onTap: () {
-                    context.read<SearchCubit>().saveQuery(category.category);
+                    context
+                        .read<RecentSearchCubit>()
+                        .saveQuery(category.category);
 
                     Navigator.push(
                       context,

@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 final ThemeData lightTheme = ThemeData(
+    // fontFamily: GoogleFonts.ubuntu().fontFamily,
     scaffoldBackgroundColor: Colors.white,
     useMaterial3: true,
     brightness: Brightness.light,
@@ -35,6 +37,7 @@ final ThemeData lightTheme = ThemeData(
         brightness: Brightness.light));
 
 final ThemeData blackTheme = ThemeData(
+    // fontFamily: GoogleFonts.ubuntu().fontFamily,
     cardTheme: CardTheme(
       color: const Color.fromARGB(255, 0, 0, 0),
     ),

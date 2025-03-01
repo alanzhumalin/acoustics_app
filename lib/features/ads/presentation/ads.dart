@@ -1,7 +1,7 @@
 import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/data/category.dart';
 import 'package:acousticsapp/features/ads/presentation/categories.dart';
-import 'package:acousticsapp/features/ads/presentation/cubit/search_cubit.dart';
+import 'package:acousticsapp/features/ads/presentation/cubit/recent_search_cubit.dart';
 import 'package:acousticsapp/features/ads/widget/ad_appbar.dart';
 import 'package:acousticsapp/features/ads/presentation/search_result.dart';
 import 'package:acousticsapp/features/ads/widget/ad_grid.dart';
@@ -31,7 +31,7 @@ class _AdState extends State<Ads> {
   @override
   void initState() {
     super.initState();
-    context.read<SearchCubit>().loadRecentSearches();
+    context.read<RecentSearchCubit>().loadRecentSearches();
   }
 
   @override
@@ -63,12 +63,16 @@ class _AdState extends State<Ads> {
   }
 
   double calculateWidth(double screenWidth) {
-    if (screenWidth <= 364) return 0.45;
-    if (screenWidth <= 384) return 0.48;
-    if (screenWidth <= 406) return 0.51;
-    if (screenWidth <= 414) return 0.54;
-    if (screenWidth <= 430) return 0.57;
-    return 0.60;
+    if (screenWidth <= 331) return 0.43;
+
+    if (screenWidth <= 358) return 0.46;
+
+    if (screenWidth <= 384) return 0.50;
+    if (screenWidth <= 406) return 0.54;
+    if (screenWidth <= 423) return 0.57;
+    if (screenWidth <= 444) return 0.60;
+    if (screenWidth <= 459) return 0.63;
+    return 0.65;
   }
 
   @override
@@ -111,7 +115,7 @@ class _AdState extends State<Ads> {
       ),
       body: CustomScrollView(controller: scrollController, slivers: [
         isSearchSelected
-            ? BlocBuilder<SearchCubit, List<String>>(
+            ? BlocBuilder<RecentSearchCubit, List<String>>(
                 builder: (context, searchHistory) {
                   return userType.isEmpty
                       ? searchHistory.isEmpty
@@ -147,7 +151,7 @@ class _AdState extends State<Ads> {
                                         InkWell(
                                           onTap: () {
                                             context
-                                                .read<SearchCubit>()
+                                                .read<RecentSearchCubit>()
                                                 .clearSearches();
                                           },
                                           child: Text(

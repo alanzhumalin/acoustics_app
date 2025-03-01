@@ -3,7 +3,6 @@ import 'package:acousticsapp/features/ads/data/category.dart';
 import 'package:acousticsapp/features/ads/data/sub_category.dart';
 import 'package:acousticsapp/features/ads/presentation/ad_detail.dart';
 import 'package:acousticsapp/features/ads/presentation/search_result.dart';
-import 'package:acousticsapp/features/ads/presentation/sub_categories.dart';
 import 'package:acousticsapp/features/ads/widget/category_appbar.dart';
 import 'package:acousticsapp/features/ads/widget/custom_ad_widget.dart';
 import 'package:acousticsapp/features/ads/widget/filter_dialog.dart';
@@ -403,7 +402,8 @@ class _CategoryDetailState extends State<Categories> {
                                           fontWeight: FontWeight.bold,
                                           fontSize: 18),
                                     ),
-                                    Text('${adCategory.length} товаров')
+                                    Text(
+                                        'Найдено ${adCategory.length} объявления')
                                   ],
                                 ),
                                 IconButton(
