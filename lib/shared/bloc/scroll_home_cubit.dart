@@ -4,6 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class ScrollHomeCubit extends Cubit<ScrollController> {
   ScrollHomeCubit() : super(ScrollController());
 
+  double get offSet => state.offset;
+
   void scrollToTop() {
     if (!state.hasClients) return;
     state.animateTo(
@@ -13,7 +15,10 @@ class ScrollHomeCubit extends Cubit<ScrollController> {
     );
   }
 
-  void offSet() {}
+  void offSetSave() {
+    final controller = ScrollController(initialScrollOffset: offSet);
+    emit(controller);
+  }
 
   @override
   Future<void> close() {

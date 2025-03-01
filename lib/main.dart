@@ -6,6 +6,7 @@ import 'package:acousticsapp/features/ads/domain/usecases/get_recent_searches.da
 import 'package:acousticsapp/features/ads/domain/usecases/save_search_query.dart';
 import 'package:acousticsapp/features/ads/presentation/cubit/scroll_cubit.dart';
 import 'package:acousticsapp/features/ads/presentation/cubit/recent_search_cubit.dart';
+import 'package:acousticsapp/features/ads/presentation/cubit/search_cubit.dart';
 import 'package:acousticsapp/home.dart';
 import 'package:acousticsapp/shared/bloc/index_bottom_nav_bar.dart';
 import 'package:acousticsapp/shared/bloc/scroll_home_cubit.dart';
@@ -30,6 +31,7 @@ void main() {
         BlocProvider(create: (_) => ScrollLinearCubit()),
         BlocProvider(create: (_) => ScrollHomeCubit()),
         BlocProvider(create: (_) => IndexBottomNavBar()),
+        BlocProvider(create: (_) => SearchCubit()),
         BlocProvider(
             create: (_) => RecentSearchCubit(
                   getRecentSearches: getRecentSearches,

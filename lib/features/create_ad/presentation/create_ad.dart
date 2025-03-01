@@ -6,6 +6,7 @@ import 'package:acousticsapp/features/create_ad/presentation/select_category.dar
 import 'package:acousticsapp/features/create_ad/presentation/show_map.dart';
 import 'package:acousticsapp/features/create_ad/presentation/show_photo.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
@@ -24,6 +25,7 @@ class _CreateAdState extends State<CreateAd> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
+  final ScrollController scrollController = ScrollController();
   final ImagePicker imagePicker = ImagePicker();
   List<XFile> pickedFileList = <XFile>[];
   var location = LatLng(43.2452, 76.9345);
@@ -84,6 +86,8 @@ class _CreateAdState extends State<CreateAd> {
   }
 
   Future<void> pickPhoto() async {
+    imageCache.clear();
+
     final List<XFile>? pickedFile = await imagePicker.pickMultiImage(
       imageQuality: 80,
     );
@@ -173,6 +177,7 @@ class _CreateAdState extends State<CreateAd> {
           ),
         ),
         body: SingleChildScrollView(
+          controller: scrollController,
           child: Form(
               key: _key,
               child: Padding(
@@ -194,6 +199,7 @@ class _CreateAdState extends State<CreateAd> {
                             child: pickedFileList.isNotEmpty
                                 ? Center(
                                     child: ListView.separated(
+                                        cacheExtent: 100,
                                         padding: EdgeInsets.symmetric(
                                             horizontal: 20),
                                         separatorBuilder: (context, index) =>
@@ -815,9 +821,8 @@ class _CreateAdState extends State<CreateAd> {
                                         final LatLng? locationNew =
                                             result['location'];
 
-                                        if (locationNew != null) {
-                                          print(locationNew.latitude);
-                                          print(locationNew.longitude);
+                                        if (locationNew != null &&
+                                            locationNew != location) {
                                           setState(() {
                                             location = locationNew;
                                           });
@@ -1023,6 +1028,12 @@ class _CreateAdState extends State<CreateAd> {
                                     );
                                   });
                             }
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              scrollController.animateTo(
+                                  scrollController.position.maxScrollExtent,
+                                  duration: const Duration(seconds: 1),
+                                  curve: Curves.easeInOut);
+                            });
                           },
                           child: Text(
                             'Опубликовать',

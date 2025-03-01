@@ -13,16 +13,32 @@ class Sponsors extends StatelessWidget {
     return Center(
       child: SizedBox(
         width: double.infinity,
-        child: CarouselSlider(
-          options: CarouselOptions(
-            height: 100,
-            autoPlay: true,
-            enlargeCenterPage: true,
-          ),
-          items: imgList.map((e) {
-            return Image.network(e,
-                fit: BoxFit.contain, width: double.infinity);
-          }).toList(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 10),
+              child: Text(
+                'Реклама',
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              ),
+            ),
+            SizedBox(
+              height: 5,
+            ),
+            CarouselSlider(
+              options: CarouselOptions(
+                height: 100,
+                autoPlay: true,
+                enlargeCenterPage: true,
+              ),
+              items: imgList.map((e) {
+                return Image.network(e,
+                    fit: BoxFit.fitHeight, width: double.infinity);
+              }).toList(),
+            ),
+          ],
         ),
       ),
     );

@@ -90,7 +90,7 @@ class _CustomAdWidgetState extends State<CustomAdWidget> {
                   margin: const EdgeInsets.all(0),
                   child: Padding(
                     padding: const EdgeInsets.only(
-                        left: 8, right: 5, top: 5, bottom: 10),
+                        left: 8, right: 5, top: 9, bottom: 10),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

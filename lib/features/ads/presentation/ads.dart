@@ -2,6 +2,7 @@ import 'package:acousticsapp/features/ads/data/ad_model.dart';
 import 'package:acousticsapp/features/ads/data/category.dart';
 import 'package:acousticsapp/features/ads/presentation/categories.dart';
 import 'package:acousticsapp/features/ads/presentation/cubit/recent_search_cubit.dart';
+import 'package:acousticsapp/features/ads/presentation/cubit/search_cubit.dart';
 import 'package:acousticsapp/features/ads/widget/ad_appbar.dart';
 import 'package:acousticsapp/features/ads/presentation/search_result.dart';
 import 'package:acousticsapp/features/ads/widget/ad_grid.dart';
@@ -22,12 +23,8 @@ class Ads extends StatefulWidget {
 
 class _AdState extends State<Ads> {
   double value = 0.2;
-  var isSearchSelected = false;
-  var isCursorShown = false;
-  TextEditingController searchController = TextEditingController();
-  List<Category> results = [];
   String userType = '';
-
+  late SearchCubit searchCubit;
   @override
   void initState() {
     super.initState();
@@ -35,21 +32,19 @@ class _AdState extends State<Ads> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    searchCubit = context.read<SearchCubit>();
+  }
+
+  @override
   void dispose() {
-    searchController.dispose();
+    searchCubit.clearSearch();
     super.dispose();
   }
 
   void search(String query) {
-    setState(() {
-      userType = query;
-      results = query.isEmpty
-          ? []
-          : categories
-              .where((category) =>
-                  category.category.toLowerCase().contains(query.toLowerCase()))
-              .toList();
-    });
+    context.read<SearchCubit>().search(query);
   }
 
   double _calculateHeight(double screenHeight) {
@@ -87,220 +82,219 @@ class _AdState extends State<Ads> {
 
     return Scaffold(
       backgroundColor: backgroundcolor,
-      appBar: AdAppbar(
-        searchController: searchController,
-        isSearchSelected: isSearchSelected,
-        isCursorShown: isCursorShown,
-        onBackPressed: () {
-          setState(() {
-            isSearchSelected = false;
-            isCursorShown = false;
-            searchController.clear();
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(kToolbarHeight),
+        child: BlocBuilder<SearchCubit, SearchState>(
+          builder: (context, state) {
+            final searchCubit = context.read<SearchCubit>();
 
-            search('');
-
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-              FocusManager.instance.primaryFocus?.unfocus();
-            });
-          });
-        },
-        onSearchChanged: search,
-        onSearchTap: () {
-          setState(() {
-            isSearchSelected = true;
-            isCursorShown = true;
-          });
-        },
-        containerColor: containerColor,
+            return AdAppbar(
+              searchController: searchCubit.searchController,
+              isSearchSelected: state.isSearchSelected,
+              isCursorShown: state.isCursorShown,
+              onBackPressed: () => searchCubit.clearSearch(),
+              onSearchChanged: (query) => searchCubit.search(query),
+              onSearchTap: () => searchCubit.toggleSearch(true),
+              containerColor: Theme.of(context).colorScheme.primaryContainer,
+            );
+          },
+        ),
       ),
-      body: CustomScrollView(controller: scrollController, slivers: [
-        isSearchSelected
-            ? BlocBuilder<RecentSearchCubit, List<String>>(
-                builder: (context, searchHistory) {
-                  return userType.isEmpty
-                      ? searchHistory.isEmpty
-                          ? const SliverFillRemaining(
-                              child: Center(
-                                child: Text(
-                                  'Начните вводить для поиска...',
-                                  style: TextStyle(color: Colors.grey),
+      body: BlocBuilder<SearchCubit, SearchState>(builder: (context, state) {
+        return CustomScrollView(controller: scrollController, slivers: [
+          state.isSearchSelected
+              ? BlocBuilder<RecentSearchCubit, List<String>>(
+                  builder: (context, searchHistory) {
+                    return state.query.isEmpty
+                        ? searchHistory.isEmpty
+                            ? const SliverFillRemaining(
+                                child: Center(
+                                  child: Text(
+                                    'Начните вводить для поиска...',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            )
-                          : SliverToBoxAdapter(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: 5,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          'Последние запросы',
-                                          style:
-                                              textTheme.titleMedium?.copyWith(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 19,
+                              )
+                            : SliverToBoxAdapter(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        height: 5,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            'Последние запросы',
+                                            style:
+                                                textTheme.titleMedium?.copyWith(
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 19,
+                                            ),
                                           ),
-                                        ),
-                                        InkWell(
-                                          onTap: () {
-                                            context
-                                                .read<RecentSearchCubit>()
-                                                .clearSearches();
-                                          },
-                                          child: Text(
-                                            'Очистить',
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.w300),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: 10,
-                                    ),
-                                    ListView.builder(
-                                        shrinkWrap: true,
-                                        physics: NeverScrollableScrollPhysics(),
-                                        itemCount: searchHistory.length,
-                                        itemBuilder: (context, index) {
-                                          final item = searchHistory[index];
-                                          return GestureDetector(
+                                          InkWell(
                                             onTap: () {
-                                              Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) =>
-                                                          Categories(
-                                                              category: item)));
+                                              context
+                                                  .read<RecentSearchCubit>()
+                                                  .clearSearches();
                                             },
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                color: containerColor,
-                                                borderRadius: _getBorderRadius(
-                                                    index, searchHistory),
-                                              ),
-                                              padding:
-                                                  const EdgeInsets.symmetric(
-                                                      horizontal: 15,
-                                                      vertical: 15),
-                                              width: double.infinity,
-                                              child: Text(
-                                                item,
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  fontSize: 15,
+                                            child: Text(
+                                              'Очистить',
+                                              style: TextStyle(
+                                                  fontWeight: FontWeight.w300),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(
+                                        height: 10,
+                                      ),
+                                      ListView.builder(
+                                          shrinkWrap: true,
+                                          physics:
+                                              const NeverScrollableScrollPhysics(),
+                                          itemCount: searchHistory.length,
+                                          itemBuilder: (context, index) {
+                                            final item = searchHistory[index];
+                                            return GestureDetector(
+                                              onTap: () {
+                                                Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            Categories(
+                                                                category:
+                                                                    item)));
+                                              },
+                                              child: Container(
+                                                decoration: BoxDecoration(
+                                                  color: containerColor,
+                                                  borderRadius:
+                                                      _getBorderRadius(
+                                                          index, searchHistory),
+                                                ),
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 15,
+                                                        vertical: 15),
+                                                width: double.infinity,
+                                                child: Text(
+                                                  item,
+                                                  style: const TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 15,
+                                                  ),
                                                 ),
                                               ),
-                                            ),
-                                          );
-                                        }),
-                                  ],
+                                            );
+                                          }),
+                                    ],
+                                  ),
                                 ),
-                              ),
-                            )
-                      : results.isEmpty
-                          ? const SliverFillRemaining(
-                              child: Center(
-                                child: Text(
-                                  'Ничего не найдено',
-                                  style: TextStyle(color: Colors.grey),
+                              )
+                        : state.results.isEmpty
+                            ? const SliverFillRemaining(
+                                child: Center(
+                                  child: Text(
+                                    'Ничего не найдено',
+                                    style: TextStyle(color: Colors.grey),
+                                  ),
                                 ),
-                              ),
-                            )
-                          : SearchResult(
-                              results: results, containerColor: containerColor);
-                },
-              )
-            : SliverMainAxisGroup(slivers: [
-                SliverToBoxAdapter(
-                  child: Sponsors(),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 5,
+                              )
+                            : SearchResult(
+                                results: state.results,
+                                containerColor: containerColor);
+                  },
+                )
+              : SliverMainAxisGroup(slivers: [
+                  SliverToBoxAdapter(
+                    child: Sponsors(),
                   ),
-                ),
-                SliverToBoxAdapter(
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 10),
-                    color: containerColor,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 10),
-                          child: Text(
-                            'Категории',
-                            style: textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 19,
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 5,
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: 10),
+                      color: containerColor,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 10),
+                            child: Text(
+                              'Категории',
+                              style: textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 19,
+                              ),
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        CategoryGrid(
-                            height: _calculateHeight(sizeScreen.height),
-                            scrollController:
-                                scrollLinearCubit.scrollLinearController,
-                            categories: categories,
-                            textTheme: textTheme)
-                      ],
+                          SizedBox(
+                            height: 10,
+                          ),
+                          CategoryGrid(
+                              height: _calculateHeight(sizeScreen.height),
+                              scrollController:
+                                  scrollLinearCubit.scrollLinearController,
+                              categories: categories,
+                              textTheme: textTheme)
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 15,
-                  ),
-                ),
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: sizeScreen.width * 0.45),
-                    child: BlocBuilder<ScrollLinearCubit, double>(
-                        builder: (context, scrollProgress) {
-                      return LinearProgressIndicator(
-                        backgroundColor:
-                            const Color.fromARGB(255, 255, 255, 255),
-                        borderRadius: BorderRadius.circular(8),
-                        value: scrollProgress,
-                        color: Colors.amber,
-                      );
-                    }),
-                  ),
-                ),
-                const SliverToBoxAdapter(child: SizedBox(height: 5)),
-                SliverToBoxAdapter(
-                  child: const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      'Рекомендация',
-                      style:
-                          TextStyle(fontWeight: FontWeight.bold, fontSize: 19),
+                  const SliverToBoxAdapter(
+                    child: SizedBox(
+                      height: 15,
                     ),
                   ),
-                ),
-                SliverToBoxAdapter(child: const SizedBox(height: 9)),
-                SliverPadding(
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 10,
+                  SliverToBoxAdapter(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: sizeScreen.width * 0.45),
+                      child: BlocBuilder<ScrollLinearCubit, double>(
+                          builder: (context, scrollProgress) {
+                        return LinearProgressIndicator(
+                          backgroundColor:
+                              const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(8),
+                          value: scrollProgress,
+                          color: Colors.amber,
+                        );
+                      }),
                     ),
-                    sliver: AdGrid(
-                        ads: ads,
-                        calculateWidth: calculateWidth,
-                        screenSize: sizeScreen)),
-                const SliverToBoxAdapter(child: SizedBox(height: 20)),
-              ])
-      ]),
+                  ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 5)),
+                  SliverToBoxAdapter(
+                    child: const Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Text(
+                        'Рекомендация',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 19),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(child: const SizedBox(height: 9)),
+                  SliverPadding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 10,
+                      ),
+                      sliver: AdGrid(
+                          ads: ads,
+                          calculateWidth: calculateWidth,
+                          screenSize: sizeScreen)),
+                  const SliverToBoxAdapter(child: SizedBox(height: 20)),
+                ])
+        ]);
+      }),
     );
   }
 

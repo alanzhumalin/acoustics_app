@@ -5,7 +5,6 @@ class Chat extends StatelessWidget {
   const Chat({super.key});
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context).colorScheme.surfaceContainer;
     final colorDivider = Theme.of(context).colorScheme.onSecondary;
     final containerColor = Theme.of(context).colorScheme.primaryContainer;
     final backgroundcolor = Theme.of(context).colorScheme.secondaryContainer;
